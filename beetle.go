@@ -24,8 +24,23 @@ import (
 	"github.com/spf13/viper"
 )
 
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 func main() {
 	var configFile string
+
+	fmt.Println(
+		fmt.Sprintf(
+			`{"message": "Beetle version %v commit %v, built at %v"}`,
+			version,
+			commit,
+			date,
+		),
+	)
 
 	flag.StringVar(&configFile, "config", "config.prod.yml", "config")
 	flag.Parse()
