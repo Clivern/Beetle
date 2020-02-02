@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/logo.png?v=1.0.1" />
+    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/logo.png?v=1.0.1" width="130" />
     <h3 align="center">Beetle</h3>
     <p align="center"></p>
     <p align="center">
