@@ -8,13 +8,19 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
+	"github.com/clivern/beetle/internal/app/controller"
+	"github.com/clivern/beetle/internal/app/middleware"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/drone/envsubst"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
@@ -82,5 +88,39 @@ func main() {
 		}
 	}
 
-	InitializeNewAPI().Run()
+	if viper.GetString("log.output") == "stdout" {
+		gin.DefaultWriter = os.Stdout
+	} else {
+		f, _ := os.Create(viper.GetString("log.output"))
+		gin.DefaultWriter = io.MultiWriter(f)
+	}
+
+	if viper.GetString("app.mode") == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DefaultWriter = ioutil.Discard
+		gin.DisableConsoleColor()
+	}
+
+	r := gin.Default()
+
+	r.Use(middleware.Correlation())
+	r.Use(middleware.Logger())
+
+	r.GET("/favicon.ico", func(c *gin.Context) {
+		c.String(http.StatusNoContent, "")
+	})
+
+	r.GET("/_health", controller.HealthCheck)
+
+	if viper.GetBool("app.tls.status") {
+		r.RunTLS(
+			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
+			viper.GetString("app.tls.pemPath"),
+			viper.GetString("app.tls.keyPath"),
+		)
+	} else {
+		r.Run(
+			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
+		)
+	}
 }
