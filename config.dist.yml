@@ -1,0 +1,18 @@
+# Log configs
+log:
+    # Log level, it can be debug, info, warn, error, panic, fatal
+    level: ${BEETLE_LOG_LEVEL:-warn}
+    # output can be stdout or abs path to log file /var/logs/beetle.log
+    output: ${BEETLE_LOG_OUTPUT:-stdout}
+    # Format can be json
+    format: ${BEETLE_LOG_FORMAT:-json}
+
+# API configs
+api:
+    # HTTP port
+    port: ${BEETLE_API_PORT:-8080}
+    # TLS configs
+    tls:
+        status: ${BEETLE_API_TLS_STATUS:-off}
+        pemPath: ${BEETLE_API_TLS_PEMPATH:-cert/server.pem}
+        keyPath: ${BEETLE_API_TLS_KEYPATH:-cert/server.key}
