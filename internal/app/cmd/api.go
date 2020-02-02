@@ -6,11 +6,15 @@ package cmd
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/clivern/beetle/internal/app/config"
 	"github.com/clivern/beetle/internal/app/controller"
+	"github.com/clivern/beetle/internal/app/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -28,27 +32,42 @@ func NewAPI(config *config.Config) *API {
 	}
 }
 
-// Run runs the api
+// Run runs the app
 func (w *API) Run() {
-	fmt.Println("API server started .....")
+
+	if viper.GetString("log.output") == "stdout" {
+		gin.DefaultWriter = os.Stdout
+	} else {
+		f, _ := os.Create(viper.GetString("log.output"))
+		gin.DefaultWriter = io.MultiWriter(f)
+	}
+
+	if viper.GetString("app.mode") == "prod" {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DefaultWriter = ioutil.Discard
+		gin.DisableConsoleColor()
+	}
 
 	r := gin.Default()
+
+	r.Use(middleware.Correlation())
+	r.Use(middleware.Logger())
 
 	r.GET("/favicon.ico", func(c *gin.Context) {
 		c.String(http.StatusNoContent, "")
 	})
 
-	r.GET("/api/_health", controller.HealthCheck)
+	r.GET("/_health", controller.HealthCheck)
 
-	if viper.GetBool("api.tls.status") {
+	if viper.GetBool("app.tls.status") {
 		r.RunTLS(
-			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("api.port"))),
-			viper.GetString("api.tls.pemPath"),
-			viper.GetString("api.tls.keyPath"),
+			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
+			viper.GetString("app.tls.pemPath"),
+			viper.GetString("app.tls.keyPath"),
 		)
 	} else {
 		r.Run(
-			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("api.port"))),
+			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
 		)
 	}
 }

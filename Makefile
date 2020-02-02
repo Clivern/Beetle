@@ -83,4 +83,10 @@ ci: style check_license test vet lint
 	@echo "\n==> All quality checks passed"
 
 
+## run: Run the service
+run:
+	-cp -n config.dist.yml config.prod.yml
+	$(GO) run beetle.go wire_gen.go
+
+
 .PHONY: help
