@@ -5,15 +5,53 @@
 package util
 
 import (
-	"github.com/nbio/st"
 	"testing"
 )
 
 // TestInArray test cases
 func TestInArray(t *testing.T) {
-	st.Expect(t, true, InArray("A", []string{"A", "B", "C", "D"}))
-	st.Expect(t, true, InArray("B", []string{"A", "B", "C", "D"}))
-	st.Expect(t, false, InArray("H", []string{"A", "B", "C", "D"}))
-	st.Expect(t, true, InArray(1, []int{2, 3, 1}))
-	st.Expect(t, false, InArray(9, []int{2, 3, 1}))
+	// TestInArray
+	t.Run("TestInArray", func(t *testing.T) {
+		got := InArray("A", []string{"A", "B", "C", "D"})
+		want := true
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	// TestInArray
+	t.Run("TestInArray", func(t *testing.T) {
+		got := InArray("B", []string{"A", "B", "C", "D"})
+		want := true
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	// TestInArray
+	t.Run("TestInArray", func(t *testing.T) {
+		got := InArray("H", []string{"A", "B", "C", "D"})
+		want := false
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	// TestInArray
+	t.Run("TestInArray", func(t *testing.T) {
+		got := InArray(1, []int{2, 3, 1})
+		want := true
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	// TestInArray
+	t.Run("TestInArray", func(t *testing.T) {
+		got := InArray(9, []int{2, 3, 1})
+		want := false
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
 }

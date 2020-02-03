@@ -49,7 +49,7 @@ test_short:
 ## test: Run test cases.
 test:
 	@echo ">> ============= Running All Tests ============= <<"
-	$(GO) test -race -cover $(pkgs)
+	$(GO) test -v -cover $(pkgs)
 
 
 ## lint: Lint the code.
