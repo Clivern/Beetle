@@ -47,12 +47,6 @@ func TestHealthCheck(t *testing.T) {
 		configParsed, _ := envsubst.EvalEnv(string(configUnparsed))
 		viper.SetConfigType("yaml")
 		viper.ReadConfig(bytes.NewBuffer([]byte(configParsed)))
-
-		got := viper.GetString("app.mode")
-		want := "test"
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
 	})
 
 	// TestHealthCheckController
@@ -64,6 +58,13 @@ func TestHealthCheck(t *testing.T) {
 		w := httptest.NewRecorder()
 		req, _ := http.NewRequest("GET", "/_healthcheck", nil)
 		router.ServeHTTP(w, req)
+
+		got := viper.GetString("app.mode")
+		want := "test"
+
+		if got != want {
+			t.Errorf("got %v, want %v", got, want)
+		}
 
 		got1 := w.Code
 		want1 := 200
