@@ -32,13 +32,13 @@ var (
 
 func main() {
 	var configFile string
-	var exec string
+	var get string
 
 	flag.StringVar(&configFile, "config", "config.prod.yml", "config")
-	flag.StringVar(&exec, "exec", "", "exec")
+	flag.StringVar(&get, "get", "", "get")
 	flag.Parse()
 
-	if exec == "release" {
+	if get == "release" {
 		fmt.Println(
 			fmt.Sprintf(
 				`Beetle Version %v Commit %v, Built @%v`,
@@ -47,6 +47,10 @@ func main() {
 				date,
 			),
 		)
+		return
+	}
+
+	if get == "health" {
 		return
 	}
 
