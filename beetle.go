@@ -32,18 +32,23 @@ var (
 
 func main() {
 	var configFile string
-
-	fmt.Println(
-		fmt.Sprintf(
-			`{"message": "Beetle version %v commit %v, built at %v"}`,
-			version,
-			commit,
-			date,
-		),
-	)
+	var exec string
 
 	flag.StringVar(&configFile, "config", "config.prod.yml", "config")
+	flag.StringVar(&exec, "exec", "", "exec")
 	flag.Parse()
+
+	if exec == "release" {
+		fmt.Println(
+			fmt.Sprintf(
+				`Beetle Version %v Commit %v, Built @%v`,
+				version,
+				commit,
+				date,
+			),
+		)
+		return
+	}
 
 	configUnparsed, err := ioutil.ReadFile(configFile)
 
@@ -126,6 +131,7 @@ func main() {
 	})
 
 	r.GET("/_health", controller.HealthCheck)
+	r.GET("/_metrics", controller.Metrics)
 
 	if viper.GetBool("app.tls.status") {
 		r.RunTLS(

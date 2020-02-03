@@ -9,7 +9,11 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/clivern/beetle/internal/app/module"
+
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
 // Logger middleware
@@ -25,15 +29,20 @@ func Logger() gin.HandlerFunc {
 
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
-		fmt.Println(
-			fmt.Sprintf(
-				`{"message": "Incoming Request %s:%s Body: %s", "correlationId": "%s"}`,
-				c.Request.Method,
-				c.Request.URL,
-				string(bodyBytes),
-				c.Request.Header.Get("X-Correlation-ID"),
-			),
+		logger, _ := module.NewLogger(
+			viper.GetString("log.level"),
+			viper.GetString("log.format"),
+			[]string{viper.GetString("log.output")},
 		)
+
+		defer logger.Sync()
+
+		logger.Info(fmt.Sprintf(
+			`Incoming Request %s:%s Body: %s`,
+			c.Request.Method,
+			c.Request.URL,
+			string(bodyBytes),
+		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 
 		c.Next()
 
@@ -41,13 +50,10 @@ func Logger() gin.HandlerFunc {
 		status := c.Writer.Status()
 		size := c.Writer.Size()
 
-		fmt.Println(
-			fmt.Sprintf(
-				`{"message": "Outgoing Response Code %d, Size %d", "correlationId": "%s"}`,
-				status,
-				size,
-				c.Request.Header.Get("X-Correlation-ID"),
-			),
-		)
+		logger.Info(fmt.Sprintf(
+			`Outgoing Response Code %d, Size %d`,
+			status,
+			size,
+		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 	}
 }
