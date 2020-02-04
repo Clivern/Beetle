@@ -10,6 +10,7 @@ require (
 	github.com/spf13/viper v1.6.2
 	go.uber.org/zap v1.13.0
 	k8s.io/api v0.17.2 // indirect
-	k8s.io/client-go v0.17.0 // indirect
+	k8s.io/apimachinery v0.17.2
+	k8s.io/client-go v0.17.0
 	k8s.io/utils v0.0.0-20200124190032-861946025e34 // indirect
 )
