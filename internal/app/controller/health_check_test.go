@@ -16,6 +16,7 @@ import (
 	"testing"
 
 	"github.com/clivern/beetle/internal/app/module"
+	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"
 	"github.com/gin-gonic/gin"
@@ -51,6 +52,10 @@ func TestHealthCheck(t *testing.T) {
 
 	// TestHealthCheckController
 	t.Run("TestHealthCheckController", func(t *testing.T) {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DefaultWriter = ioutil.Discard
+		gin.DisableConsoleColor()
+
 		router := gin.Default()
 
 		router.GET("/_healthcheck", HealthCheck)
@@ -59,25 +64,8 @@ func TestHealthCheck(t *testing.T) {
 		req, _ := http.NewRequest("GET", "/_healthcheck", nil)
 		router.ServeHTTP(w, req)
 
-		got := viper.GetString("app.mode")
-		want := "test"
-
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-
-		got1 := w.Code
-		want1 := 200
-
-		if got1 != want1 {
-			t.Errorf("got %v, want %v", got1, want1)
-		}
-
-		got2 := strings.TrimSpace(w.Body.String())
-		want2 := `{"status":"ok"}`
-
-		if got2 != want2 {
-			t.Errorf("got %v, want %v", got2, want2)
-		}
+		pkg.Expect(t, viper.GetString("app.mode"), "test")
+		pkg.Expect(t, w.Code, 200)
+		pkg.Expect(t, strings.TrimSpace(w.Body.String()), `{"status":"ok"}`)
 	})
 }

@@ -6,52 +6,18 @@ package util
 
 import (
 	"testing"
+
+	"github.com/clivern/beetle/pkg"
 )
 
 // TestInArray test cases
 func TestInArray(t *testing.T) {
 	// TestInArray
 	t.Run("TestInArray", func(t *testing.T) {
-		got := InArray("A", []string{"A", "B", "C", "D"})
-		want := true
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-
-	// TestInArray
-	t.Run("TestInArray", func(t *testing.T) {
-		got := InArray("B", []string{"A", "B", "C", "D"})
-		want := true
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-
-	// TestInArray
-	t.Run("TestInArray", func(t *testing.T) {
-		got := InArray("H", []string{"A", "B", "C", "D"})
-		want := false
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-
-	// TestInArray
-	t.Run("TestInArray", func(t *testing.T) {
-		got := InArray(1, []int{2, 3, 1})
-		want := true
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
-	})
-
-	// TestInArray
-	t.Run("TestInArray", func(t *testing.T) {
-		got := InArray(9, []int{2, 3, 1})
-		want := false
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
+		pkg.Expect(t, InArray("A", []string{"A", "B", "C", "D"}), true)
+		pkg.Expect(t, InArray("B", []string{"A", "B", "C", "D"}), true)
+		pkg.Expect(t, InArray("H", []string{"A", "B", "C", "D"}), false)
+		pkg.Expect(t, InArray(1, []int{2, 3, 1}), true)
+		pkg.Expect(t, InArray(9, []int{2, 3, 1}), false)
 	})
 }

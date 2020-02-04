@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"testing"
 
 	"github.com/satori/go.uuid"
 )
@@ -85,4 +86,13 @@ func Unset(a []string, i int) []string {
 	a[i] = a[len(a)-1]
 	a[len(a)-1] = ""
 	return a[:len(a)-1]
+}
+
+// Expect compare two values for testing
+func Expect(t *testing.T, got, want interface{}) {
+	t.Logf(`Comparing values %v, %v`, got, want)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf(`got %v, want %v`, got, want)
+	}
 }

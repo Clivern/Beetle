@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/clivern/beetle/internal/app/module"
+	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"
 	"github.com/spf13/viper"
@@ -44,11 +45,6 @@ func TestMain(t *testing.T) {
 		viper.SetConfigType("yaml")
 		viper.ReadConfig(bytes.NewBuffer([]byte(configParsed)))
 
-		got := viper.GetString("app.mode")
-		want := "test"
-
-		if got != want {
-			t.Errorf("got %v, want %v", got, want)
-		}
+		pkg.Expect(t, viper.GetString("app.mode"), "test")
 	})
 }
