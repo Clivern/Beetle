@@ -1,7 +1,7 @@
 <p align="center">
     <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/logo.png?v=1.0.1" width="130" />
     <h3 align="center">Beetle</h3>
-    <p align="center"></p>
+    <p align="center">Kubernetes Automatic Deployer.</p>
     <p align="center">
         <a href="https://travis-ci.org/Clivern/Beetle"><img src="https://travis-ci.org/Clivern/Beetle.svg?branch=master"></a>
         <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-0.0.1-red.svg"></a>
