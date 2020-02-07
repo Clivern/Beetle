@@ -4,6 +4,6 @@
 
 package kubernetes
 
-// Pod struct
-type Pod struct {
+// Deployment struct
+type Deployment struct {
 }
