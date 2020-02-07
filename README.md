@@ -1,9 +1,8 @@
 <p align="center">
     <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/logo.png?v=1.0.1" width="130" />
     <h3 align="center">Beetle</h3>
-    <p align="center"></p>
+    <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
-        <a href="https://godoc.org/github.com/Clivern/Beetle"><img src="https://godoc.org/github.com/clivern/beetle?status.svg"></a>
         <a href="https://travis-ci.org/Clivern/Beetle"><img src="https://travis-ci.org/Clivern/Beetle.svg?branch=master"></a>
         <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-0.0.1-red.svg"></a>
         <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.1"></a>
