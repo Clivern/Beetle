@@ -4,6 +4,6 @@
 
 package kubernetes
 
-// Pod struct
-type Pod struct {
+// Config struct
+type Config struct {
 }
