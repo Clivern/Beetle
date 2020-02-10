@@ -12,6 +12,12 @@ app:
         pemPath: ${BEETLE_API_TLS_PEMPATH:-cert/server.pem}
         keyPath: ${BEETLE_API_TLS_KEYPATH:-cert/server.key}
 
+    # k8s Clusters
+    clusters:
+        -
+            name: ${DEFAULT_CLUSTER_NAME:-default}
+            config: ${DEFAULT_CLUSTER_CONFIG:-/app/config/default_kubctl.yaml}
+
 # Log configs
 log:
     # Log level, it can be debug, info, warn, error, panic, fatal
