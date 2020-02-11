@@ -6,6 +6,8 @@ package kubernetes
 
 import (
 	"github.com/spf13/viper"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 // Clusters struct
@@ -15,9 +17,8 @@ type Clusters struct {
 
 // Cluster struct
 type Cluster struct {
-	Name    string `mapstructure:",name"`
-	Config  string `mapstructure:",config"`
-	Version string `mapstructure:",version"`
+	Name       string `mapstructure:",name"`
+	Kubeconfig string `mapstructure:",kubeconfig"`
 }
 
 // GetClusters get a list of clusters
@@ -33,12 +34,27 @@ func GetClusters() ([]*Cluster, error) {
 	return clusters.Clusters, nil
 }
 
-// Info fetch the cluster info
-func (c *Cluster) Info() (bool, error) {
-	// clus, _ := kubernetes.GetClusters()
-	// clus[0].Info()
-	// fmt.Println(clus[0].Version)
-	c.Version = "1.17"
+// Ping check the cluster
+// clus, _ := kubernetes.GetClusters()
+// fmt.Println(clus[0].Ping())
+func (c *Cluster) Ping() (bool, error) {
+	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
 
-	return true, nil
+	if err != nil {
+		return false, err
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+
+	if err != nil {
+		return false, err
+	}
+
+	data, err := clientset.RESTClient().Get().AbsPath("/api/v1").DoRaw()
+
+	if err != nil {
+		return false, err
+	}
+
+	return (string(data) != ""), nil
 }
