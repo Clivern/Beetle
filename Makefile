@@ -58,6 +58,14 @@ lint:
 	revive -config config.toml -exclude vendor/... -formatter friendly ./...
 
 
+## verify: verify dependencies
+verify:
+	@echo ">> ============= List Dependencies ============= <<"
+	$(GO) list -m all
+	@echo ">> ============= Verify Dependencies ============= <<"
+	$(GO) mod verify
+
+
 ## format: Format the code.
 format:
 	@echo ">> ============= Formatting Code ============= <<"
@@ -79,7 +87,7 @@ coverage:
 
 
 ## ci: Run all CI tests.
-ci: style check_license test vet lint
+ci: style check_license test vet lint verify
 	@echo "\n==> All quality checks passed"
 
 
