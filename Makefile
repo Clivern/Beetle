@@ -87,7 +87,7 @@ coverage:
 
 
 ## ci: Run all CI tests.
-ci: style check_license test vet lint verify
+ci: style check_license test vet lint
 	@echo "\n==> All quality checks passed"
 
 

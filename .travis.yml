@@ -48,6 +48,7 @@ script:
   - cat diff.log
   - git clean -fd
   - git reset --hard
+  - make verify
 
 deploy:
 - provider: script
