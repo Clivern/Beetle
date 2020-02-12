@@ -1,6 +1,0 @@
-minApprovals:
-  OWNER: 1
-  MEMBER: 3
-
-requiredLabels:
-- merge
