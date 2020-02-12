@@ -26,7 +26,9 @@ func Cluster(c *gin.Context) {
 		[]string{viper.GetString("log.output")},
 	)
 
-	defer logger.Sync()
+	defer func() {
+		_ = logger.Sync()
+	}()
 
 	clusters, err := kubernetes.GetClusters()
 
