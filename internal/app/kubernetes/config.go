@@ -5,10 +5,20 @@
 package kubernetes
 
 import (
+	"fmt"
+
+	"github.com/clivern/beetle/internal/app/module"
+
 	"github.com/spf13/viper"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
+
+// ClusterModel struct
+type ClusterModel struct {
+	Name   string `json:"name"`
+	Health bool   `json:"health"`
+}
 
 // Clusters struct
 type Clusters struct {
@@ -35,9 +45,17 @@ func GetClusters() ([]*Cluster, error) {
 }
 
 // Ping check the cluster
-// clus, _ := kubernetes.GetClusters()
-// fmt.Println(clus[0].Ping())
 func (c *Cluster) Ping() (bool, error) {
+	fs := module.FileSystem{}
+
+	if !fs.FileExists(c.Kubeconfig) {
+		return false, fmt.Errorf(
+			"cluster [%s] config file [%s] not exist",
+			c.Name,
+			c.Kubeconfig,
+		)
+	}
+
 	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
 
 	if err != nil {

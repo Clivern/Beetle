@@ -58,7 +58,7 @@ lint:
 	revive -config config.toml -exclude vendor/... -formatter friendly ./...
 
 
-## verify: verify dependencies
+## verify: Verify dependencies
 verify:
 	@echo ">> ============= List Dependencies ============= <<"
 	$(GO) list -m all

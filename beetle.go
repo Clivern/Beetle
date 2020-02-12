@@ -136,6 +136,7 @@ func main() {
 
 	r.GET("/_health", controller.HealthCheck)
 	r.GET("/_metrics", controller.Metrics)
+	r.GET("api/v1/cluster", controller.Cluster)
 
 	if viper.GetBool("app.tls.status") {
 		r.RunTLS(
