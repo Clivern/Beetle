@@ -35,7 +35,9 @@ func Logger() gin.HandlerFunc {
 			[]string{viper.GetString("log.output")},
 		)
 
-		defer logger.Sync()
+		defer func() {
+			_ = logger.Sync()
+		}()
 
 		logger.Info(fmt.Sprintf(
 			`Incoming Request %s:%s Body: %s`,
