@@ -138,15 +138,21 @@ func main() {
 	r.GET("/_metrics", controller.Metrics)
 	r.GET("api/v1/cluster", controller.Cluster)
 
+	var runerr error
+
 	if viper.GetBool("app.tls.status") {
-		r.RunTLS(
+		runerr = r.RunTLS(
 			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
 			viper.GetString("app.tls.pemPath"),
 			viper.GetString("app.tls.keyPath"),
 		)
 	} else {
-		r.Run(
+		runerr = r.Run(
 			fmt.Sprintf(":%s", strconv.Itoa(viper.GetInt("app.port"))),
 		)
+	}
+
+	if runerr != nil {
+		panic(runerr.Error())
 	}
 }
