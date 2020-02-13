@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Cluster controller
-func Cluster(c *gin.Context) {
+// Namespace controller
+func Namespace(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
