@@ -136,7 +136,7 @@ func main() {
 
 	r.GET("/_health", controller.HealthCheck)
 	r.GET("/_metrics", controller.Metrics)
-	r.GET("api/v1/cluster", controller.Cluster)
+	r.GET("/api/v1/cluster", controller.Cluster)
 
 	var runerr error
 
