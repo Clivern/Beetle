@@ -38,10 +38,7 @@ func Clusters(c *gin.Context) {
 			err.Error(),
 		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 
-		c.JSON(http.StatusOK, gin.H{
-			"clusters": result,
-		})
-
+		c.Status(http.StatusInternalServerError)
 		return
 	}
 
