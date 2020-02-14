@@ -142,8 +142,8 @@ func main() {
 	r.GET("/api/v1/cluster/:cn/namespace/:ns", controller.Namespace)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app", controller.Apps)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id", controller.App)
-	r.PUT("/api/v1/cluster/:cn/namespace/:ns/app/:id/deploy", controller.AppDeploy)
-	r.PUT("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.AppRollback)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.AppDeploy)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.AppRollback)
 
 	var runerr error
 
