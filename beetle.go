@@ -136,7 +136,14 @@ func main() {
 
 	r.GET("/_health", controller.HealthCheck)
 	r.GET("/_metrics", controller.Metrics)
-	r.GET("/api/v1/cluster", controller.Cluster)
+	r.GET("/api/v1/cluster", controller.Clusters)
+	r.GET("/api/v1/cluster/:cn", controller.Cluster)
+	r.GET("/api/v1/cluster/:cn/namespace", controller.Namespaces)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns", controller.Namespace)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app", controller.Apps)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id", controller.App)
+	r.PUT("/api/v1/cluster/:cn/namespace/:ns/app/:id/deploy", controller.AppDeploy)
+	r.PUT("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.AppRollback)
 
 	var runerr error
 

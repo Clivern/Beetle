@@ -16,10 +16,12 @@ import (
 	"go.uber.org/zap"
 )
 
-// Cluster controller
-func Cluster(c *gin.Context) {
+// Namespace controller
+func Namespace(c *gin.Context) {
 	cn := c.Param("cn")
-	result := kubernetes.ClusterModel{}
+	ns := c.Param("ns")
+
+	result := kubernetes.NamespaceModel{}
 
 	logger, _ := module.NewLogger(
 		viper.GetString("log.level"),
@@ -43,14 +45,12 @@ func Cluster(c *gin.Context) {
 		return
 	}
 
-	var status bool
-
 	for _, cluster := range clusters {
 		if cn != cluster.Name {
 			continue
 		}
 
-		status, err = cluster.Ping()
+		result, err = cluster.GetNamespace(ns)
 
 		if err != nil {
 			logger.Info(fmt.Sprintf(
@@ -58,9 +58,6 @@ func Cluster(c *gin.Context) {
 				err.Error(),
 			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 		}
-
-		result.Name = cluster.Name
-		result.Health = status
 	}
 
 	if result.Name == "" {
@@ -70,6 +67,7 @@ func Cluster(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"name":   result.Name,
-		"health": result.Health,
+		"uid":    result.UID,
+		"status": result.Status,
 	})
 }

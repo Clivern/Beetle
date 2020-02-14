@@ -16,10 +16,9 @@ import (
 	"go.uber.org/zap"
 )
 
-// Cluster controller
-func Cluster(c *gin.Context) {
-	cn := c.Param("cn")
-	result := kubernetes.ClusterModel{}
+// Clusters controller
+func Clusters(c *gin.Context) {
+	result := []kubernetes.ClusterModel{}
 
 	logger, _ := module.NewLogger(
 		viper.GetString("log.level"),
@@ -46,10 +45,6 @@ func Cluster(c *gin.Context) {
 	var status bool
 
 	for _, cluster := range clusters {
-		if cn != cluster.Name {
-			continue
-		}
-
 		status, err = cluster.Ping()
 
 		if err != nil {
@@ -59,17 +54,13 @@ func Cluster(c *gin.Context) {
 			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 		}
 
-		result.Name = cluster.Name
-		result.Health = status
-	}
-
-	if result.Name == "" {
-		c.Status(http.StatusNotFound)
-		return
+		result = append(result, kubernetes.ClusterModel{
+			Name:   cluster.Name,
+			Health: status,
+		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"name":   result.Name,
-		"health": result.Health,
+		"clusters": result,
 	})
 }
