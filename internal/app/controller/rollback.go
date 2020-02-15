@@ -11,7 +11,8 @@ import (
 )
 
 // CreateRollback controller
-func CreateRollback(c *gin.Context) {
+func CreateRollback(c *gin.Context, messages chan<- string) {
+	messages <- c.Request.Header.Get("X-Correlation-ID")
 	c.Status(http.StatusOK)
 }
 

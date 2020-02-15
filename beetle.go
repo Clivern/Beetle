@@ -125,6 +125,8 @@ func main() {
 		gin.DisableConsoleColor()
 	}
 
+	messages := make(chan string, viper.GetInt("app.broker.native.capacity"))
+
 	r := gin.Default()
 
 	r.Use(middleware.Correlation())
@@ -143,13 +145,21 @@ func main() {
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app", controller.Applications)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id", controller.Application)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.Deployments)
-	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.CreateDeployment)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", func(c *gin.Context) {
+		controller.CreateDeployment(c, messages)
+	})
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment/:dId", controller.GetDeployment)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.Rollbacks)
-	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.CreateRollback)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", func(c *gin.Context) {
+		controller.CreateRollback(c, messages)
+	})
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rId", controller.GetRollback)
 	r.GET("/api/v1/job", controller.Jobs)
 	r.GET("/api/v1/job/:id", controller.Job)
+
+	for i := 0; i < viper.GetInt("app.broker.native.workers"); i++ {
+		go controller.Worker(i+1, messages)
+	}
 
 	var runerr error
 

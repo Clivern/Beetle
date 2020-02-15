@@ -12,11 +12,71 @@ app:
         pemPath: ${BEETLE_API_TLS_PEMPATH:-cert/server.pem}
         keyPath: ${BEETLE_API_TLS_KEYPATH:-cert/server.key}
 
+    # Message Broker Configs
+    broker:
+        # Broker driver (native)
+        driver: ${BEETLE_BROKER_DRIVER:-native}
+        # Native driver configs
+        native:
+            # Queue max capacity
+            capacity: ${BEETLE_BROKER_NATIVE_CAPACITY:-5000}
+            # Number of concurrent workers
+            workers: ${BEETLE_BROKER_NATIVE_WORKERS:-4}
+
+    # Application Database
+    database:
+        # Database driver (mysql)
+        driver: ${BEETLE_DATABASE_DRIVER:-mysql}
+        # MySQL DB Configs
+        mysql:
+            # MySQL Hostname
+            host: localhost
+            # MySQL Port
+            port: 3306
+            # MySQL Database
+            database: beetle
+            # MySQL Username
+            username: root
+            # MySQL Password
+            password: root
+
     # Kubernetes Clusters
     clusters:
         -
             name: ${BEETLE_DEFAULT_CLUSTER_NAME:-default}
             kubeconfig: ${BEETLE_DEFAULT_CLUSTER_CONFIG:-/app/config/default-kubctl.yaml}
+            # Service to get all applications versions
+            versions:
+                type: httpService
+                url: http://example.com/api/application/[.AppId]
+                method: get
+                headers:
+                    -
+                        X-AUTH-TOKEN: 1234
+            # Webhooks running on the cluster
+            applications:
+                -
+                    id: beetle
+                    name: Beetle
+                    deployment:
+                        defaultStrategy: recreate
+                    rollback:
+                        defaultStrategy: recreate
+            # Webhooks
+            webhooks:
+                -
+                    enabled: false
+                    type: httpService
+                    url: http://example.com/api/listen
+                    method: post
+                    headers:
+                        -
+                            X-AUTH-TOKEN: 1234
+                    events:
+                        -
+                            name: deployment
+                        -
+                            name: rollback
 
 # Log configs
 log:

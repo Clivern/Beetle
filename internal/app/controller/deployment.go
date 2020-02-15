@@ -11,7 +11,8 @@ import (
 )
 
 // CreateDeployment controller
-func CreateDeployment(c *gin.Context) {
+func CreateDeployment(c *gin.Context, messages chan<- string) {
+	messages <- c.Request.Header.Get("X-Correlation-ID")
 	c.Status(http.StatusOK)
 }
 
