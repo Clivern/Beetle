@@ -148,6 +148,8 @@ func main() {
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.Rollbacks)
 	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.CreateRollback)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rId", controller.GetRollback)
+	r.GET("/api/v1/job", controller.Jobs)
+	r.GET("/api/v1/job/:id", controller.Job)
 
 	var runerr error
 
