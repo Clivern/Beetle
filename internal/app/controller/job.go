@@ -12,5 +12,9 @@ import (
 
 // Job controller
 func Job(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+	id := c.Param("id")
+
+	c.JSON(http.StatusOK, gin.H{
+		"id": id,
+	})
 }
