@@ -10,7 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Applications controller
-func Applications(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+// CreateRollback controller
+func CreateRollback(c *gin.Context) {
+	c.Status(http.StatusOK)
+}
+
+// GetRollback controller
+func GetRollback(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

@@ -140,10 +140,14 @@ func main() {
 	r.GET("/api/v1/cluster/:cn", controller.Cluster)
 	r.GET("/api/v1/cluster/:cn/namespace", controller.Namespaces)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns", controller.Namespace)
-	r.GET("/api/v1/cluster/:cn/namespace/:ns/app", controller.Apps)
-	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id", controller.App)
-	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.AppDeploy)
-	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.AppRollback)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app", controller.Applications)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id", controller.Application)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.Deployments)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", controller.CreateDeployment)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment/:dId", controller.GetDeployment)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.Rollbacks)
+	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.CreateRollback)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rId", controller.GetRollback)
 
 	var runerr error
 

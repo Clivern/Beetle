@@ -10,7 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Applications controller
-func Applications(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
+// CreateDeployment controller
+func CreateDeployment(c *gin.Context) {
+	c.Status(http.StatusOK)
+}
+
+// GetDeployment controller
+func GetDeployment(c *gin.Context) {
+	c.Status(http.StatusOK)
 }

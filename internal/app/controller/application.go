@@ -10,17 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// App controller
-func App(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
-}
-
-// AppDeploy controller
-func AppDeploy(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{})
-}
-
-// AppRollback controller
-func AppRollback(c *gin.Context) {
+// Application controller
+func Application(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
