@@ -88,18 +88,38 @@ app:
             # MySQL Username
             username: ${BEETLE_DATABASE_MYSQL_USERNAME:-root}
             # MySQL Password
-            password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-root}
+            password: ${BEETLE_DATABASE_MYSQL_PASSWORD:- }
+
+    # Supported Notifications Webhooks
+    webhooks:
+        -
+            name: http_service
+            type: http
+            url: http://example.com/api/listen
+            method: post
+            headers:
+                - X-AUTH-TOKEN=1234
+            events:
+                - deployment
+                - rollback
 
     # Kubernetes Clusters
     clusters:
         -
+            # kubernetes cluster name
             name: ${BEETLE_DEFAULT_CLUSTER_NAME:-default}
+
+            # kubernetes cluster kubctl config
             kubeconfig: ${BEETLE_DEFAULT_CLUSTER_CONFIG:-/app/config/default-kubctl.yaml}
+
+            # Enabled Notifications Webhooks
+            notify:
+                - http_service
 
 # Log configs
 log:
     # Log level, it can be debug, info, warn, error, panic, fatal
-    level: ${BEETLE_LOG_LEVEL:-warn}
+    level: ${BEETLE_LOG_LEVEL:-info}
     # output can be stdout or abs path to log file /var/logs/beetle.log
     output: ${BEETLE_LOG_OUTPUT:-stdout}
     # Format can be json

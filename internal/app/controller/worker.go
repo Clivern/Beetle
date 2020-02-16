@@ -9,6 +9,7 @@ import (
 
 	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
+	"github.com/clivern/beetle/internal/app/util"
 
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -33,7 +34,7 @@ func Worker(id int, messages <-chan string) {
 	logger.Info(fmt.Sprintf(
 		`Worker [%d] started`,
 		id,
-	), zap.String("CorrelationId", ""))
+	), zap.String("CorrelationId", util.GenerateUUID4()))
 
 	for message := range messages {
 		ok, err = messageObj.LoadFromJSON([]byte(message))
