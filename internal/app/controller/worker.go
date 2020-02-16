@@ -7,6 +7,7 @@ package controller
 import (
 	"fmt"
 
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/spf13/viper"
@@ -15,6 +16,10 @@ import (
 
 // Worker controller
 func Worker(id int, messages <-chan string) {
+	var ok bool
+	var err error
+	messageObj := model.Message{}
+
 	logger, _ := module.NewLogger(
 		viper.GetString("log.level"),
 		viper.GetString("log.format"),
@@ -31,10 +36,21 @@ func Worker(id int, messages <-chan string) {
 	), zap.String("CorrelationId", ""))
 
 	for message := range messages {
+		ok, err = messageObj.LoadFromJSON([]byte(message))
+
+		if !ok || err != nil {
+			logger.Warn(fmt.Sprintf(
+				`Worker [%d] received invalid message: %s`,
+				id,
+				message,
+			), zap.String("CorrelationId", messageObj.UUID))
+			continue
+		}
+
 		logger.Info(fmt.Sprintf(
-			`Worker [%d] Received: %s`,
+			`Worker [%d] received: %s`,
 			id,
-			message,
-		), zap.String("CorrelationId", ""))
+			messageObj.Payload,
+		), zap.String("CorrelationId", messageObj.UUID))
 	}
 }

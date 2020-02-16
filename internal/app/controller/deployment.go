@@ -7,12 +7,20 @@ package controller
 import (
 	"net/http"
 
+	"github.com/clivern/beetle/internal/app/model"
+
 	"github.com/gin-gonic/gin"
 )
 
 // CreateDeployment controller
 func CreateDeployment(c *gin.Context, messages chan<- string) {
-	messages <- c.Request.Header.Get("X-Correlation-ID")
+	messageObj := model.Message{
+		UUID: c.Request.Header.Get("X-Correlation-ID"),
+	}
+
+	message, _ := messageObj.ConvertToJSON()
+
+	messages <- message
 	c.Status(http.StatusOK)
 }
 
