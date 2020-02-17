@@ -17,6 +17,7 @@ type Job struct {
 	Status    string    `json:"status"`
 	Type      string    `json:"type"`
 	Result    string    `json:"result"`
+	Retry     int       `json:"retry"`
 	RunAt     time.Time `json:"run_at"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
