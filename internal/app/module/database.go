@@ -6,7 +6,8 @@ package module
 
 import (
 	"database/sql"
-	"fmt"
+
+	"github.com/clivern/beetle/internal/app/model"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -16,29 +17,8 @@ type Database struct {
 	Connection *sql.DB
 }
 
-// DSN struct
-type DSN struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Hostname string `json:"hostname"`
-	Port     int    `json:"port"`
-	Database string `json:"database"`
-}
-
-// ToString gets the dsn string
-func (dsn *DSN) ToString() string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s",
-		dsn.Username,
-		dsn.Password,
-		dsn.Hostname,
-		dsn.Port,
-		dsn.Database,
-	)
-}
-
 // Connect connects to a MySQL database
-func (db *Database) Connect(dsn DSN) (bool, error) {
+func (db *Database) Connect(dsn model.DSN) (bool, error) {
 	var err error
 
 	db.Connection, err = sql.Open("mysql", dsn.ToString())
@@ -48,6 +28,46 @@ func (db *Database) Connect(dsn DSN) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// CreateJob creates a new job
+func (db *Database) CreateJob(_ model.Job) (model.Job, error) {
+	return model.Job{}, nil
+}
+
+// GetJobByID gets a job by id
+func (db *Database) GetJobByID(_ int) (model.Job, error) {
+	return model.Job{}, nil
+}
+
+// GetJobByUUID gets a job by id
+func (db *Database) GetJobByUUID(_ string) (model.Job, error) {
+	return model.Job{}, nil
+}
+
+// GetJobs get a list of jobs
+func (db *Database) GetJobs(_ int, _ int) ([]model.Job, error) {
+	return []model.Job{}, nil
+}
+
+// DeleteJob deletes a job by id
+func (db *Database) DeleteJob(_ int) (bool, error) {
+	return true, nil
+}
+
+// UpdateJobByID updates a job by ID
+func (db *Database) UpdateJobByID(_ model.Job) (bool, error) {
+	return true, nil
+}
+
+// UpdateJobByUUID updates a job by UUID
+func (db *Database) UpdateJobByUUID(_ model.Job) (bool, error) {
+	return true, nil
+}
+
+// CreateMigration creates a new migration
+func (db *Database) CreateMigration(_ model.Migration) (model.Migration, error) {
+	return model.Migration{}, nil
 }
 
 // Close closes MySQL database connection
