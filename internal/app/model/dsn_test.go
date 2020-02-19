@@ -12,14 +12,23 @@ import (
 
 // TestDsnToString test cases
 func TestDsnToString(t *testing.T) {
-	t.Run("TestDsnToString", func(t *testing.T) {
+	t.Run("TestDsnToStringForMySQL", func(t *testing.T) {
 		dsn := DSN{
+			Driver:   "mysql",
 			Username: "root",
 			Password: "root",
 			Hostname: "127.0.0.1",
 			Port:     3306,
-			Database: "beetle",
+			Name:     "beetle",
 		}
 		pkg.Expect(t, "root:root@tcp(127.0.0.1:3306)/beetle", dsn.ToString())
+	})
+
+	t.Run("TestDsnToStringForSQLLite", func(t *testing.T) {
+		dsn := DSN{
+			Driver: "sqlite3",
+			Name:   "/path/to/beetle.db",
+		}
+		pkg.Expect(t, "/path/to/beetle.db", dsn.ToString())
 	})
 }

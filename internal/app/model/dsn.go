@@ -11,23 +11,29 @@ import (
 
 // DSN struct
 type DSN struct {
+	Driver   string `json:"driver"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 	Hostname string `json:"hostname"`
 	Port     int    `json:"port"`
-	Database string `json:"database"`
+	Name     string `json:"name"`
 }
 
 // ToString gets the dsn string
 func (d *DSN) ToString() string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s",
-		d.Username,
-		d.Password,
-		d.Hostname,
-		d.Port,
-		d.Database,
-	)
+	if d.Driver == "mysql" {
+		return fmt.Sprintf(
+			"%s:%s@tcp(%s:%d)/%s",
+			d.Username,
+			d.Password,
+			d.Hostname,
+			d.Port,
+			d.Name,
+		)
+	}
+
+	// sqlite3 by default
+	return d.Name
 }
 
 // LoadFromJSON update object from json

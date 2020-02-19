@@ -17,6 +17,7 @@ import (
 
 	"github.com/clivern/beetle/internal/app/controller"
 	"github.com/clivern/beetle/internal/app/middleware"
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/drone/envsubst"
@@ -125,6 +126,25 @@ func main() {
 		gin.DisableConsoleColor()
 	}
 
+	// Init DB Connection
+	db := module.Database{}
+	err = db.Connect(model.DSN{
+		Driver:   viper.GetString("app.database.driver"),
+		Username: viper.GetString("app.database.username"),
+		Password: viper.GetString("app.database.password"),
+		Hostname: viper.GetString("app.database.host"),
+		Port:     viper.GetInt("app.database.port"),
+		Name:     viper.GetString("app.database.name"),
+	})
+
+	if err != nil {
+		panic(err.Error())
+	}
+	// Migrate Database
+	db.Migrate()
+
+	defer db.Close()
+
 	messages := make(chan string, viper.GetInt("app.broker.native.capacity"))
 
 	r := gin.Default()
@@ -148,12 +168,12 @@ func main() {
 	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", func(c *gin.Context) {
 		controller.CreateDeployment(c, messages)
 	})
-	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment/:dId", controller.GetDeployment)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment/:deploy_id", controller.GetDeployment)
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", controller.Rollbacks)
 	r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", func(c *gin.Context) {
 		controller.CreateRollback(c, messages)
 	})
-	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rId", controller.GetRollback)
+	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rollback_id", controller.GetRollback)
 	r.GET("/api/v1/job", controller.Jobs)
 	r.GET("/api/v1/job/:id", controller.Job)
 

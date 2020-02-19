@@ -5,29 +5,35 @@
 package module
 
 import (
-	"database/sql"
-
+	"github.com/clivern/beetle/internal/app/migration"
 	"github.com/clivern/beetle/internal/app/model"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 // Database struct
 type Database struct {
-	Connection *sql.DB
+	Connection *gorm.DB
 }
 
 // Connect connects to a MySQL database
-func (db *Database) Connect(dsn model.DSN) (bool, error) {
+func (db *Database) Connect(dsn model.DSN) error {
 	var err error
 
-	db.Connection, err = sql.Open("mysql", dsn.ToString())
+	db.Connection, err = gorm.Open(dsn.Driver, dsn.ToString())
 
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	return true, nil
+	return nil
+}
+
+// Migrate migrates the database
+func (db *Database) Migrate() {
+	db.Connection.AutoMigrate(&migration.Job{})
 }
 
 // CreateJob creates a new job
@@ -63,11 +69,6 @@ func (db *Database) UpdateJobByID(_ model.Job) (bool, error) {
 // UpdateJobByUUID updates a job by UUID
 func (db *Database) UpdateJobByUUID(_ model.Job) (bool, error) {
 	return true, nil
-}
-
-// CreateMigration creates a new migration
-func (db *Database) CreateMigration(_ model.Migration) (model.Migration, error) {
-	return model.Migration{}, nil
 }
 
 // Close closes MySQL database connection

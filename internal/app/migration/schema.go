@@ -4,27 +4,40 @@
 
 package migration
 
-var (
-	// MigrationTableStatement mysql statement to create migrations table
-	MigrationTableStatement = `DROP TABLE IF EXISTS migrations
-	CREATE TABLE IF NOT EXISTS migrations (
-	  id int(11) NOT NULL AUTO_INCREMENT,
-	  file varchar(150) NOT NULL,
-	  run_at datetime(6) NOT NULL,
-	  PRIMARY KEY (id)
-	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1`
+import (
+	"encoding/json"
+	"time"
 
-	// JobTableStatement mysql statement to create jobs table
-	JobTableStatement = `DROP TABLE IF EXISTS jobs
-	CREATE TABLE IF NOT EXISTS jobs (
-	  id int(11) NOT NULL AUTO_INCREMENT,
-	  run_at datetime(6) NOT NULL,
-	  PRIMARY KEY (id)
-	) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1`
-
-	// DatabaseSchema database schema
-	DatabaseSchema = map[string]string{
-		"create_migrations_table": MigrationTableStatement,
-		"create_jobs_table":       JobTableStatement,
-	}
+	"github.com/jinzhu/gorm"
 )
+
+// Job struct
+type Job struct {
+	gorm.Model
+
+	UUID    string    `json:"uuid"`
+	Payload string    `json:"payload"`
+	Status  string    `json:"status"`
+	Type    string    `json:"type"`
+	Result  string    `json:"result"`
+	Retry   int       `json:"retry"`
+	RunAt   time.Time `json:"run_at"`
+}
+
+// LoadFromJSON update object from json
+func (j *Job) LoadFromJSON(data []byte) (bool, error) {
+	err := json.Unmarshal(data, &j)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ConvertToJSON convert object to json
+func (j *Job) ConvertToJSON() (string, error) {
+	data, err := json.Marshal(&j)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}

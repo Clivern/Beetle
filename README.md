@@ -75,20 +75,18 @@ app:
 
     # Application Database
     database:
-        # Database driver (mysql)
-        driver: ${BEETLE_DATABASE_DRIVER:-mysql}
-        # MySQL DB Configs
-        mysql:
-            # MySQL Hostname
-            host: ${BEETLE_DATABASE_MYSQL_HOST:-localhost}
-            # MySQL Port
-            port: ${BEETLE_DATABASE_MYSQL_PORT:-3306}
-            # MySQL Database
-            database: ${BEETLE_DATABASE_MYSQL_DATABASE:-beetle}
-            # MySQL Username
-            username: ${BEETLE_DATABASE_MYSQL_USERNAME:-root}
-            # MySQL Password
-            password: ${BEETLE_DATABASE_MYSQL_PASSWORD:- }
+        # Database driver (sqlite3, mysql)
+        driver: ${BEETLE_DATABASE_DRIVER:-sqlite3}
+        # Database Host
+        host: ${BEETLE_DATABASE_MYSQL_HOST:-localhost}
+        # Database Port
+        port: ${BEETLE_DATABASE_MYSQL_PORT:-3306}
+        # Database Name
+        name: ${BEETLE_DATABASE_MYSQL_DATABASE:-beetle.db}
+        # Database Username
+        username: ${BEETLE_DATABASE_MYSQL_USERNAME:-root}
+        # Database Password
+        password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-root}
 
     # Supported Notifications Webhooks
     webhooks:
