@@ -21,7 +21,6 @@ type Database struct {
 // Connect connects to a MySQL database
 func (db *Database) Connect(dsn model.DSN) error {
 	var err error
-
 	db.Connection, err = gorm.Open(dsn.Driver, dsn.ToString())
 
 	if err != nil {
@@ -55,31 +54,21 @@ func (db *Database) HasTable(table string) bool {
 // CreateJob creates a new job
 func (db *Database) CreateJob(job *model.Job) *model.Job {
 	db.Connection.Create(job)
-
 	return job
 }
 
 // GetJobByID gets a job by id
 func (db *Database) GetJobByID(id int) model.Job {
 	job := model.Job{}
-
 	db.Connection.Where("id = ?", id).First(&job)
-
 	return job
 }
 
 // GetJobByUUID gets a job by uuid
 func (db *Database) GetJobByUUID(uuid string) model.Job {
 	job := model.Job{}
-
 	db.Connection.Where("uuid = ?", uuid).First(&job)
-
 	return job
-}
-
-// GetJobs get a list of jobs
-func (db *Database) GetJobs(_ int, _ int) ([]model.Job, error) {
-	return []model.Job{}, nil
 }
 
 // DeleteJobByID deletes a job by id
@@ -93,13 +82,8 @@ func (db *Database) DeleteJobByUUID(uuid string) {
 }
 
 // UpdateJobByID updates a job by ID
-func (db *Database) UpdateJobByID(_ model.Job) (bool, error) {
-	return true, nil
-}
-
-// UpdateJobByUUID updates a job by UUID
-func (db *Database) UpdateJobByUUID(_ model.Job) (bool, error) {
-	return true, nil
+func (db *Database) UpdateJobByID(job *model.Job) {
+	db.Connection.Save(&job)
 }
 
 // Close closes MySQL database connection
