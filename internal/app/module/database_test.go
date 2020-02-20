@@ -100,5 +100,12 @@ func TestDatabase(t *testing.T) {
 
 		pkg.Expect(t, job1.ID, job2.ID)
 		pkg.Expect(t, job1.UUID, job2.UUID)
+
+		job1.UUID = "dddde755-5f99-4e51-a517-77878986a07n"
+		db.UpdateJobByID(&job1)
+
+		job3 := db.GetJobByID(1)
+		pkg.Expect(t, "dddde755-5f99-4e51-a517-77878986a07n", job3.UUID)
+		pkg.Expect(t, job1.UUID, job3.UUID)
 	})
 }
