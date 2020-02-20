@@ -109,5 +109,8 @@ func TestDatabase(t *testing.T) {
 		pkg.Expect(t, job1.UUID, job3.UUID)
 
 		pkg.Expect(t, 0, db.GetJobByUUID("dddde755-5f99-4e51-a517-77878986a07ek").ID)
+
+		pkg.Expect(t, false, db.JobExistByUUID("dddde755-5f99-4e51-a517-77878986a07eo"))
+		pkg.Expect(t, false, db.JobExistByID(20))
 	})
 }

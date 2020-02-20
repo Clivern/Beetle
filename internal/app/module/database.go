@@ -57,17 +57,39 @@ func (db *Database) CreateJob(job *model.Job) *model.Job {
 	return job
 }
 
+// JobExistByID check if job exists
+func (db *Database) JobExistByID(id int) bool {
+	job := model.Job{}
+
+	db.Connection.Where("id = ?", id).First(&job)
+
+	return job.ID > 0
+}
+
 // GetJobByID gets a job by id
 func (db *Database) GetJobByID(id int) model.Job {
 	job := model.Job{}
+
 	db.Connection.Where("id = ?", id).First(&job)
+
 	return job
+}
+
+// JobExistByUUID check if job exists
+func (db *Database) JobExistByUUID(uuid string) bool {
+	job := model.Job{}
+
+	db.Connection.Where("uuid = ?", uuid).First(&job)
+
+	return job.ID > 0
 }
 
 // GetJobByUUID gets a job by uuid
 func (db *Database) GetJobByUUID(uuid string) model.Job {
 	job := model.Job{}
+
 	db.Connection.Where("uuid = ?", uuid).First(&job)
+
 	return job
 }
 

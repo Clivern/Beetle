@@ -59,7 +59,7 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 
 	uuid := util.GenerateUUID4()
 
-	for db.GetJobByUUID(uuid).ID != 0 {
+	for db.JobExistByUUID(uuid) {
 		uuid = util.GenerateUUID4()
 	}
 
