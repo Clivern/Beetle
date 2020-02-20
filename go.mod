@@ -8,7 +8,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/viper v1.6.2
-	go.uber.org/zap v1.13.0
+	go.uber.org/zap v1.14.0
 	k8s.io/apimachinery v0.17.3
 	k8s.io/client-go v0.17.3
 )
