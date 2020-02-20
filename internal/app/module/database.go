@@ -32,23 +32,49 @@ func (db *Database) Connect(dsn model.DSN) error {
 }
 
 // Migrate migrates the database
-func (db *Database) Migrate() {
+func (db *Database) Migrate() bool {
+	status := true
 	db.Connection.AutoMigrate(&migration.Job{})
+	status = status && db.Connection.HasTable(&migration.Job{})
+	return status
+}
+
+// Rollback drop tables
+func (db *Database) Rollback() bool {
+	status := true
+	db.Connection.DropTable(&migration.Job{})
+	status = status && !db.Connection.HasTable(&migration.Job{})
+	return status
+}
+
+// HasTable checks if table exists
+func (db *Database) HasTable(table string) bool {
+	return db.Connection.HasTable(table)
 }
 
 // CreateJob creates a new job
-func (db *Database) CreateJob(_ model.Job) (model.Job, error) {
-	return model.Job{}, nil
+func (db *Database) CreateJob(job *model.Job) *model.Job {
+	db.Connection.Create(job)
+
+	return job
 }
 
 // GetJobByID gets a job by id
-func (db *Database) GetJobByID(_ int) (model.Job, error) {
-	return model.Job{}, nil
+func (db *Database) GetJobByID(id int) model.Job {
+	job := model.Job{}
+
+	db.Connection.Where("id = ?", id).First(&job)
+
+	return job
 }
 
-// GetJobByUUID gets a job by id
-func (db *Database) GetJobByUUID(_ string) (model.Job, error) {
-	return model.Job{}, nil
+// GetJobByUUID gets a job by uuid
+func (db *Database) GetJobByUUID(uuid string) model.Job {
+	job := model.Job{}
+
+	db.Connection.Where("uuid = ?", uuid).First(&job)
+
+	return job
 }
 
 // GetJobs get a list of jobs
@@ -56,9 +82,14 @@ func (db *Database) GetJobs(_ int, _ int) ([]model.Job, error) {
 	return []model.Job{}, nil
 }
 
-// DeleteJob deletes a job by id
-func (db *Database) DeleteJob(_ int) (bool, error) {
-	return true, nil
+// DeleteJobByID deletes a job by id
+func (db *Database) DeleteJobByID(id int) {
+	db.Connection.Where("id=?", id).Delete(&migration.Job{})
+}
+
+// DeleteJobByUUID deletes a job by uuid
+func (db *Database) DeleteJobByUUID(uuid string) {
+	db.Connection.Where("uuid=?", uuid).Delete(&migration.Job{})
 }
 
 // UpdateJobByID updates a job by ID

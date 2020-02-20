@@ -12,16 +12,62 @@ app:
         pemPath: ${BEETLE_API_TLS_PEMPATH:-cert/server.pem}
         keyPath: ${BEETLE_API_TLS_KEYPATH:-cert/server.key}
 
+    # Message Broker Configs
+    broker:
+        # Broker driver (native)
+        driver: ${BEETLE_BROKER_DRIVER:-native}
+        # Native driver configs
+        native:
+            # Queue max capacity
+            capacity: ${BEETLE_BROKER_NATIVE_CAPACITY:-5000}
+            # Number of concurrent workers
+            workers: ${BEETLE_BROKER_NATIVE_WORKERS:-4}
+
+    # Application Database
+    database:
+        # Database driver (sqlite3, mysql)
+        driver: ${BEETLE_DATABASE_DRIVER:-sqlite3}
+        # Hostname
+        host: ${BEETLE_DATABASE_MYSQL_HOST:-localhost}
+        # Port
+        port: ${BEETLE_DATABASE_MYSQL_PORT:-3306}
+        # Database
+        name: ${BEETLE_DATABASE_MYSQL_DATABASE:-/tmp/beetle.db}
+        # Username
+        username: ${BEETLE_DATABASE_MYSQL_USERNAME:-root}
+        # Password
+        password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-root}
+
+    # Supported Notifications Webhooks
+    webhooks:
+        -
+            name: http_service
+            type: http
+            url: http://example.com/api/listen
+            method: post
+            headers:
+                - X-AUTH-TOKEN=1234
+            events:
+                - deployment
+                - rollback
+
     # Kubernetes Clusters
     clusters:
         -
+            # kubernetes cluster name
             name: ${BEETLE_DEFAULT_CLUSTER_NAME:-default}
+
+            # kubernetes cluster kubctl config
             kubeconfig: ${BEETLE_DEFAULT_CLUSTER_CONFIG:-/app/config/default-kubctl.yaml}
+
+            # Enabled Notifications Webhooks
+            notify:
+                - http_service
 
 # Log configs
 log:
     # Log level, it can be debug, info, warn, error, panic, fatal
-    level: ${BEETLE_LOG_LEVEL:-warn}
+    level: ${BEETLE_LOG_LEVEL:-info}
     # output can be stdout or abs path to log file /var/logs/beetle.log
     output: ${BEETLE_LOG_OUTPUT:-stdout}
     # Format can be json

@@ -140,8 +140,13 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+
 	// Migrate Database
-	db.Migrate()
+	success := db.Migrate()
+
+	if !success {
+		panic("Error! Unable to migrate database tables.")
+	}
 
 	defer db.Close()
 
