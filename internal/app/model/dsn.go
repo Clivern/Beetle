@@ -23,7 +23,7 @@ type DSN struct {
 func (d *DSN) ToString() string {
 	if d.Driver == "mysql" {
 		return fmt.Sprintf(
-			"%s:%s@tcp(%s:%d)/%s",
+			"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True",
 			d.Username,
 			d.Password,
 			d.Hostname,

@@ -107,5 +107,7 @@ func TestDatabase(t *testing.T) {
 		job3 := db.GetJobByID(1)
 		pkg.Expect(t, "dddde755-5f99-4e51-a517-77878986a07n", job3.UUID)
 		pkg.Expect(t, job1.UUID, job3.UUID)
+
+		pkg.Expect(t, 0, db.GetJobByUUID("dddde755-5f99-4e51-a517-77878986a07ek").ID)
 	})
 }

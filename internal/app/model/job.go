@@ -9,6 +9,17 @@ import (
 	"time"
 )
 
+var (
+	// JobPending pending job type
+	JobPending = "PENDING"
+
+	// JobFailed failed job type
+	JobFailed = "FAILED"
+
+	// JobSuccess success job type
+	JobSuccess = "SUCCESS"
+)
+
 // Job struct
 type Job struct {
 	ID        int       `json:"id"`

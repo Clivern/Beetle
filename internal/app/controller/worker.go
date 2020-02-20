@@ -49,9 +49,9 @@ func Worker(id int, messages <-chan string) {
 		}
 
 		logger.Info(fmt.Sprintf(
-			`Worker [%d] received: %s`,
+			`Worker [%d] received: %d`,
 			id,
-			messageObj.Payload,
+			messageObj.Job,
 		), zap.String("CorrelationId", messageObj.UUID))
 	}
 }

@@ -21,7 +21,7 @@ func TestDsnToString(t *testing.T) {
 			Port:     3306,
 			Name:     "beetle",
 		}
-		pkg.Expect(t, "root:root@tcp(127.0.0.1:3306)/beetle", dsn.ToString())
+		pkg.Expect(t, "root:root@tcp(127.0.0.1:3306)/beetle?charset=utf8&parseTime=True", dsn.ToString())
 	})
 
 	t.Run("TestDsnToStringForSQLLite", func(t *testing.T) {

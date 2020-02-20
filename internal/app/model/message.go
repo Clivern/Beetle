@@ -10,8 +10,8 @@ import (
 
 // Message struct
 type Message struct {
-	UUID    string `json:"uuid"`
-	Payload string `json:"payload"`
+	UUID string `json:"uuid"`
+	Job  int    `json:"job"`
 }
 
 // LoadFromJSON update object from json
