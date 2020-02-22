@@ -1,5 +1,7 @@
 language: go
 
+sudo: true
+
 # needed for the nfpm pipe
 addons:
   apt:
@@ -30,7 +32,7 @@ env:
 install: true
 
 before_script:
-  - apt-get install nodejs
+  - sudo apt-get install nodejs
   - make ng_install
 
 # Fix this by renaming the directory before testing.
