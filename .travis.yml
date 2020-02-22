@@ -29,6 +29,10 @@ env:
 
 install: true
 
+before_script:
+  - apt-get install nodejs
+  - make ng_install
+
 # Fix this by renaming the directory before testing.
 # https://github.com/travis-ci/travis-ci/issues/4573
 script:
