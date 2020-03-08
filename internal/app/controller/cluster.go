@@ -27,8 +27,8 @@ func Cluster(c *gin.Context) {
 	clusters, err := kubernetes.GetClusters()
 
 	if err != nil {
-		logger.Info(fmt.Sprintf(
-			`Error! %s`,
+		logger.Error(fmt.Sprintf(
+			`Error: %s`,
 			err.Error(),
 		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 
@@ -46,8 +46,8 @@ func Cluster(c *gin.Context) {
 		status, err = cluster.Ping()
 
 		if err != nil {
-			logger.Info(fmt.Sprintf(
-				`Error! %s`,
+			logger.Error(fmt.Sprintf(
+				`Error: %s`,
 				err.Error(),
 			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 		}

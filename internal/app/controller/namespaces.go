@@ -27,8 +27,8 @@ func Namespaces(c *gin.Context) {
 	clusters, err := kubernetes.GetClusters()
 
 	if err != nil {
-		logger.Info(fmt.Sprintf(
-			`Error! %s`,
+		logger.Error(fmt.Sprintf(
+			`Error: %s`,
 			err.Error(),
 		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 
@@ -44,8 +44,8 @@ func Namespaces(c *gin.Context) {
 		result, err = cluster.GetNamespaces()
 
 		if err != nil {
-			logger.Info(fmt.Sprintf(
-				`Error! %s`,
+			logger.Error(fmt.Sprintf(
+				`Error: %s`,
 				err.Error(),
 			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 		}

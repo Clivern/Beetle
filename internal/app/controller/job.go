@@ -5,30 +5,35 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 // Job controller
 func Job(c *gin.Context) {
 	id := c.Param("id")
 
-	// Init DB Connection
+	logger, _ := module.NewLogger()
+
+	defer logger.Sync()
+
 	db := module.Database{}
+
 	err := db.AutoConnect()
 
 	if err != nil {
-		panic(err.Error())
-	}
+		logger.Error(fmt.Sprintf(
+			`Error: %s`,
+			err.Error(),
+		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 
-	// Migrate Database
-	success := db.Migrate()
-
-	if !success {
-		panic("Error! Unable to migrate database tables.")
+		c.Status(http.StatusInternalServerError)
+		return
 	}
 
 	defer db.Close()
