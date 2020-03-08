@@ -77,6 +77,7 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 
 	message, _ := messageObj.ConvertToJSON()
 
+	// Send the job to workers
 	messages <- message
 
 	c.JSON(http.StatusAccepted, gin.H{

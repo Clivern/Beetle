@@ -53,5 +53,7 @@ func Worker(id int, messages <-chan string) {
 			id,
 			messageObj.Job,
 		), zap.String("CorrelationId", messageObj.UUID))
+
+		// @TODO Process the message
 	}
 }
