@@ -14,7 +14,6 @@ import (
 	"github.com/clivern/beetle/internal/app/util"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -25,25 +24,12 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 	// ...
 
 	// Then create async job
-	logger, _ := module.NewLogger(
-		viper.GetString("log.level"),
-		viper.GetString("log.format"),
-		[]string{viper.GetString("log.output")},
-	)
+	logger, _ := module.NewLogger()
 
-	defer func() {
-		_ = logger.Sync()
-	}()
+	defer logger.Sync()
 
 	db := module.Database{}
-	err := db.Connect(model.DSN{
-		Driver:   viper.GetString("app.database.driver"),
-		Username: viper.GetString("app.database.username"),
-		Password: viper.GetString("app.database.password"),
-		Hostname: viper.GetString("app.database.host"),
-		Port:     viper.GetInt("app.database.port"),
-		Name:     viper.GetString("app.database.name"),
-	})
+	err := db.AutoConnect()
 
 	if err != nil {
 		logger.Error(fmt.Sprintf(

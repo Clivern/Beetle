@@ -11,7 +11,6 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 	"github.com/clivern/beetle/internal/app/util"
 
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -21,15 +20,9 @@ func Worker(id int, messages <-chan string) {
 	var err error
 	messageObj := model.Message{}
 
-	logger, _ := module.NewLogger(
-		viper.GetString("log.level"),
-		viper.GetString("log.format"),
-		[]string{viper.GetString("log.output")},
-	)
+	logger, _ := module.NewLogger()
 
-	defer func() {
-		_ = logger.Sync()
-	}()
+	defer logger.Sync()
 
 	logger.Info(fmt.Sprintf(
 		`Worker [%d] started`,

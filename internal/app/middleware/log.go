@@ -12,7 +12,6 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -29,11 +28,7 @@ func Logger() gin.HandlerFunc {
 
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
-		logger, _ := module.NewLogger(
-			viper.GetString("log.level"),
-			viper.GetString("log.format"),
-			[]string{viper.GetString("log.output")},
-		)
+		logger, _ := module.NewLogger()
 
 		defer func() {
 			_ = logger.Sync()

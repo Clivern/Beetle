@@ -9,6 +9,8 @@ import (
 	"github.com/clivern/beetle/internal/app/model"
 
 	"github.com/jinzhu/gorm"
+	"github.com/spf13/viper"
+
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -21,6 +23,28 @@ type Database struct {
 // Connect connects to a MySQL database
 func (db *Database) Connect(dsn model.DSN) error {
 	var err error
+	db.Connection, err = gorm.Open(dsn.Driver, dsn.ToString())
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// AutoConnect connects to a MySQL database using loaded configs
+func (db *Database) AutoConnect() error {
+	var err error
+
+	dsn := model.DSN{
+		Driver:   viper.GetString("app.database.driver"),
+		Username: viper.GetString("app.database.username"),
+		Password: viper.GetString("app.database.password"),
+		Hostname: viper.GetString("app.database.host"),
+		Port:     viper.GetInt("app.database.port"),
+		Name:     viper.GetString("app.database.name"),
+	}
+
 	db.Connection, err = gorm.Open(dsn.Driver, dsn.ToString())
 
 	if err != nil {

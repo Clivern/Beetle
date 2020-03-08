@@ -12,7 +12,6 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -23,15 +22,9 @@ func Namespace(c *gin.Context) {
 
 	result := kubernetes.NamespaceModel{}
 
-	logger, _ := module.NewLogger(
-		viper.GetString("log.level"),
-		viper.GetString("log.format"),
-		[]string{viper.GetString("log.output")},
-	)
+	logger, _ := module.NewLogger()
 
-	defer func() {
-		_ = logger.Sync()
-	}()
+	defer logger.Sync()
 
 	clusters, err := kubernetes.GetClusters()
 

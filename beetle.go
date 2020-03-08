@@ -17,7 +17,6 @@ import (
 
 	"github.com/clivern/beetle/internal/app/controller"
 	"github.com/clivern/beetle/internal/app/middleware"
-	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/drone/envsubst"
@@ -128,14 +127,7 @@ func main() {
 
 	// Init DB Connection
 	db := module.Database{}
-	err = db.Connect(model.DSN{
-		Driver:   viper.GetString("app.database.driver"),
-		Username: viper.GetString("app.database.username"),
-		Password: viper.GetString("app.database.password"),
-		Hostname: viper.GetString("app.database.host"),
-		Port:     viper.GetInt("app.database.port"),
-		Name:     viper.GetString("app.database.name"),
-	})
+	err = db.AutoConnect()
 
 	if err != nil {
 		panic(err.Error())

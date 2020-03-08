@@ -8,18 +8,20 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/spf13/viper"
+
 	"go.uber.org/zap"
 )
 
 // NewLogger returns a logger instance
-func NewLogger(level, encoding string, outputPaths []string) (*zap.Logger, error) {
+func NewLogger() (*zap.Logger, error) {
 	cfg := zap.NewProductionConfig()
 
 	rawJSON := []byte(fmt.Sprintf(`{
       		"level": "%s",
       		"encoding": "%s",
       		"outputPaths": []
-    	}`, level, encoding))
+    	}`, viper.GetString("log.level"), viper.GetString("log.format")))
 
 	err := json.Unmarshal(rawJSON, &cfg)
 
@@ -27,8 +29,8 @@ func NewLogger(level, encoding string, outputPaths []string) (*zap.Logger, error
 		panic(err)
 	}
 
-	cfg.Encoding = encoding
-	cfg.OutputPaths = outputPaths
+	cfg.Encoding = viper.GetString("log.format")
+	cfg.OutputPaths = []string{viper.GetString("log.output")}
 
 	logger, err := cfg.Build()
 
