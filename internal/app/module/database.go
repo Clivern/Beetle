@@ -119,12 +119,12 @@ func (db *Database) GetJobByUUID(uuid string) model.Job {
 
 // DeleteJobByID deletes a job by id
 func (db *Database) DeleteJobByID(id int) {
-	db.Connection.Where("id=?", id).Delete(&migration.Job{})
+	db.Connection.Unscoped().Where("id=?", id).Delete(&migration.Job{})
 }
 
 // DeleteJobByUUID deletes a job by uuid
 func (db *Database) DeleteJobByUUID(uuid string) {
-	db.Connection.Where("uuid=?", uuid).Delete(&migration.Job{})
+	db.Connection.Unscoped().Where("uuid=?", uuid).Delete(&migration.Job{})
 }
 
 // UpdateJobByID updates a job by ID

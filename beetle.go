@@ -172,7 +172,8 @@ func main() {
 	})
 	r.GET("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback/:rollback_id", controller.GetRollback)
 	r.GET("/api/v1/job", controller.Jobs)
-	r.GET("/api/v1/job/:uuid", controller.Job)
+	r.GET("/api/v1/job/:uuid", controller.GetJob)
+	r.DELETE("/api/v1/job/:uuid", controller.DeleteJob)
 
 	for i := 0; i < viper.GetInt("app.broker.native.workers"); i++ {
 		go controller.Worker(i+1, messages)
