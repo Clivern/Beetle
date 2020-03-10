@@ -18,6 +18,9 @@ import (
 func Worker(id int, messages <-chan string) {
 	var ok bool
 	var err error
+	var db module.Database
+	var job model.Job
+
 	messageObj := model.Message{}
 
 	logger, _ := module.NewLogger()
@@ -47,6 +50,42 @@ func Worker(id int, messages <-chan string) {
 			messageObj.Job,
 		), zap.String("CorrelationId", messageObj.UUID))
 
-		// @TODO Process the message
+		db = module.Database{}
+
+		err = db.AutoConnect()
+
+		if err != nil {
+			logger.Error(fmt.Sprintf(
+				`Worker [%d] unable to connect to database: %s`,
+				id,
+				err.Error(),
+			), zap.String("CorrelationId", messageObj.UUID))
+			continue
+		}
+
+		defer db.Close()
+
+		job = db.GetJobByID(messageObj.Job)
+
+		err = job.Run()
+
+		if err != nil {
+			logger.Error(fmt.Sprintf(
+				`Worker [%d] failure while executing async job [%d] [%s]: %s`,
+				id,
+				messageObj.Job,
+				job.UUID,
+				err.Error(),
+			), zap.String("CorrelationId", messageObj.UUID))
+		}
+
+		logger.Info(fmt.Sprintf(
+			`Worker [%d] processed async job [%d] [%s]`,
+			id,
+			messageObj.Job,
+			job.UUID,
+		), zap.String("CorrelationId", messageObj.UUID))
+
+		db.UpdateJobByID(&job)
 	}
 }
