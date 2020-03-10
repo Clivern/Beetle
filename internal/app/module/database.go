@@ -99,6 +99,15 @@ func (db *Database) GetJobByID(id int) model.Job {
 	return job
 }
 
+// GetJobs gets jobs
+func (db *Database) GetJobs() []model.Job {
+	jobs := []model.Job{}
+
+	db.Connection.Select("*").Find(&jobs)
+
+	return jobs
+}
+
 // JobExistByUUID check if job exists
 func (db *Database) JobExistByUUID(uuid string) bool {
 	job := model.Job{}
