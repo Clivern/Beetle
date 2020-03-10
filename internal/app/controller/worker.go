@@ -77,14 +77,14 @@ func Worker(id int, messages <-chan string) {
 				job.UUID,
 				err.Error(),
 			), zap.String("CorrelationId", messageObj.UUID))
+		} else {
+			logger.Info(fmt.Sprintf(
+				`Worker [%d] processed async job [%d] [%s]`,
+				id,
+				messageObj.Job,
+				job.UUID,
+			), zap.String("CorrelationId", messageObj.UUID))
 		}
-
-		logger.Info(fmt.Sprintf(
-			`Worker [%d] processed async job [%d] [%s]`,
-			id,
-			messageObj.Job,
-			job.UUID,
-		), zap.String("CorrelationId", messageObj.UUID))
 
 		db.UpdateJobByID(&job)
 	}
