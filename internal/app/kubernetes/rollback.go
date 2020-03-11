@@ -6,4 +6,14 @@ package kubernetes
 
 // Rollback struct
 type Rollback struct {
+	Cluster     string
+	Namespace   string
+	Application string
+	Current     string
+	Target      string
+}
+
+// Run runs the rollback process
+func (d *Rollback) Run() (bool, error) {
+	return true, nil
 }

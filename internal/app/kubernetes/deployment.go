@@ -6,4 +6,14 @@ package kubernetes
 
 // Deployment struct
 type Deployment struct {
+	Cluster     string
+	Namespace   string
+	Application string
+	Current     string
+	Target      string
+}
+
+// Run runs the deployment process
+func (d *Deployment) Run() (bool, error) {
+	return true, nil
 }
