@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strconv"
 
+	"github.com/clivern/beetle/internal/app/cmd"
 	"github.com/clivern/beetle/internal/app/controller"
 	"github.com/clivern/beetle/internal/app/middleware"
 	"github.com/clivern/beetle/internal/app/module"
@@ -47,10 +48,6 @@ func main() {
 				date,
 			),
 		)
-		return
-	}
-
-	if get == "health" {
 		return
 	}
 
@@ -110,6 +107,11 @@ func main() {
 			}
 			defer f.Close()
 		}
+	}
+
+	if get == "health" {
+		cmd.HealthCheck()
+		return
 	}
 
 	if viper.GetString("log.output") == "stdout" {
