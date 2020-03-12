@@ -52,7 +52,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	job := db.CreateJob(&model.Job{
 		UUID:   uuid,
 		Status: model.JobPending,
-		Type:   "deployment.create",
+		Type:   JobDeploymentCreate,
 		RunAt:  time.Now(),
 	})
 

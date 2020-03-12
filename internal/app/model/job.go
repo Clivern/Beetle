@@ -18,6 +18,12 @@ var (
 
 	// JobSuccess success job type
 	JobSuccess = "SUCCESS"
+
+	// JobDeploymentCreate deployment create
+	JobDeploymentCreate = "deployment.create"
+
+	// JobRollbackCreate rollback create
+	JobRollbackCreate = "rollback.create"
 )
 
 // Job struct

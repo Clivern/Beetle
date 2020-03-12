@@ -52,7 +52,7 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 	job := db.CreateJob(&model.Job{
 		UUID:   uuid,
 		Status: model.JobPending,
-		Type:   "rollback.create",
+		Type:   JobRollbackCreate,
 		RunAt:  time.Now(),
 	})
 
