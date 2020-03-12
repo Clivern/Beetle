@@ -52,7 +52,7 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 	job := db.CreateJob(&model.Job{
 		UUID:   uuid,
 		Status: model.JobPending,
-		Type:   JobRollbackCreate,
+		Type:   model.JobRollbackCreate,
 		RunAt:  time.Now(),
 	})
 
@@ -72,9 +72,4 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 		"status":    job.Status,
 		"createdAt": job.CreatedAt,
 	})
-}
-
-// GetRollback controller
-func GetRollback(c *gin.Context) {
-	c.Status(http.StatusOK)
 }

@@ -52,7 +52,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	job := db.CreateJob(&model.Job{
 		UUID:   uuid,
 		Status: model.JobPending,
-		Type:   JobDeploymentCreate,
+		Type:   model.JobDeploymentCreate,
 		RunAt:  time.Now(),
 	})
 
@@ -72,9 +72,4 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 		"status":    job.Status,
 		"createdAt": job.CreatedAt,
 	})
-}
-
-// GetDeployment controller
-func GetDeployment(c *gin.Context) {
-	c.Status(http.StatusOK)
 }
