@@ -20,7 +20,7 @@
     "@angular/platform-browser": "9.0.6",
     "@angular/platform-browser-dynamic": "9.0.6",
     "@angular/router": "9.0.6",
-    "@ng-bootstrap/ng-bootstrap": "6.0.0",
+    "@ng-bootstrap/ng-bootstrap": "6.0.2",
     "@types/color": "3.0.1",
     "angular2-chartjs": "0.5.1",
     "bootstrap": "4.4.1",
