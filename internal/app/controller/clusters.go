@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ import (
 
 // Clusters controller
 func Clusters(c *gin.Context) {
-	result := []kubernetes.ClusterModel{}
+	result := []model.Cluster{}
 
 	logger, _ := module.NewLogger()
 
@@ -47,7 +48,7 @@ func Clusters(c *gin.Context) {
 			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
 		}
 
-		result = append(result, kubernetes.ClusterModel{
+		result = append(result, model.Cluster{
 			Name:   cluster.Name,
 			Health: status,
 		})

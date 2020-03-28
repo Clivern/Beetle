@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/spf13/viper"
@@ -15,19 +16,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
-
-// ClusterModel struct
-type ClusterModel struct {
-	Name   string `json:"name"`
-	Health bool   `json:"health"`
-}
-
-// NamespaceModel struct
-type NamespaceModel struct {
-	Name   string `json:"name"`
-	UID    string `json:"uid"`
-	Status string `json:"status"`
-}
 
 // Clusters struct
 type Clusters struct {
@@ -87,8 +75,8 @@ func (c *Cluster) Ping() (bool, error) {
 }
 
 // GetNamespaces gets a list of cluster namespaces
-func (c *Cluster) GetNamespaces() ([]NamespaceModel, error) {
-	result := []NamespaceModel{}
+func (c *Cluster) GetNamespaces() ([]model.Namespace, error) {
+	result := []model.Namespace{}
 
 	fs := module.FileSystem{}
 
@@ -119,7 +107,7 @@ func (c *Cluster) GetNamespaces() ([]NamespaceModel, error) {
 	}
 
 	for _, namespace := range data.Items {
-		result = append(result, NamespaceModel{
+		result = append(result, model.Namespace{
 			Name:   namespace.ObjectMeta.Name,
 			UID:    string(namespace.ObjectMeta.UID),
 			Status: strings.ToLower(string(namespace.Status.Phase)),
@@ -130,8 +118,8 @@ func (c *Cluster) GetNamespaces() ([]NamespaceModel, error) {
 }
 
 // GetNamespace gets a namespace by name
-func (c *Cluster) GetNamespace(name string) (NamespaceModel, error) {
-	result := NamespaceModel{}
+func (c *Cluster) GetNamespace(name string) (model.Namespace, error) {
+	result := model.Namespace{}
 
 	fs := module.FileSystem{}
 
@@ -166,4 +154,14 @@ func (c *Cluster) GetNamespace(name string) (NamespaceModel, error) {
 	result.Status = strings.ToLower(string(namespace.Status.Phase))
 
 	return result, nil
+}
+
+// GetDeployments gets a list of deployments
+func (c *Cluster) GetDeployments() ([]model.Deployment, error) {
+	return []model.Deployment{}, nil
+}
+
+// GetDeployment gets a deployment by name
+func (c *Cluster) GetDeployment() (model.Deployment, error) {
+	return model.Deployment{}, nil
 }

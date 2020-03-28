@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,7 @@ import (
 // Namespaces controller
 func Namespaces(c *gin.Context) {
 	cn := c.Param("cn")
-	result := []kubernetes.NamespaceModel{}
+	result := []model.Namespace{}
 
 	logger, _ := module.NewLogger()
 
