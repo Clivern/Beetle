@@ -5,16 +5,14 @@
 package cmd
 
 import (
-	"github.com/clivern/beetle/internal/app/module"
+	log "github.com/sirupsen/logrus"
 )
 
 // HealthCheck controller
 func HealthCheck() (bool, error) {
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
-	logger.Info("I am ok")
+	log.WithFields(log.Fields{
+		"CorrelationId": "",
+	}).Info(`I am ok`)
 
 	return true, nil
 }

@@ -14,7 +14,7 @@ import (
 	"github.com/clivern/beetle/internal/app/util"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // CreateDeployment controller
@@ -24,18 +24,13 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	// ...
 
 	// Then create async job
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
 	db := module.Database{}
 	err := db.AutoConnect()
 
 	if err != nil {
-		logger.Error(fmt.Sprintf(
-			`Error while connecting to database: %s`,
-			err.Error(),
-		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Error(fmt.Sprintf(`Error while connecting to database: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)
 		return

@@ -8,24 +8,17 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/clivern/beetle/internal/app/module"
-
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // HealthCheck controller
 func HealthCheck(c *gin.Context) {
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
 	status := "ok"
 
-	logger.Info(fmt.Sprintf(
-		`Health Status: %s`,
-		status,
-	), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+	log.WithFields(log.Fields{
+		"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+	}).Info(fmt.Sprintf(`Health Status: %s`, status))
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,

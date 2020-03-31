@@ -11,24 +11,19 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // Jobs controller
 func Jobs(c *gin.Context) {
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
 	db := module.Database{}
 
 	err := db.AutoConnect()
 
 	if err != nil {
-		logger.Error(fmt.Sprintf(
-			`Error: %s`,
-			err.Error(),
-		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)
 		return

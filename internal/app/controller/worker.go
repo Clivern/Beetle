@@ -11,7 +11,7 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 	"github.com/clivern/beetle/internal/app/util"
 
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // Worker controller
@@ -23,43 +23,32 @@ func Worker(id int, messages <-chan string) {
 
 	messageObj := model.Message{}
 
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
-	logger.Info(fmt.Sprintf(
-		`Worker [%d] started`,
-		id,
-	), zap.String("CorrelationId", util.GenerateUUID4()))
+	log.WithFields(log.Fields{
+		"CorrelationId": util.GenerateUUID4(),
+	}).Info(fmt.Sprintf(`Worker [%d] started`, id))
 
 	for message := range messages {
 		ok, err = messageObj.LoadFromJSON([]byte(message))
 
 		if !ok || err != nil {
-			logger.Warn(fmt.Sprintf(
-				`Worker [%d] received invalid message: %s`,
-				id,
-				message,
-			), zap.String("CorrelationId", messageObj.UUID))
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Warn(fmt.Sprintf(`Worker [%d] received invalid message: %s`, id, message))
 			continue
 		}
 
-		logger.Info(fmt.Sprintf(
-			`Worker [%d] received: %d`,
-			id,
-			messageObj.Job,
-		), zap.String("CorrelationId", messageObj.UUID))
+		log.WithFields(log.Fields{
+			"CorrelationId": messageObj.UUID,
+		}).Info(fmt.Sprintf(`Worker [%d] received: %d`, id, messageObj.Job))
 
 		db = module.Database{}
 
 		err = db.AutoConnect()
 
 		if err != nil {
-			logger.Error(fmt.Sprintf(
-				`Worker [%d] unable to connect to database: %s`,
-				id,
-				err.Error(),
-			), zap.String("CorrelationId", messageObj.UUID))
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Error(fmt.Sprintf(`Worker [%d] unable to connect to database: %s`, id, err.Error()))
 			continue
 		}
 
@@ -70,20 +59,13 @@ func Worker(id int, messages <-chan string) {
 		err = job.Run()
 
 		if err != nil {
-			logger.Error(fmt.Sprintf(
-				`Worker [%d] failure while executing async job [%d] [%s]: %s`,
-				id,
-				messageObj.Job,
-				job.UUID,
-				err.Error(),
-			), zap.String("CorrelationId", messageObj.UUID))
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [%d] [%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
 		} else {
-			logger.Info(fmt.Sprintf(
-				`Worker [%d] processed async job [%d] [%s]`,
-				id,
-				messageObj.Job,
-				job.UUID,
-			), zap.String("CorrelationId", messageObj.UUID))
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Info(fmt.Sprintf(`Worker [%d] processed async job [%d] [%s]`, id, messageObj.Job, job.UUID))
 		}
 
 		db.UpdateJobByID(&job)

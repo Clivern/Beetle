@@ -22,6 +22,7 @@ import (
 
 	"github.com/drone/envsubst"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -116,9 +117,14 @@ func main() {
 
 	if viper.GetString("log.output") == "stdout" {
 		gin.DefaultWriter = os.Stdout
+		log.SetOutput(os.Stdout)
 	} else {
 		f, _ := os.Create(viper.GetString("log.output"))
 		gin.DefaultWriter = io.MultiWriter(f)
+	}
+
+	if viper.GetString("log.level") == "info" {
+		log.SetLevel(log.InfoLevel)
 	}
 
 	if viper.GetString("app.mode") == "prod" {
@@ -126,6 +132,8 @@ func main() {
 		gin.DefaultWriter = ioutil.Discard
 		gin.DisableConsoleColor()
 	}
+
+	log.SetFormatter(&log.JSONFormatter{})
 
 	// Init DB Connection
 	db := module.Database{}
@@ -141,6 +149,10 @@ func main() {
 	if !success {
 		panic("Error! Unable to migrate database tables.")
 	}
+
+	log.WithFields(log.Fields{
+		"CorrelationId": "",
+	}).Info(fmt.Sprintf(`Migrating database tables`))
 
 	defer db.Close()
 

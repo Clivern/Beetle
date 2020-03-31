@@ -10,10 +10,9 @@ import (
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // Namespaces controller
@@ -21,17 +20,12 @@ func Namespaces(c *gin.Context) {
 	cn := c.Param("cn")
 	result := []model.Namespace{}
 
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
 	clusters, err := kubernetes.GetClusters()
 
 	if err != nil {
-		logger.Error(fmt.Sprintf(
-			`Error: %s`,
-			err.Error(),
-		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -45,10 +39,9 @@ func Namespaces(c *gin.Context) {
 		result, err = cluster.GetNamespaces()
 
 		if err != nil {
-			logger.Error(fmt.Sprintf(
-				`Error: %s`,
-				err.Error(),
-			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+			log.WithFields(log.Fields{
+				"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 		}
 	}
 

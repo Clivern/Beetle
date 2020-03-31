@@ -10,27 +10,21 @@ import (
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	log "github.com/sirupsen/logrus"
 )
 
 // Clusters controller
 func Clusters(c *gin.Context) {
 	result := []model.Cluster{}
 
-	logger, _ := module.NewLogger()
-
-	defer logger.Sync()
-
 	clusters, err := kubernetes.GetClusters()
 
 	if err != nil {
-		logger.Error(fmt.Sprintf(
-			`Error: %s`,
-			err.Error(),
-		), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -42,10 +36,9 @@ func Clusters(c *gin.Context) {
 		status, err = cluster.Ping()
 
 		if err != nil {
-			logger.Error(fmt.Sprintf(
-				`Error: %s`,
-				err.Error(),
-			), zap.String("CorrelationId", c.Request.Header.Get("X-Correlation-ID")))
+			log.WithFields(log.Fields{
+				"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 		}
 
 		result = append(result, model.Cluster{
