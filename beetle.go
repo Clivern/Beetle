@@ -155,6 +155,7 @@ func main() {
 		c.String(http.StatusNoContent, "")
 	})
 
+	r.GET("/", controller.HealthCheck)
 	r.GET("/_health", controller.HealthCheck)
 	r.GET("/_metrics", controller.Metrics)
 	r.GET("/api/v1/cluster", controller.Clusters)
