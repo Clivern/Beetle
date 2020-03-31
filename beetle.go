@@ -152,7 +152,7 @@ func main() {
 
 	log.WithFields(log.Fields{
 		"CorrelationId": "",
-	}).Info(fmt.Sprintf(`Migrating database tables`))
+	}).Info(`Migrating database tables`)
 
 	defer db.Close()
 
