@@ -157,11 +157,11 @@ func (c *Cluster) GetNamespace(name string) (model.Namespace, error) {
 }
 
 // GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments() ([]model.Deployment, error) {
+func (c *Cluster) GetDeployments(namespace string, labels []string) ([]model.Deployment, error) {
 	return []model.Deployment{}, nil
 }
 
 // GetDeployment gets a deployment by name
-func (c *Cluster) GetDeployment() (model.Deployment, error) {
+func (c *Cluster) GetDeployment(namespace, name string) (model.Deployment, error) {
 	return model.Deployment{}, nil
 }
