@@ -3,7 +3,7 @@
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
-        <a href="https://travis-ci.org/Clivern/Beetle"><img src="https://travis-ci.org/Clivern/Beetle.svg?branch=master"></a>
+        <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
         <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-0.0.2-red.svg"></a>
         <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.2"></a>
      <a href="https://hub.docker.com/r/clivern/beetle"><img src="https://img.shields.io/badge/Docker-Latest-orange"></a>
