@@ -61,11 +61,11 @@ func Worker(id int, messages <-chan string) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"CorrelationId": messageObj.UUID,
-			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [%d] [%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
+			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [id=%d] [uuid=%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
 		} else {
 			log.WithFields(log.Fields{
 				"CorrelationId": messageObj.UUID,
-			}).Info(fmt.Sprintf(`Worker [%d] processed async job [%d] [%s]`, id, messageObj.Job, job.UUID))
+			}).Info(fmt.Sprintf(`Worker [%d] processed async job [id=%d] [uuid=%s]`, id, messageObj.Job, job.UUID))
 		}
 
 		db.UpdateJobByID(&job)
