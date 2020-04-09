@@ -10,6 +10,7 @@ import (
 
 // Deployment struct
 type Deployment struct {
+	Name string `json:"name"`
 }
 
 // LoadFromJSON update object from json

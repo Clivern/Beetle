@@ -159,7 +159,7 @@ func (c *Cluster) GetNamespace(ctx context.Context, name string) (model.Namespac
 }
 
 // GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels []string) ([]model.Deployment, error) {
+func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels string) ([]model.Deployment, error) {
 	result := []model.Deployment{}
 
 	fs := module.FileSystem{}
@@ -184,15 +184,18 @@ func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels [
 		return result, err
 	}
 
-	data, err := clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
+	data, err := clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{
+		LabelSelector: labels,
+	})
 
 	if err != nil {
 		return result, err
 	}
 
-	for _ = range data.Items {
-		//fmt.Printf("%v", deployment)
-		result = append(result, model.Deployment{})
+	for _, deployment := range data.Items {
+		result = append(result, model.Deployment{
+			Name: deployment.ObjectMeta.Name,
+		})
 	}
 
 	return result, nil
@@ -229,6 +232,8 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 	if err != nil {
 		return result, err
 	}
+
+	result.Name = deployment.ObjectMeta.Name
 
 	return result, nil
 }
