@@ -12,4 +12,3 @@
 *.out
 
 config.prod.yml
-beetle-kubeconfig.yaml
