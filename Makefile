@@ -88,26 +88,6 @@ coverage:
 	go tool cover -html=cover.out -o coverage.html
 
 
-## ng_install: Install angular dependencies
-ng_install:
-	@echo ">> ============= Ng Install ============= <<"
-	$(NPM) install -g @angular/cli
-	$(NPM) --prefix public install
-
-
-## ng_test: Test angular app
-ng_test:
-	@echo ">> ============= Ng Test ============= <<"
-	cd public; $(NG) lint
-	cd public; $(NG) build
-
-
-## ng_run: Run the angular app
-ng_run:
-	@echo ">> ============= Ng Run ============= <<"
-	cd public; $(NG) serve
-
-
 ## ci: Run all CI tests.
 ci: style check_license test vet lint
 	@echo "\n==> All quality checks passed"
