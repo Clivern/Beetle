@@ -5,6 +5,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -36,7 +37,7 @@ func Namespaces(c *gin.Context) {
 			continue
 		}
 
-		result, err = cluster.GetNamespaces()
+		result, err = cluster.GetNamespaces(context.Background())
 
 		if err != nil {
 			log.WithFields(log.Fields{

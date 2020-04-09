@@ -5,6 +5,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -33,7 +34,7 @@ func Clusters(c *gin.Context) {
 	var status bool
 
 	for _, cluster := range clusters {
-		status, err = cluster.Ping()
+		status, err = cluster.Ping(context.Background())
 
 		if err != nil {
 			log.WithFields(log.Fields{

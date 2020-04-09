@@ -5,6 +5,7 @@
 package kubernetes
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -13,6 +14,7 @@ import (
 
 	"github.com/spf13/viper"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 )
@@ -42,7 +44,7 @@ func GetClusters() ([]*Cluster, error) {
 }
 
 // Ping check the cluster
-func (c *Cluster) Ping() (bool, error) {
+func (c *Cluster) Ping(ctx context.Context) (bool, error) {
 	fs := module.FileSystem{}
 
 	if !fs.FileExists(c.Kubeconfig) {
@@ -65,7 +67,7 @@ func (c *Cluster) Ping() (bool, error) {
 		return false, err
 	}
 
-	data, err := clientset.RESTClient().Get().AbsPath("/api/v1").DoRaw()
+	data, err := clientset.RESTClient().Get().AbsPath("/api/v1").DoRaw(ctx)
 
 	if err != nil {
 		return false, err
@@ -75,7 +77,7 @@ func (c *Cluster) Ping() (bool, error) {
 }
 
 // GetNamespaces gets a list of cluster namespaces
-func (c *Cluster) GetNamespaces() ([]model.Namespace, error) {
+func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) {
 	result := []model.Namespace{}
 
 	fs := module.FileSystem{}
@@ -100,7 +102,7 @@ func (c *Cluster) GetNamespaces() ([]model.Namespace, error) {
 		return result, err
 	}
 
-	data, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
+	data, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 
 	if err != nil {
 		return result, err
@@ -118,7 +120,7 @@ func (c *Cluster) GetNamespaces() ([]model.Namespace, error) {
 }
 
 // GetNamespace gets a namespace by name
-func (c *Cluster) GetNamespace(name string) (model.Namespace, error) {
+func (c *Cluster) GetNamespace(ctx context.Context, name string) (model.Namespace, error) {
 	result := model.Namespace{}
 
 	fs := module.FileSystem{}
@@ -143,7 +145,7 @@ func (c *Cluster) GetNamespace(name string) (model.Namespace, error) {
 		return result, err
 	}
 
-	namespace, err := clientset.CoreV1().Namespaces().Get(name, metav1.GetOptions{})
+	namespace, err := clientset.CoreV1().Namespaces().Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {
 		return result, err
@@ -157,11 +159,76 @@ func (c *Cluster) GetNamespace(name string) (model.Namespace, error) {
 }
 
 // GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments(namespace string, labels []string) ([]model.Deployment, error) {
-	return []model.Deployment{}, nil
+func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels []string) ([]model.Deployment, error) {
+	result := []model.Deployment{}
+
+	fs := module.FileSystem{}
+
+	if !fs.FileExists(c.Kubeconfig) {
+		return result, fmt.Errorf(
+			"cluster [%s] config file [%s] not exist",
+			c.Name,
+			c.Kubeconfig,
+		)
+	}
+
+	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
+
+	if err != nil {
+		return result, err
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+
+	if err != nil {
+		return result, err
+	}
+
+	data, err := clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{})
+
+	if err != nil {
+		return result, err
+	}
+
+	for _ = range data.Items {
+		//fmt.Printf("%v", deployment)
+		result = append(result, model.Deployment{})
+	}
+
+	return result, nil
 }
 
 // GetDeployment gets a deployment by name
-func (c *Cluster) GetDeployment(namespace, name string) (model.Deployment, error) {
-	return model.Deployment{}, nil
+func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (model.Deployment, error) {
+	result := model.Deployment{}
+
+	fs := module.FileSystem{}
+
+	if !fs.FileExists(c.Kubeconfig) {
+		return result, fmt.Errorf(
+			"cluster [%s] config file [%s] not exist",
+			c.Name,
+			c.Kubeconfig,
+		)
+	}
+
+	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
+
+	if err != nil {
+		return result, err
+	}
+
+	clientset, err := kubernetes.NewForConfig(config)
+
+	if err != nil {
+		return result, err
+	}
+
+	deployment, err := clientset.AppsV1().Deployments(namespace).Get(ctx, name, metav1.GetOptions{})
+
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
 }
