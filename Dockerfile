@@ -6,6 +6,7 @@ ENV GO111MODULE=on
 
 RUN mkdir -p /app/configs
 RUN mkdir -p /app/var/logs
+RUN mkdir -p /app/var/storage
 RUN apt-get update
 
 WORKDIR /app
