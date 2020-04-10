@@ -92,12 +92,12 @@ app:
     clusters:
         -
             name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
-            kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/Users/Ahmed/configs/production-cluster-kubeconfig.yaml}
+            kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/app/configs/production-cluster-kubeconfig.yaml}
             configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-production-configs}
         -
-            name: ${BEETLE_KUBE_CLUSTER_01_NAME:-staging}
-            kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/Users/Ahmed/configs/staging-cluster-kubeconfig.yaml}
-            configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-staging-configs}
+            name: ${BEETLE_KUBE_CLUSTER_02_NAME:-staging}
+            kubeconfig: ${BEETLE_KUBE_CLUSTER_02_CONFIG_FILE:-/app/configs/staging-cluster-kubeconfig.yaml}
+            configMapName: ${BEETLE_KUBE_CLUSTER_02_CONFIG_MAP:-beetle-staging-configs}
 
 # Log configs
 log:
