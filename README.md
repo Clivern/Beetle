@@ -88,31 +88,16 @@ app:
         # Database Password
         password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-root}
 
-    # Supported Notifications Webhooks
-    webhooks:
-        -
-            name: http_service
-            type: http
-            url: http://example.com/api/listen
-            method: post
-            headers:
-                - X-AUTH-TOKEN=1234
-            events:
-                - deployment
-                - rollback
-
     # Kubernetes Clusters
     clusters:
         -
-            # kubernetes cluster name
-            name: ${BEETLE_DEFAULT_CLUSTER_NAME:-default}
-
-            # kubernetes cluster kubctl config
-            kubeconfig: ${BEETLE_DEFAULT_CLUSTER_CONFIG:-/app/config/default-kubctl.yaml}
-
-            # Enabled Notifications Webhooks
-            notify:
-                - http_service
+            name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
+            kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/Users/Ahmed/configs/production-cluster-kubeconfig.yaml}
+            configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-production-configs}
+        -
+            name: ${BEETLE_KUBE_CLUSTER_01_NAME:-staging}
+            kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/Users/Ahmed/configs/staging-cluster-kubeconfig.yaml}
+            configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-staging-configs}
 
 # Log configs
 log:
