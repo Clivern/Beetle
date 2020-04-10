@@ -43,6 +43,25 @@ func GetClusters() ([]*Cluster, error) {
 	return clusters.Clusters, nil
 }
 
+// GetCluster get a list of clusters
+func GetCluster(name string) (*Cluster, error) {
+	var clusters Clusters
+
+	err := viper.UnmarshalKey("app", &clusters)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, cluster := range clusters.Clusters {
+		if name == cluster.Name {
+			return cluster, nil
+		}
+	}
+
+	return &Cluster{}, fmt.Errorf("Unable to find cluster %s", name)
+}
+
 // Ping check the cluster
 func (c *Cluster) Ping(ctx context.Context) (bool, error) {
 	fs := module.FileSystem{}

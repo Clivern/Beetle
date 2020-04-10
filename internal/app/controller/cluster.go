@@ -21,40 +21,27 @@ func Cluster(c *gin.Context) {
 	cn := c.Param("cn")
 	result := model.Cluster{}
 
-	clusters, err := kubernetes.GetClusters()
+	cluster, err := kubernetes.GetCluster(cn)
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Info(fmt.Sprintf(`Cluster not found %s: %s`, cn, err.Error()))
+
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	status, err := cluster.Ping(context.Background())
 
 	if err != nil {
 		log.WithFields(log.Fields{
 			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
-
-		c.Status(http.StatusInternalServerError)
-		return
 	}
 
-	var status bool
-
-	for _, cluster := range clusters {
-		if cn != cluster.Name {
-			continue
-		}
-
-		status, err = cluster.Ping(context.Background())
-
-		if err != nil {
-			log.WithFields(log.Fields{
-				"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
-			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
-		}
-
-		result.Name = cluster.Name
-		result.Health = status
-	}
-
-	if result.Name == "" {
-		c.Status(http.StatusNotFound)
-		return
-	}
+	result.Name = cluster.Name
+	result.Health = status
 
 	c.JSON(http.StatusOK, gin.H{
 		"name":   result.Name,
