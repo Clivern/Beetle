@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beetle-configs
+  namespace: default
+data:
+  config: |-
+    ---
+    top: value
+    parent:
+      child: value
