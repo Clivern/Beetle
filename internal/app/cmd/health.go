@@ -5,13 +5,15 @@
 package cmd
 
 import (
+	"github.com/clivern/beetle/internal/app/util"
+
 	log "github.com/sirupsen/logrus"
 )
 
 // HealthCheck controller
 func HealthCheck() (bool, error) {
 	log.WithFields(log.Fields{
-		"CorrelationId": "",
+		"CorrelationId": util.GenerateUUID4(),
 	}).Info(`I am ok`)
 
 	return true, nil
