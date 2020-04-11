@@ -7,6 +7,7 @@ package kubernetes
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
@@ -17,9 +18,9 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-// GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels string) ([]model.Deployment, error) {
-	result := []model.Deployment{}
+// GetNamespaces gets a list of cluster namespaces
+func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) {
+	result := []model.Namespace{}
 
 	fs := module.FileSystem{}
 
@@ -43,26 +44,26 @@ func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels s
 		return result, err
 	}
 
-	data, err := clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{
-		LabelSelector: labels,
-	})
+	data, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 
 	if err != nil {
 		return result, err
 	}
 
-	for _, deployment := range data.Items {
-		result = append(result, model.Deployment{
-			Name: deployment.ObjectMeta.Name,
+	for _, namespace := range data.Items {
+		result = append(result, model.Namespace{
+			Name:   namespace.ObjectMeta.Name,
+			UID:    string(namespace.ObjectMeta.UID),
+			Status: strings.ToLower(string(namespace.Status.Phase)),
 		})
 	}
 
 	return result, nil
 }
 
-// GetDeployment gets a deployment by name
-func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (model.Deployment, error) {
-	result := model.Deployment{}
+// GetNamespace gets a namespace by name
+func (c *Cluster) GetNamespace(ctx context.Context, name string) (model.Namespace, error) {
+	result := model.Namespace{}
 
 	fs := module.FileSystem{}
 
@@ -86,13 +87,15 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 		return result, err
 	}
 
-	deployment, err := clientset.AppsV1().Deployments(namespace).Get(ctx, name, metav1.GetOptions{})
+	namespace, err := clientset.CoreV1().Namespaces().Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {
 		return result, err
 	}
 
-	result.Name = deployment.ObjectMeta.Name
+	result.Name = namespace.ObjectMeta.Name
+	result.UID = string(namespace.ObjectMeta.UID)
+	result.Status = strings.ToLower(string(namespace.Status.Phase))
 
 	return result, nil
 }
