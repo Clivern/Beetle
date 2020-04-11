@@ -36,11 +36,11 @@ func main() {
 	var configFile string
 	var get string
 
-	flag.StringVar(&configFile, "config", "config.prod.yml", "config")
-	flag.StringVar(&get, "get", "", "get")
+	flag.StringVar(&configFile, "config", "config.prod.yml", "Absolute path to config file")
+	flag.StringVar(&get, "get", "", "Use with version or release (./beetle --get release) (./beetle --get version) (./beetle --get health)")
 	flag.Parse()
 
-	if get == "release" {
+	if get == "release" || get == "version" {
 		fmt.Println(
 			fmt.Sprintf(
 				`Beetle Version %v Commit %v, Built @%v`,
@@ -149,10 +149,6 @@ func main() {
 	if !success {
 		panic("Error! Unable to migrate database tables.")
 	}
-
-	log.WithFields(log.Fields{
-		"CorrelationId": "",
-	}).Info(`Migrating database tables`)
 
 	defer db.Close()
 
