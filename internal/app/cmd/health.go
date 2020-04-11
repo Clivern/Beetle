@@ -11,10 +11,8 @@ import (
 )
 
 // HealthCheck controller
-func HealthCheck() (bool, error) {
+func HealthCheck() {
 	log.WithFields(log.Fields{
 		"CorrelationId": util.GenerateUUID4(),
 	}).Info(`I am ok`)
-
-	return true, nil
 }
