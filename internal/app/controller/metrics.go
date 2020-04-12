@@ -7,10 +7,36 @@ package controller
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/spf13/viper"
 )
 
+var (
+	workersCount = prometheus.NewCounter(
+		prometheus.CounterOpts{
+			Namespace: "beetle",
+			Name:      "workers_count",
+			Help:      "Number of Async Workers",
+		})
+
+	queueCapacity = prometheus.NewCounter(
+		prometheus.CounterOpts{
+			Namespace: "beetle",
+			Name:      "workers_queue_capacity",
+			Help:      "The maximum number of messages queue can process",
+		})
+)
+
+func init() {
+	prometheus.MustRegister(workersCount)
+	prometheus.MustRegister(queueCapacity)
+}
+
 // Metrics controller
-func Metrics(c *gin.Context) {
-	c.Status(http.StatusOK)
+func Metrics() http.Handler {
+	workersCount.Add(float64(viper.GetInt("app.broker.native.workers")))
+	queueCapacity.Add(float64(viper.GetInt("app.broker.native.capacity")))
+
+	return promhttp.Handler()
 }

@@ -165,7 +165,7 @@ func main() {
 
 	r.GET("/", controller.HealthCheck)
 	r.GET("/_health", controller.HealthCheck)
-	r.GET("/_metrics", controller.Metrics)
+	r.GET("/_metrics", gin.WrapH(controller.Metrics()))
 	r.GET("/api/v1/cluster", controller.Clusters)
 	r.GET("/api/v1/cluster/:cn", controller.Cluster)
 	r.GET("/api/v1/cluster/:cn/namespace", controller.Namespaces)
