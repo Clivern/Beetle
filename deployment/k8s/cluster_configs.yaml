@@ -7,6 +7,6 @@ metadata:
 data:
   config: |-
     ---
-    top: value
+    version: 0.1.0
     parent:
       child: value
