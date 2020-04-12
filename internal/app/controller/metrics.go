@@ -13,15 +13,15 @@ import (
 )
 
 var (
-	workersCount = prometheus.NewCounter(
-		prometheus.CounterOpts{
+	workersCount = prometheus.NewGauge(
+		prometheus.GaugeOpts{
 			Namespace: "beetle",
 			Name:      "workers_count",
 			Help:      "Number of Async Workers",
 		})
 
-	queueCapacity = prometheus.NewCounter(
-		prometheus.CounterOpts{
+	queueCapacity = prometheus.NewGauge(
+		prometheus.GaugeOpts{
 			Namespace: "beetle",
 			Name:      "workers_queue_capacity",
 			Help:      "The maximum number of messages queue can process",
