@@ -76,7 +76,8 @@ func Logger() gin.HandlerFunc {
 		// Collect Metrics
 		httpRequests.WithLabelValues(
 			strconv.Itoa(c.Writer.Status()),
-			c.Request.Method, c.HandlerName(),
+			c.Request.Method,
+			c.HandlerName(),
 			c.Request.Host,
 			c.Request.URL.Path,
 		).Inc()
