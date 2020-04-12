@@ -23,8 +23,9 @@ type Clusters struct {
 
 // Cluster struct
 type Cluster struct {
-	Name       string `mapstructure:",name"`
-	Kubeconfig string `mapstructure:",kubeconfig"`
+	Name          string `mapstructure:",name"`
+	Kubeconfig    string `mapstructure:",kubeconfig"`
+	ConfigMapName string `mapstructure:",configMapName"`
 }
 
 // GetClusters get a list of clusters

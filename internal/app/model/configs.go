@@ -8,13 +8,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// NamespaceConfigs struct
-type NamespaceConfigs struct {
+// Configs struct
+type Configs struct {
+	Exists  bool   `yaml:"exists"`
 	Version string `yaml:"version"`
 }
 
 // LoadFromYAML update object from yaml
-func (n *NamespaceConfigs) LoadFromYAML(data []byte) (bool, error) {
+func (n *Configs) LoadFromYAML(data []byte) (bool, error) {
 	err := yaml.Unmarshal(data, &n)
 
 	if err != nil {
@@ -25,7 +26,7 @@ func (n *NamespaceConfigs) LoadFromYAML(data []byte) (bool, error) {
 }
 
 // ConvertToYAML convert object to yaml
-func (n *NamespaceConfigs) ConvertToYAML() (string, error) {
+func (n *Configs) ConvertToYAML() (string, error) {
 	data, err := yaml.Marshal(&n)
 
 	if err != nil {
