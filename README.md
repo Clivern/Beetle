@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.3" width="150" />
+    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.3" width="180" />
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
