@@ -60,5 +60,4 @@ func Application(c *gin.Context) {
 	}).Info(fmt.Sprintf(`Application %s not found for cluster %s namespace %s`, id, cn, ns))
 
 	c.Status(http.StatusNotFound)
-	return
 }
