@@ -8,5 +8,9 @@ data:
   config: |-
     ---
     version: 0.1.0
-    parent:
-      child: value
+
+    applications:
+      -
+        name: Toad Nice Name
+        id: toad
+        image: clivern/toad:release-[.Version]
