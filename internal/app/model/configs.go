@@ -8,10 +8,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Application struct
+type Application struct {
+	ID           string `yaml:"id"`
+	Name         string `yaml:"name"`
+	ImageFormat  string `yaml:"imageFormat"`
+	CurrentImage string `yaml:"currentImage"`
+}
+
 // Configs struct
 type Configs struct {
-	Exists  bool   `yaml:"exists"`
-	Version string `yaml:"version"`
+	Exists       bool          `yaml:"exists"`
+	Version      string        `yaml:"version"`
+	Applications []Application `yaml:"applications"`
 }
 
 // LoadFromYAML update object from yaml
