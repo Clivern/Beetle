@@ -73,6 +73,12 @@ app:
             # Number of concurrent workers
             workers: ${BEETLE_BROKER_NATIVE_WORKERS:-4}
 
+    # Runtime, Requests/Response and Beetle Metrics
+    metrics:
+        prometheus:
+            # Route for the metrics endpoint
+            endpoint: ${BEETLE_METRICS_PROM_ENDPOINT:-/metrics}
+
     # Application Database
     database:
         # Database driver (sqlite3, mysql)
