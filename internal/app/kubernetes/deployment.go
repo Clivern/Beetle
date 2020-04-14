@@ -18,7 +18,7 @@ import (
 )
 
 // GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels string) ([]model.Deployment, error) {
+func (c *Cluster) GetDeployments(ctx context.Context, namespace string, label string) ([]model.Deployment, error) {
 	result := []model.Deployment{}
 
 	fs := module.FileSystem{}
@@ -44,7 +44,7 @@ func (c *Cluster) GetDeployments(ctx context.Context, namespace string, labels s
 	}
 
 	data, err := clientset.AppsV1().Deployments(namespace).List(ctx, metav1.ListOptions{
-		LabelSelector: labels,
+		LabelSelector: label,
 	})
 
 	if err != nil {

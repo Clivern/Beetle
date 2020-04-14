@@ -8,9 +8,8 @@ data:
   config: |-
     ---
     version: 0.1.0
-
     applications:
       -
         name: Toad App
         id: toad
-        image: clivern/toad:release-[.Release]
+        imageFormat: clivern/toad:release-[.Release]
