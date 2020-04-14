@@ -11,6 +11,11 @@ data:
 
     applications:
       -
-        name: Toad Nice Name
-        id: toad
-        image: clivern/toad:release-[.Version]
+        name: App1 Name
+        id: app1
+        image: clivern/app1:release-[.Version]
+
+      -
+        name: App2 Name
+        id: app2
+        image: [.Image]
