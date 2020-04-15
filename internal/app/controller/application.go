@@ -45,6 +45,19 @@ func Application(c *gin.Context) {
 
 	for _, app := range config.Applications {
 		if app.ID == id {
+			app.CurrentImage, err = cluster.GetApplicationVersion(
+				context.Background(),
+				ns,
+				app.ID,
+				app.ImageFormat,
+			)
+
+			if err != nil {
+				log.WithFields(log.Fields{
+					"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+				}).Warn(fmt.Sprintf(`Error while fetching application %s current version cluster %s namespace %s: %s`, id, cn, ns, err.Error()))
+			}
+
 			c.JSON(http.StatusOK, gin.H{
 				"ID":           app.ID,
 				"Name":         app.Name,
