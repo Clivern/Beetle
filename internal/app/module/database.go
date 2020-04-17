@@ -32,6 +32,17 @@ func (db *Database) Connect(dsn model.DSN) error {
 	return nil
 }
 
+// Ping check the db connection
+func (db *Database) Ping() error {
+	err := db.Connection.DB().Ping()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // AutoConnect connects to a MySQL database using loaded configs
 func (db *Database) AutoConnect() error {
 	var err error
