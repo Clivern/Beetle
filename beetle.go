@@ -115,6 +115,11 @@ func main() {
 		return
 	}
 
+	if get == "ready" {
+		cmd.ReadyCheck()
+		return
+	}
+
 	if viper.GetString("log.output") == "stdout" {
 		gin.DefaultWriter = os.Stdout
 		log.SetOutput(os.Stdout)
@@ -166,6 +171,7 @@ func main() {
 
 	r.GET("/", controller.HealthCheck)
 	r.GET("/_health", controller.HealthCheck)
+	r.GET("/_ready", controller.ReadyCheck)
 	r.GET(viper.GetString("app.metrics.prometheus.endpoint"), gin.WrapH(controller.Metrics()))
 	r.GET("/api/v1/cluster", controller.Clusters)
 	r.GET("/api/v1/cluster/:cn", controller.Cluster)
