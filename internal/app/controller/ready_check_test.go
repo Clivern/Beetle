@@ -23,8 +23,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// TestHealthCheck test cases
-func TestHealthCheck(t *testing.T) {
+// TestReadyCheck test cases
+func TestReadyCheck(t *testing.T) {
 	testingConfig := "config.testing.yml"
 
 	// LoadConfigFile
@@ -50,18 +50,18 @@ func TestHealthCheck(t *testing.T) {
 		viper.ReadConfig(bytes.NewBuffer([]byte(configParsed)))
 	})
 
-	// TestHealthCheckController
-	t.Run("TestHealthCheckController", func(t *testing.T) {
+	// TestReadyCheckController
+	t.Run("TestReadyCheckController", func(t *testing.T) {
 		gin.SetMode(gin.ReleaseMode)
 		gin.DefaultWriter = ioutil.Discard
 		gin.DisableConsoleColor()
 
 		router := gin.Default()
 
-		router.GET("/_health", HealthCheck)
+		router.GET("/_ready", ReadyCheck)
 
 		w := httptest.NewRecorder()
-		req, _ := http.NewRequest("GET", "/_health", nil)
+		req, _ := http.NewRequest("GET", "/_ready", nil)
 		router.ServeHTTP(w, req)
 
 		pkg.Expect(t, viper.GetString("app.mode"), "test")

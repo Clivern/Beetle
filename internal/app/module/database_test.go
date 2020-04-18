@@ -79,6 +79,7 @@ func TestDatabase(t *testing.T) {
 		pkg.Expect(t, nil, err)
 
 		defer db.Close()
+
 		pkg.Expect(t, true, db.Rollback())
 		pkg.Expect(t, true, db.Migrate())
 		pkg.Expect(t, true, db.HasTable("jobs"))

@@ -76,7 +76,7 @@ func (db *Database) Migrate() bool {
 // Rollback drop tables
 func (db *Database) Rollback() bool {
 	status := true
-	db.Connection.DropTable(&migration.Job{})
+	db.Connection.DropTableIfExists(&migration.Job{})
 	status = status && !db.Connection.HasTable(&migration.Job{})
 	return status
 }

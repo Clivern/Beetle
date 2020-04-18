@@ -6,6 +6,7 @@ package controller
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
@@ -57,6 +58,10 @@ func Worker(id int, messages <-chan string) {
 		job = db.GetJobByID(messageObj.Job)
 
 		err = job.Run()
+
+		now := time.Now()
+
+		job.RunAt = &now
 
 		if err != nil {
 			log.WithFields(log.Fields{

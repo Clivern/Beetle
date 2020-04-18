@@ -7,7 +7,6 @@ package controller
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
@@ -48,7 +47,6 @@ func CreateRollback(c *gin.Context, messages chan<- string) {
 		UUID:   uuid,
 		Status: model.JobPending,
 		Type:   model.JobRollbackCreate,
-		RunAt:  time.Now(),
 	})
 
 	messageObj := model.Message{
