@@ -6,39 +6,18 @@ package kubernetes
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 // GetNamespaces gets a list of cluster namespaces
 func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) {
 	result := []model.Namespace{}
 
-	fs := module.FileSystem{}
-
-	if !fs.FileExists(c.Kubeconfig) {
-		return result, fmt.Errorf(
-			"cluster [%s] config file [%s] not exist",
-			c.Name,
-			c.Kubeconfig,
-		)
-	}
-
-	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
-
-	if err != nil {
-		return result, err
-	}
-
-	clientset, err := kubernetes.NewForConfig(config)
+	clientset, err := c.GetClientSet()
 
 	if err != nil {
 		return result, err
@@ -65,23 +44,7 @@ func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) 
 func (c *Cluster) GetNamespace(ctx context.Context, name string) (model.Namespace, error) {
 	result := model.Namespace{}
 
-	fs := module.FileSystem{}
-
-	if !fs.FileExists(c.Kubeconfig) {
-		return result, fmt.Errorf(
-			"cluster [%s] config file [%s] not exist",
-			c.Name,
-			c.Kubeconfig,
-		)
-	}
-
-	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
-
-	if err != nil {
-		return result, err
-	}
-
-	clientset, err := kubernetes.NewForConfig(config)
+	clientset, err := c.GetClientSet()
 
 	if err != nil {
 		return result, err

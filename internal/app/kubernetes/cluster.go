@@ -12,7 +12,9 @@ import (
 
 	"github.com/spf13/viper"
 
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -21,11 +23,17 @@ type Clusters struct {
 	Clusters []*Cluster `mapstructure:",clusters"`
 }
 
+type ClientSet struct {
+	Override bool
+	Instance *fake.Clientset
+}
+
 // Cluster struct
 type Cluster struct {
 	Name          string `mapstructure:",name"`
 	Kubeconfig    string `mapstructure:",kubeconfig"`
 	ConfigMapName string `mapstructure:",configMapName"`
+	ClientSet     ClientSet
 }
 
 // GetClusters get a list of clusters
@@ -60,12 +68,22 @@ func GetCluster(name string) (*Cluster, error) {
 	return &Cluster{}, fmt.Errorf("Unable to find cluster %s", name)
 }
 
-// Ping check the cluster
-func (c *Cluster) Ping(ctx context.Context) (bool, error) {
+// Override overrides the client set for testing
+func (c *Cluster) Override(objects ...runtime.Object) {
+	c.ClientSet.Override = true
+	c.ClientSet.Instance = fake.NewSimpleClientset(objects...)
+}
+
+// Override overrides the client set for testing
+func (c *Cluster) GetClientSet() (kubernetes.Interface, error) {
+	if c.ClientSet.Override {
+		return c.ClientSet.Instance, nil
+	}
+
 	fs := module.FileSystem{}
 
 	if !fs.FileExists(c.Kubeconfig) {
-		return false, fmt.Errorf(
+		return nil, fmt.Errorf(
 			"cluster [%s] config file [%s] not exist",
 			c.Name,
 			c.Kubeconfig,
@@ -75,16 +93,27 @@ func (c *Cluster) Ping(ctx context.Context) (bool, error) {
 	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
 
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)
 
 	if err != nil {
+		return nil, err
+	}
+
+	return clientset, nil
+}
+
+// Ping check the cluster
+func (c *Cluster) Ping(ctx context.Context) (bool, error) {
+	clientset, err := c.GetClientSet()
+
+	if err != nil {
 		return false, err
 	}
 
-	data, err := clientset.RESTClient().Get().AbsPath("/api/v1").DoRaw(ctx)
+	data, err := clientset.CoreV1().RESTClient().Get().AbsPath("/api/v1").DoRaw(ctx)
 
 	if err != nil {
 		return false, err
