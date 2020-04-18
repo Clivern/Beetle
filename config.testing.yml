@@ -42,7 +42,7 @@ app:
         # Username
         username: ${BEETLE_DATABASE_MYSQL_USERNAME:-root}
         # Password
-        password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-root}
+        password: ${BEETLE_DATABASE_MYSQL_PASSWORD:- }
 
     # Kubernetes Clusters
     clusters:
