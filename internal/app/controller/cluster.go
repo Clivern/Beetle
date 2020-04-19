@@ -40,6 +40,8 @@ func Cluster(c *gin.Context) {
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 	}
 
+	cluster.GetDeployments(context.Background(), "default", "app.clivern.com/managed-by=beetle")
+
 	result.Name = cluster.Name
 	result.Health = status
 

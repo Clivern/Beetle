@@ -5,6 +5,7 @@
 package kubernetes
 
 import (
+	"fmt"
 	"context"
 
 	"github.com/clivern/beetle/internal/app/model"
@@ -13,7 +14,7 @@ import (
 )
 
 // GetDeployments gets a list of deployments
-func (c *Cluster) GetDeployments(ctx context.Context, namespace string, label string) ([]model.Deployment, error) {
+func (c *Cluster) GetDeployments(ctx context.Context, namespace, label string) ([]model.Deployment, error) {
 	result := []model.Deployment{}
 
 	err := c.Config()
@@ -31,8 +32,10 @@ func (c *Cluster) GetDeployments(ctx context.Context, namespace string, label st
 	}
 
 	for _, deployment := range data.Items {
+		fmt.Printf("%+v\n", deployment.Spec.Template.Spec.Containers)
 		result = append(result, model.Deployment{
 			Name: deployment.ObjectMeta.Name,
+			UID: string(deployment.ObjectMeta.UID),
 		})
 	}
 
@@ -56,6 +59,7 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 	}
 
 	result.Name = deployment.ObjectMeta.Name
+	result.UID = string(deployment.ObjectMeta.UID)
 
 	return result, nil
 }

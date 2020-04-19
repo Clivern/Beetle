@@ -14,6 +14,7 @@ type Application struct {
 	Name         string `yaml:"name"`
 	ImageFormat  string `yaml:"imageFormat"`
 	CurrentImage string `yaml:"currentImage"`
+	Deployment   []Deployment `yaml:"deployment"`
 }
 
 // Configs struct
