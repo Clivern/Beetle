@@ -6,44 +6,23 @@ package kubernetes
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 // GetConfigMap gets a configmap data
 func (c *Cluster) GetConfigMap(ctx context.Context, namespace, name string) (model.ConfigMap, error) {
 	result := model.ConfigMap{}
 
-	fs := module.FileSystem{}
-
-	if !fs.FileExists(c.Kubeconfig) {
-		return result, fmt.Errorf(
-			"cluster [%s] config file [%s] not exist",
-			c.Name,
-			c.Kubeconfig,
-		)
-	}
-
-	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
+	err := c.Config()
 
 	if err != nil {
 		return result, err
 	}
 
-	clientset, err := kubernetes.NewForConfig(config)
-
-	if err != nil {
-		return result, err
-	}
-
-	configmap, err := clientset.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
+	configmap, err := c.ClientSet.CoreV1().ConfigMaps(namespace).Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {
 		return result, err

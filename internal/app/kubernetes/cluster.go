@@ -23,17 +23,13 @@ type Clusters struct {
 	Clusters []*Cluster `mapstructure:",clusters"`
 }
 
-type ClientSet struct {
-	Override bool
-	Instance *fake.Clientset
-}
-
 // Cluster struct
 type Cluster struct {
 	Name          string `mapstructure:",name"`
 	Kubeconfig    string `mapstructure:",kubeconfig"`
 	ConfigMapName string `mapstructure:",configMapName"`
-	ClientSet     ClientSet
+	ClientSet     kubernetes.Interface
+	Fake          bool
 }
 
 // GetClusters get a list of clusters
@@ -70,20 +66,20 @@ func GetCluster(name string) (*Cluster, error) {
 
 // Override overrides the client set for testing
 func (c *Cluster) Override(objects ...runtime.Object) {
-	c.ClientSet.Override = true
-	c.ClientSet.Instance = fake.NewSimpleClientset(objects...)
+	c.Fake = true
+	c.ClientSet = fake.NewSimpleClientset(objects...)
 }
 
-// Override overrides the client set for testing
-func (c *Cluster) GetClientSet() (kubernetes.Interface, error) {
-	if c.ClientSet.Override {
-		return c.ClientSet.Instance, nil
+// Config configs the client set for testing
+func (c *Cluster) Config() error {
+	if c.Fake {
+		return nil
 	}
 
 	fs := module.FileSystem{}
 
 	if !fs.FileExists(c.Kubeconfig) {
-		return nil, fmt.Errorf(
+		return fmt.Errorf(
 			"cluster [%s] config file [%s] not exist",
 			c.Name,
 			c.Kubeconfig,
@@ -93,27 +89,29 @@ func (c *Cluster) GetClientSet() (kubernetes.Interface, error) {
 	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return clientset, nil
+	c.ClientSet = clientset
+
+	return nil
 }
 
 // Ping check the cluster
 func (c *Cluster) Ping(ctx context.Context) (bool, error) {
-	clientset, err := c.GetClientSet()
+	err := c.Config()
 
 	if err != nil {
 		return false, err
 	}
 
-	data, err := clientset.CoreV1().RESTClient().Get().AbsPath("/api/v1").DoRaw(ctx)
+	data, err := c.ClientSet.CoreV1().RESTClient().Get().AbsPath("/api/v1").DoRaw(ctx)
 
 	if err != nil {
 		return false, err

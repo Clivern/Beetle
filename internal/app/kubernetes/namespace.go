@@ -17,13 +17,13 @@ import (
 func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) {
 	result := []model.Namespace{}
 
-	clientset, err := c.GetClientSet()
+	err := c.Config()
 
 	if err != nil {
 		return result, err
 	}
 
-	data, err := clientset.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
+	data, err := c.ClientSet.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 
 	if err != nil {
 		return result, err
@@ -44,13 +44,13 @@ func (c *Cluster) GetNamespaces(ctx context.Context) ([]model.Namespace, error) 
 func (c *Cluster) GetNamespace(ctx context.Context, name string) (model.Namespace, error) {
 	result := model.Namespace{}
 
-	clientset, err := c.GetClientSet()
+	err := c.Config()
 
 	if err != nil {
 		return result, err
 	}
 
-	namespace, err := clientset.CoreV1().Namespaces().Get(ctx, name, metav1.GetOptions{})
+	namespace, err := c.ClientSet.CoreV1().Namespaces().Get(ctx, name, metav1.GetOptions{})
 
 	if err != nil {
 		return result, err
