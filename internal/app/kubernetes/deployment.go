@@ -5,7 +5,6 @@
 package kubernetes
 
 import (
-	"fmt"
 	"context"
 
 	"github.com/clivern/beetle/internal/app/model"
@@ -32,10 +31,9 @@ func (c *Cluster) GetDeployments(ctx context.Context, namespace, label string) (
 	}
 
 	for _, deployment := range data.Items {
-		fmt.Printf("%+v\n", deployment.Spec.Template.Spec.Containers)
 		result = append(result, model.Deployment{
 			Name: deployment.ObjectMeta.Name,
-			UID: string(deployment.ObjectMeta.UID),
+			UID:  string(deployment.ObjectMeta.UID),
 		})
 	}
 

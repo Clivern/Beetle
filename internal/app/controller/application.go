@@ -45,10 +45,11 @@ func Application(c *gin.Context) {
 
 	for _, app := range config.Applications {
 		if app.ID == id {
-			app.CurrentImage, err = cluster.GetApplicationVersion(
+			application, err := cluster.GetApplication(
 				context.Background(),
 				ns,
 				app.ID,
+				app.Name,
 				app.ImageFormat,
 			)
 
@@ -59,14 +60,16 @@ func Application(c *gin.Context) {
 			}
 
 			c.JSON(http.StatusOK, gin.H{
-				"ID":           app.ID,
-				"Name":         app.Name,
-				"ImageFormat":  app.ImageFormat,
-				"CurrentImage": app.CurrentImage,
+				"ID":         application.ID,
+				"Name":       application.Name,
+				"Format":     application.Format,
+				"Containers": application.Containers,
 			})
 			return
 		}
 	}
+
+	fmt.Println(config)
 
 	log.WithFields(log.Fields{
 		"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
