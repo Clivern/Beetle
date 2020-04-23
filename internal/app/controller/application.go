@@ -69,8 +69,6 @@ func Application(c *gin.Context) {
 		}
 	}
 
-	fmt.Println(config)
-
 	log.WithFields(log.Fields{
 		"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
 	}).Info(fmt.Sprintf(`Application %s not found for cluster %s namespace %s`, id, cn, ns))
