@@ -10,10 +10,9 @@ import (
 
 // Application struct
 type Application struct {
-	ID           string `yaml:"id"`
-	Name         string `yaml:"name"`
-	ImageFormat  string `yaml:"imageFormat"`
-	CurrentImage string `yaml:"currentImage"`
+	ID          string `yaml:"id"`
+	Name        string `yaml:"name"`
+	ImageFormat string `yaml:"imageFormat"`
 }
 
 // Configs struct

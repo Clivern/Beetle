@@ -23,7 +23,7 @@ func NewHTTPClient() *HTTPClient {
 }
 
 // Get http call
-func (h *HTTPClient) Get(ctx context.Context, endpoint string, parameters map[string]string, headers map[string]string) (*http.Response, error) {
+func (h *HTTPClient) Get(ctx context.Context, endpoint string, parameters, headers map[string]string) (*http.Response, error) {
 
 	endpoint, err := h.BuildParameters(endpoint, parameters)
 
@@ -51,7 +51,7 @@ func (h *HTTPClient) Get(ctx context.Context, endpoint string, parameters map[st
 }
 
 // Post http call
-func (h *HTTPClient) Post(ctx context.Context, endpoint string, data string, parameters map[string]string, headers map[string]string) (*http.Response, error) {
+func (h *HTTPClient) Post(ctx context.Context, endpoint string, data string, parameters, headers map[string]string) (*http.Response, error) {
 
 	endpoint, err := h.BuildParameters(endpoint, parameters)
 
@@ -79,7 +79,7 @@ func (h *HTTPClient) Post(ctx context.Context, endpoint string, data string, par
 }
 
 // Put http call
-func (h *HTTPClient) Put(ctx context.Context, endpoint string, data string, parameters map[string]string, headers map[string]string) (*http.Response, error) {
+func (h *HTTPClient) Put(ctx context.Context, endpoint string, data string, parameters, headers map[string]string) (*http.Response, error) {
 
 	endpoint, err := h.BuildParameters(endpoint, parameters)
 
@@ -107,7 +107,7 @@ func (h *HTTPClient) Put(ctx context.Context, endpoint string, data string, para
 }
 
 // Delete http call
-func (h *HTTPClient) Delete(ctx context.Context, endpoint string, parameters map[string]string, headers map[string]string) (*http.Response, error) {
+func (h *HTTPClient) Delete(ctx context.Context, endpoint string, parameters, headers map[string]string) (*http.Response, error) {
 
 	endpoint, err := h.BuildParameters(endpoint, parameters)
 

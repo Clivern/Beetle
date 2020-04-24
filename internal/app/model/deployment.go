@@ -11,6 +11,7 @@ import (
 // Deployment struct
 type Deployment struct {
 	Name string `json:"name"`
+	UID  string `json:"uid"`
 }
 
 // LoadFromJSON update object from json
