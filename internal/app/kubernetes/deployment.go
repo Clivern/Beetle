@@ -63,16 +63,14 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 }
 
 // PatchDeployment updates the deployment
-func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data string) (model.Deployment, error) {
-	result := model.Deployment{}
-
+func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data string) (bool, error) {
 	err := c.Config()
 
 	if err != nil {
-		return result, err
+		return false, err
 	}
 
-	deployment, err := c.ClientSet.AppsV1().Deployments(namespace).Patch(
+	_, err = c.ClientSet.AppsV1().Deployments(namespace).Patch(
 		ctx,
 		name,
 		types.JSONPatchType,
@@ -81,11 +79,8 @@ func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data str
 	)
 
 	if err != nil {
-		return result, err
+		return false, err
 	}
 
-	result.Name = deployment.ObjectMeta.Name
-	result.UID = string(deployment.ObjectMeta.UID)
-
-	return result, nil
+	return true, nil
 }
