@@ -12,10 +12,14 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "beetle",
-	Short: "Interactively work with remote or local running beetle instance",
+	Use: "beetle",
+	Short: `Work seamlessly with Beetle from the command line.
+
+Beetle is in early stages of development, and we'd love to hear your
+feedback at <https://github.com/Clivern/Beetle>`,
 }
 
+// Execute runs cmd tool
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

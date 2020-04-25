@@ -23,7 +23,6 @@ EXPOSE 8080
 VOLUME /app/configs
 VOLUME /app/var
 
-HEALTHCHECK --interval=5s --timeout=2s --retries=5 --start-period=2s \
-  CMD ./beetle --config /app/configs/config.dist.yml --get health
+./beetle version
 
-CMD ["./beetle", "--config", "/app/configs/config.dist.yml"]
+CMD ["./beetle", "serve", "-c", "/app/configs/config.dist.yml"]

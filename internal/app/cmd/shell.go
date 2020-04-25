@@ -12,8 +12,10 @@ import (
 
 var shellCmd = &cobra.Command{
 	Use:   "shell",
-	Short: "# shell",
-	Run:   func(cmd *cobra.Command, args []string) { fmt.Println("shell", args) },
+	Short: "Interact with running beetle server",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("shell", args)
+	},
 }
 
 func init() {
