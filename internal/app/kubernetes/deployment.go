@@ -12,12 +12,6 @@ import (
 	types "k8s.io/apimachinery/pkg/types"
 )
 
-type patchUInt32Value struct {
-	Op    string `json:"op"`
-	Path  string `json:"path"`
-	Value uint32 `json:"value"`
-}
-
 // GetDeployments gets a list of deployments
 func (c *Cluster) GetDeployments(ctx context.Context, namespace, label string) ([]model.Deployment, error) {
 	result := []model.Deployment{}
