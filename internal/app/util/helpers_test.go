@@ -7,6 +7,7 @@ package util
 import (
 	"testing"
 
+	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/pkg"
 )
 
@@ -19,5 +20,18 @@ func TestInArray(t *testing.T) {
 		pkg.Expect(t, InArray("H", []string{"A", "B", "C", "D"}), false)
 		pkg.Expect(t, InArray(1, []int{2, 3, 1}), true)
 		pkg.Expect(t, InArray(9, []int{2, 3, 1}), false)
+
+		payload := []model.PatchStringValue{
+			model.PatchStringValue{
+				Op:    "replace",
+				Path:  "/spec/template/spec/containers/0/image",
+				Value: "clivern/toad:release-0.2.4",
+			},
+		}
+
+		data, err := ConvertToJSON(payload)
+
+		pkg.Expect(t, data, `[{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}]`)
+		pkg.Expect(t, err, nil)
 	})
 }

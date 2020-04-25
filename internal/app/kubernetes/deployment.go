@@ -8,9 +8,15 @@ import (
 	"context"
 
 	"github.com/clivern/beetle/internal/app/model"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	types "k8s.io/apimachinery/pkg/types"
 )
+
+type patchUInt32Value struct {
+	Op    string `json:"op"`
+	Path  string `json:"path"`
+	Value uint32 `json:"value"`
+}
 
 // GetDeployments gets a list of deployments
 func (c *Cluster) GetDeployments(ctx context.Context, namespace, label string) ([]model.Deployment, error) {
@@ -51,6 +57,34 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 	}
 
 	deployment, err := c.ClientSet.AppsV1().Deployments(namespace).Get(ctx, name, metav1.GetOptions{})
+
+	if err != nil {
+		return result, err
+	}
+
+	result.Name = deployment.ObjectMeta.Name
+	result.UID = string(deployment.ObjectMeta.UID)
+
+	return result, nil
+}
+
+// PatchDeployment updates the deployment
+func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data string) (model.Deployment, error) {
+	result := model.Deployment{}
+
+	err := c.Config()
+
+	if err != nil {
+		return result, err
+	}
+
+	deployment, err := c.ClientSet.AppsV1().Deployments(namespace).Patch(
+		ctx,
+		name,
+		types.JSONPatchType,
+		[]byte(data),
+		metav1.PatchOptions{},
+	)
 
 	if err != nil {
 		return result, err
