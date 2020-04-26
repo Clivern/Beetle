@@ -11,13 +11,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
-	builtBy = "unknown"
-)
-
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Get current and latest version",
