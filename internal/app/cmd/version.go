@@ -11,17 +11,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	Version = "dev"
+	Commit  = "none"
+	Date    = "unknown"
+	BuiltBy = "unknown"
+)
+
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Get current and latest version",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(
 			fmt.Sprintf(
-				`Current Beetle Version %v Commit %v, Built @%v by %v`,
-				version,
-				commit,
-				date,
-				builtBy,
+				`Current Beetle Version %v Commit %v, Built @%v By %v.`,
+				Version,
+				Commit,
+				Date,
+				BuiltBy,
 			),
 		)
 

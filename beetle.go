@@ -16,5 +16,11 @@ var (
 )
 
 func main() {
-	cmd.Execute(version, commit, date, builtBy)
+	// Expose build info to cmd subpackage to avoid custome ldflags
+	cmd.Version = version
+	cmd.Commit = commit
+	cmd.Date = date
+	cmd.BuiltBy = builtBy
+
+	cmd.Execute()
 }
