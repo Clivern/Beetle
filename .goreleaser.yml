@@ -20,6 +20,9 @@ checksum:
   name_template: 'checksums.txt'
 snapshot:
   name_template: "{{ .Tag }}-next"
+ldflags:
+ - -s -w -X cmd.version={{.Version}} -X cmd.commit={{.Commit}} -X cmd.date={{.Date}} -X cmd.builtBy=goreleaser
+ - ./usemsan=-msan
 changelog:
   sort: asc
   filters:

@@ -15,6 +15,7 @@ var (
 	version = "dev"
 	commit  = "none"
 	date    = "unknown"
+	builtBy = "unknown"
 )
 
 var versionCmd = &cobra.Command{
@@ -23,10 +24,11 @@ var versionCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(
 			fmt.Sprintf(
-				`Current Beetle Version %v Commit %v, Built @%v`,
+				`Current Beetle Version %v Commit %v, Built @%v by %v`,
 				version,
 				commit,
 				date,
+				builtBy,
 			),
 		)
 
