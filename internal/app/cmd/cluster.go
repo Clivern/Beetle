@@ -7,13 +7,25 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/clivern/beetle/internal/app/module"
+
 	"github.com/spf13/cobra"
 )
 
 var clusterCmd = &cobra.Command{
 	Use:   "cluster",
 	Short: "# cluster",
-	Run:   func(cmd *cobra.Command, args []string) { fmt.Println("cluster", args) },
+	Run: func(cmd *cobra.Command, args []string) {
+		module.DrawTable(
+			[]string{"Name", "Status", "Role", "Version"},
+			[][]string{
+				{"node1.example.com", "Ready", "compute", "1.11"},
+				{"node2.example.com", "Ready", "compute", "1.11"},
+				{"node3.example.com", "Ready", "compute", "1.11"},
+				{"node4.example.com", "NotReady", "compute", "1.11"},
+			},
+		)
+	},
 }
 
 var clusterListCmd = &cobra.Command{
