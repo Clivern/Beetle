@@ -1,8 +1,7 @@
 GO           ?= go
 GOFMT        ?= $(GO)fmt
 pkgs          = ./...
-NPM ?= npm
-NG ?= ng
+HUGO ?= hugo
 
 
 help: Makefile
@@ -97,6 +96,12 @@ ci: style check_license test vet lint
 run:
 	-cp -n config.dist.yml config.prod.yml
 	$(GO) run beetle.go
+
+
+## doc: Serve the docs.
+doc:
+	@echo ">> ============= Serve Docs ============= <<"
+	cd docs; $(HUGO) server --minify --theme book
 
 
 .PHONY: help
