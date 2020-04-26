@@ -12,9 +12,13 @@ import (
 )
 
 var (
+	// Version buildinfo item
 	Version = "dev"
-	Commit  = "none"
-	Date    = "unknown"
+	// Commit buildinfo item
+	Commit = "none"
+	// Date buildinfo item
+	Date = "unknown"
+	// BuiltBy buildinfo item
 	BuiltBy = "unknown"
 )
 
