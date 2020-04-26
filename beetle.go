@@ -16,7 +16,7 @@ var (
 )
 
 func main() {
-	// Expose build info to cmd subpackage to avoid custome ldflags
+	// Expose build info to cmd subpackage to avoid custom ldflags
 	cmd.Version = version
 	cmd.Commit = commit
 	cmd.Date = date
