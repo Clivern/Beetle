@@ -95,6 +95,7 @@ var serveCmd = &cobra.Command{
 		} else {
 			f, _ := os.Create(viper.GetString("log.output"))
 			gin.DefaultWriter = io.MultiWriter(f)
+			log.SetOutput(f)
 		}
 
 		if viper.GetString("log.level") == "info" {
