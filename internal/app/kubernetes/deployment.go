@@ -8,8 +8,8 @@ import (
 	"context"
 
 	"github.com/clivern/beetle/internal/app/model"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	types "k8s.io/apimachinery/pkg/types"
 )
 
 // GetDeployments gets a list of deployments
@@ -60,4 +60,27 @@ func (c *Cluster) GetDeployment(ctx context.Context, namespace, name string) (mo
 	result.UID = string(deployment.ObjectMeta.UID)
 
 	return result, nil
+}
+
+// PatchDeployment updates the deployment
+func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data string) (bool, error) {
+	err := c.Config()
+
+	if err != nil {
+		return false, err
+	}
+
+	_, err = c.ClientSet.AppsV1().Deployments(namespace).Patch(
+		ctx,
+		name,
+		types.JSONPatchType,
+		[]byte(data),
+		metav1.PatchOptions{},
+	)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

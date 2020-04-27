@@ -5,6 +5,7 @@
 package util
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -85,4 +86,13 @@ func Unset(a []string, i int) []string {
 	a[i] = a[len(a)-1]
 	a[len(a)-1] = ""
 	return a[:len(a)-1]
+}
+
+// ConvertToJSON convert object to json
+func ConvertToJSON(val interface{}) (string, error) {
+	data, err := json.Marshal(val)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
 }

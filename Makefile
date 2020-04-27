@@ -95,7 +95,7 @@ ci: style check_license test vet lint
 ## run: Run the service
 run:
 	-cp -n config.dist.yml config.prod.yml
-	$(GO) run beetle.go
+	$(GO) run beetle.go serve -c config.prod.yml
 
 
 ## doc: Serve the docs.

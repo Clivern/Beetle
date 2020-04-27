@@ -30,7 +30,7 @@ $ curl -sL https://github.com/Clivern/Beetle/releases/download/x.x.x/beetle_x.x.
 Create your config file as explained on [development part](#development) and run beetle with systemd or anything else you prefer.
 
 ```
-$ ./beetle -config=/custom/path/config.prod.yml
+$ ./beetle serve -c /custom/path/config.prod.yml
 ```
 
 
@@ -119,15 +119,15 @@ And then run the application.
 
 ```zsh
 $ go build beetle.go
-$ ./beetle
+$ ./beetle serve -c /custom/path/config.prod.yml
 
 // OR
 
 $ make run
 
-// To Provide a custom config file
-$ ./beetle -config=/custom/path/config.prod.yml
-$ go run beetle.go -config=/custom/path/config.prod.yml
+// OR
+
+$ go run beetle.go serve -c /custom/path/config.prod.yml
 ```
 
 ## Versioning

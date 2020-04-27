@@ -65,7 +65,6 @@ func (c *Cluster) GetApplication(ctx context.Context, namespace, id, name, forma
 
 	for _, deployment := range data.Items {
 		for _, container := range deployment.Spec.Template.Spec.Containers {
-
 			result.Containers = append(result.Containers, Container{
 				Name:  container.Name,
 				Image: container.Image,
