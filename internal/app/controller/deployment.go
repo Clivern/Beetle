@@ -18,13 +18,26 @@ import (
 
 // CreateDeployment controller
 func CreateDeployment(c *gin.Context, messages chan<- string) {
-	// Validate
-	// ...
-	// ...
+	rawBody, _ := c.GetRawData()
+
+	deploymentRequest := model.DeploymentRequest{}
+
+	_, err := deploymentRequest.LoadFromJSON(rawBody)
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid request!",
+		})
+		return
+	}
 
 	// Then create async job
 	db := module.Database{}
-	err := db.AutoConnect()
+	err = db.AutoConnect()
 
 	if err != nil {
 		log.WithFields(log.Fields{
