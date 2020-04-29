@@ -73,6 +73,10 @@ app:
             # Number of concurrent workers
             workers: ${BEETLE_BROKER_NATIVE_WORKERS:-4}
 
+    # API Configs
+    api:
+        token: ${BEETLE_API_TOKEN:- }
+
     # Runtime, Requests/Response and Beetle Metrics
     metrics:
         prometheus:

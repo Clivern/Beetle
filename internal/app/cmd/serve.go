@@ -132,6 +132,7 @@ var serveCmd = &cobra.Command{
 		r := gin.Default()
 
 		r.Use(middleware.Correlation())
+		r.Use(middleware.Auth())
 		r.Use(middleware.Logger())
 		r.Use(middleware.Metric())
 
