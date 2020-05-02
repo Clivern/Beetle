@@ -153,9 +153,6 @@ var serveCmd = &cobra.Command{
 		r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/deployment", func(c *gin.Context) {
 			controller.CreateDeployment(c, messages)
 		})
-		r.POST("/api/v1/cluster/:cn/namespace/:ns/app/:id/rollback", func(c *gin.Context) {
-			controller.CreateRollback(c, messages)
-		})
 		r.GET("/api/v1/job", controller.Jobs)
 		r.GET("/api/v1/job/:uuid", controller.GetJob)
 		r.DELETE("/api/v1/job/:uuid", controller.DeleteJob)

@@ -35,6 +35,37 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 		return
 	}
 
+	err = deploymentRequest.Validate([]string{
+		model.RecreateStrategy,
+		model.RampedStrategy,
+		model.CanaryStrategy,
+		model.BlueGreenStrategy,
+	})
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	result, err := deploymentRequest.ConvertToJSON()
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	// Then create async job
 	db := module.Database{}
 	err = db.AutoConnect()
@@ -57,9 +88,10 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	}
 
 	job := db.CreateJob(&model.Job{
-		UUID:   uuid,
-		Status: model.JobPending,
-		Type:   model.JobDeploymentCreate,
+		UUID:    uuid,
+		Payload: result,
+		Status:  model.JobPending,
+		Type:    model.JobDeploymentCreate,
 	})
 
 	messageObj := model.Message{

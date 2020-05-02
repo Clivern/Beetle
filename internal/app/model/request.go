@@ -6,6 +6,19 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
+	"reflect"
+)
+
+var (
+	// RecreateStrategy var
+	RecreateStrategy = "recreate"
+	// RampedStrategy var
+	RampedStrategy = "ramped"
+	// CanaryStrategy var
+	CanaryStrategy = "canary"
+	// BlueGreenStrategy var
+	BlueGreenStrategy = "blue_green"
 )
 
 // DeploymentRequest struct
@@ -30,4 +43,38 @@ func (d *DeploymentRequest) ConvertToJSON() (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+// Validate validates the request
+func (d *DeploymentRequest) Validate(strategies []string) error {
+	if d.Version != "" {
+		return fmt.Errorf(
+			"Error! version is required",
+		)
+	}
+
+	if !In(d.Strategy, strategies) {
+		return fmt.Errorf(
+			"Error! strategy %s is invalid",
+			d.Strategy,
+		)
+	}
+
+	return nil
+}
+
+// In check if value is on array
+func In(val interface{}, array interface{}) bool {
+	switch reflect.TypeOf(array).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(array)
+
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(val, s.Index(i).Interface()) {
+				return true
+			}
+		}
+	}
+
+	return false
 }

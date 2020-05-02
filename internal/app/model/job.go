@@ -21,9 +21,6 @@ var (
 
 	// JobDeploymentCreate deployment create
 	JobDeploymentCreate = "deployment.create"
-
-	// JobRollbackCreate rollback create
-	JobRollbackCreate = "rollback.create"
 )
 
 // Job struct
