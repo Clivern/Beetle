@@ -5,7 +5,7 @@
 package cmd
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/clivern/beetle/internal/app/module"
 
@@ -14,33 +14,50 @@ import (
 
 var clusterCmd = &cobra.Command{
 	Use:   "cluster",
-	Short: "# cluster",
+	Short: "Display clusters names and health",
 	Run: func(cmd *cobra.Command, args []string) {
+		var err error
+		var result [][]string
+
+		url := os.Getenv("REMOTE_BEETLE_URL")
+		token := os.Getenv("REMOTE_BEETLE_TOKEN")
+
+		if url == "" {
+			panic("Error! beetle url is missing (eg. $ export REMOTE_BEETLE_URL=http://127.0.0.1")
+		}
+
+		if len(args) > 0 {
+			err, result = getCluster(args, url, token)
+		} else {
+			err, result = getClusters(url, token)
+		}
+
+		if err != nil {
+			panic(err.Error())
+		}
+
 		module.DrawTable(
-			[]string{"Name", "Status", "Role", "Version"},
-			[][]string{
-				{"node1.example.com", "Ready", "compute", "1.11"},
-				{"node2.example.com", "Ready", "compute", "1.11"},
-				{"node3.example.com", "Ready", "compute", "1.11"},
-				{"node4.example.com", "NotReady", "compute", "1.11"},
-			},
+			[]string{"Cluster", "Health"},
+			result,
 		)
 	},
 }
 
-var clusterListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "# cluster list",
-	Run:   func(cmd *cobra.Command, args []string) { fmt.Println("cluster list", args) },
-}
-
-var clusterGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "# cluster get",
-	Run:   func(cmd *cobra.Command, args []string) { fmt.Println("cluster get", args) },
-}
-
 func init() {
-	clusterCmd.AddCommand(clusterListCmd, clusterGetCmd)
 	shellCmd.AddCommand(clusterCmd)
+}
+
+// getClusters Get Clusters List
+func getClusters(beetleURL, token string) (error, [][]string) {
+	return nil, [][]string{
+		{"Staging", "Down"},
+		{"Production", "Up"},
+	}
+}
+
+// getCluster Get Cluster
+func getCluster(clusters []string, beetleURL, token string) (error, [][]string) {
+	return nil, [][]string{
+		{"Staging", "Down"},
+	}
 }
