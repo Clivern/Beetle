@@ -94,6 +94,8 @@ func getClusters(httpClient *module.HTTPClient, beetleURL, token string) ([][]st
 	for _, clusterObj := range clusterObjs.Clusters {
 		if clusterObj.Health {
 			status = "up"
+		} else {
+			status = "down"
 		}
 
 		result = append(result, []string{clusterObj.Name, status})
