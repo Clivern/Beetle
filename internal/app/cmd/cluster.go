@@ -27,7 +27,7 @@ var clusterCmd = &cobra.Command{
 		}
 
 		if len(args) > 0 {
-			err, result = getCluster(args, url, token)
+			err, result = getCluster(args[0], url, token)
 		} else {
 			err, result = getClusters(url, token)
 		}
@@ -50,14 +50,14 @@ func init() {
 // getClusters Get Clusters List
 func getClusters(beetleURL, token string) (error, [][]string) {
 	return nil, [][]string{
-		{"Staging", "Down"},
-		{"Production", "Up"},
+		{"staging", "down"},
+		{"production", "up"},
 	}
 }
 
 // getCluster Get Cluster
-func getCluster(clusters []string, beetleURL, token string) (error, [][]string) {
+func getCluster(cluster string, beetleURL, token string) (error, [][]string) {
 	return nil, [][]string{
-		{"Staging", "Down"},
+		{"staging", "down"},
 	}
 }
