@@ -56,7 +56,7 @@ func TestClusterCMD(t *testing.T) {
 
 		defer srv.Close()
 
-		err, result := getClusters(httpClient, srv.URL, "")
+		result, err := getClusters(httpClient, srv.URL, "")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, [][]string{
@@ -74,7 +74,7 @@ func TestClusterCMD(t *testing.T) {
 
 		defer srv.Close()
 
-		err, result := getCluster(httpClient, "staging", srv.URL, "")
+		result, err := getCluster(httpClient, "staging", srv.URL, "")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, [][]string{

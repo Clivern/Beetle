@@ -36,9 +36,9 @@ var clusterCmd = &cobra.Command{
 		httpClient := module.NewHTTPClient()
 
 		if len(args) > 0 {
-			err, result = getCluster(httpClient, args[0], url, token)
+			result, err = getCluster(httpClient, args[0], url, token)
 		} else {
-			err, result = getClusters(httpClient, url, token)
+			result, err = getClusters(httpClient, url, token)
 		}
 
 		if err != nil {
@@ -61,7 +61,9 @@ func init() {
 }
 
 // getClusters Get Clusters List
-func getClusters(httpClient *module.HTTPClient, beetleURL, token string) (error, [][]string) {
+func getClusters(httpClient *module.HTTPClient, beetleURL, token string) ([][]string, error) {
+	var result [][]string
+
 	response, err := httpClient.Get(
 		context.Background(),
 		fmt.Sprintf("%s/api/v1/cluster", beetleURL),
@@ -70,27 +72,40 @@ func getClusters(httpClient *module.HTTPClient, beetleURL, token string) (error,
 	)
 
 	if httpClient.GetStatusCode(response) != http.StatusOK || err != nil {
-		return fmt.Errorf("Unable to fetch remote data"), [][]string{}
+		return result, fmt.Errorf("Unable to fetch remote data")
 	}
 
-	_, err = httpClient.ToString(response)
+	body, err := httpClient.ToString(response)
 
 	if err != nil {
-		return fmt.Errorf("Invalid response"), [][]string{}
+		return result, fmt.Errorf("Invalid response")
 	}
 
-	// @TODO
-	// convert json response to struct
-	// then into [][]string{}
+	clusterObjs := clustersResponse{}
 
-	return nil, [][]string{
-		{"staging", "down"},
-		{"production", "up"},
+	ok, err := clusterObjs.LoadFromJSON([]byte(body))
+
+	if !ok || err != nil {
+		return result, fmt.Errorf("Invalid response")
 	}
+
+	status := "down"
+
+	for _, clusterObj := range clusterObjs.Clusters {
+		if clusterObj.Health {
+			status = "up"
+		}
+
+		result = append(result, []string{clusterObj.Name, status})
+	}
+
+	return result, nil
 }
 
 // getCluster Get Cluster
-func getCluster(httpClient *module.HTTPClient, cluster, beetleURL, token string) (error, [][]string) {
+func getCluster(httpClient *module.HTTPClient, cluster, beetleURL, token string) ([][]string, error) {
+	var result [][]string
+
 	response, err := httpClient.Get(
 		context.Background(),
 		fmt.Sprintf("%s/api/v1/cluster/%s", beetleURL, cluster),
@@ -99,20 +114,30 @@ func getCluster(httpClient *module.HTTPClient, cluster, beetleURL, token string)
 	)
 
 	if httpClient.GetStatusCode(response) != http.StatusOK || err != nil {
-		return fmt.Errorf("Unable to fetch remote data"), [][]string{}
+		return result, fmt.Errorf("Unable to fetch remote data")
 	}
 
-	_, err = httpClient.ToString(response)
+	body, err := httpClient.ToString(response)
 
 	if err != nil {
-		return fmt.Errorf("Invalid response"), [][]string{}
+		return result, fmt.Errorf("Invalid response")
 	}
 
-	// @TODO
-	// convert json response to struct
-	// then into [][]string{}
+	clusterObj := clusterResponse{}
 
-	return nil, [][]string{
-		{"staging", "down"},
+	ok, err := clusterObj.LoadFromJSON([]byte(body))
+
+	if !ok || err != nil {
+		return result, fmt.Errorf("Invalid response")
 	}
+
+	status := "down"
+
+	if clusterObj.Health {
+		status = "up"
+	}
+
+	result = append(result, []string{clusterObj.Name, status})
+
+	return result, nil
 }
