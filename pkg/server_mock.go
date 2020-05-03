@@ -9,8 +9,8 @@ import (
 	"net/http/httptest"
 )
 
-// MockServer mocks http server
-func MockServer(uri, response string) *httptest.Server {
+// ServerMock mocks http server
+func ServerMock(uri, response string) *httptest.Server {
 	handler := http.NewServeMux()
 	handler.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(response))

@@ -22,6 +22,7 @@ import (
 // TestClusterCMD test cases
 func TestClusterCMD(t *testing.T) {
 	testingConfig := "config.testing.yml"
+	httpClient := module.NewHTTPClient()
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -48,14 +49,14 @@ func TestClusterCMD(t *testing.T) {
 
 	// TestGetClusters
 	t.Run("TestGetClusters", func(t *testing.T) {
-		srv := pkg.MockServer(
+		srv := pkg.ServerMock(
 			"/api/v1/cluster",
 			`{"clusters": [{"name": "staging", "health": false},{"name": "production", "health": true}]}`,
 		)
 
 		defer srv.Close()
 
-		err, result := getClusters(srv.URL, "")
+		err, result := getClusters(httpClient, srv.URL, "")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, [][]string{
@@ -66,14 +67,14 @@ func TestClusterCMD(t *testing.T) {
 
 	// TestGetCluster
 	t.Run("TestGetCluster", func(t *testing.T) {
-		srv := pkg.MockServer(
+		srv := pkg.ServerMock(
 			"/api/v1/cluster/staging",
 			`{"name": "staging", "health": false}`,
 		)
 
 		defer srv.Close()
 
-		err, result := getCluster("staging", srv.URL, "")
+		err, result := getCluster(httpClient, "staging", srv.URL, "")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, [][]string{
