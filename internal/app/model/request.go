@@ -23,8 +23,11 @@ var (
 
 // DeploymentRequest struct
 type DeploymentRequest struct {
-	Version  string `json:"version"`
-	Strategy string `json:"strategy"`
+	Cluster     string `json:"cluster"`
+	Namespace   string `json:"namespace"`
+	Application string `json:"application"`
+	Version     string `json:"version"`
+	Strategy    string `json:"strategy"`
 }
 
 // LoadFromJSON update object from json

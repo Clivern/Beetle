@@ -24,6 +24,10 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 
 	_, err := deploymentRequest.LoadFromJSON(rawBody)
 
+	deploymentRequest.Cluster = c.Param("cn")
+	deploymentRequest.Namespace = c.Param("ns")
+	deploymentRequest.Application = c.Param("id")
+
 	if err != nil {
 		log.WithFields(log.Fields{
 			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
