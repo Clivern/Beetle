@@ -54,9 +54,3 @@ func (j *Job) ConvertToJSON() (string, error) {
 	}
 	return string(data), nil
 }
-
-// Run runs the job
-func (j *Job) Run() error {
-	j.Status = JobSuccess
-	return nil
-}

@@ -5,9 +5,11 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"time"
 
+	"github.com/clivern/beetle/internal/app/kubernetes"
 	"github.com/clivern/beetle/internal/app/model"
 	"github.com/clivern/beetle/internal/app/module"
 	"github.com/clivern/beetle/internal/app/util"
@@ -21,8 +23,10 @@ func Worker(id int, messages <-chan string) {
 	var err error
 	var db module.Database
 	var job model.Job
+	var cluster *kubernetes.Cluster
 
 	messageObj := model.Message{}
+	deploymentRequest := model.DeploymentRequest{}
 
 	log.WithFields(log.Fields{
 		"CorrelationId": util.GenerateUUID4(),
@@ -57,21 +61,53 @@ func Worker(id int, messages <-chan string) {
 
 		job = db.GetJobByID(messageObj.Job)
 
-		err = job.Run()
+		job.Status = model.JobPending
 
-		now := time.Now()
+		ok, err = deploymentRequest.LoadFromJSON([]byte(job.Payload))
 
-		job.RunAt = &now
-
-		if err != nil {
+		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"CorrelationId": messageObj.UUID,
 			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [id=%d] [uuid=%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
+			continue
 		} else {
 			log.WithFields(log.Fields{
 				"CorrelationId": messageObj.UUID,
 			}).Info(fmt.Sprintf(`Worker [%d] processed async job [id=%d] [uuid=%s]`, id, messageObj.Job, job.UUID))
 		}
+
+		cluster, err = kubernetes.GetCluster(deploymentRequest.Cluster)
+
+		if err != nil {
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Info(fmt.Sprintf(`Worker [%d] Cluster not found %s: %s`, id, deploymentRequest.Cluster, err.Error()))
+			continue
+		}
+
+		ok, err = cluster.Ping(context.Background())
+
+		if !ok || err != nil {
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
+		}
+
+		ok, err = cluster.Deploy(deploymentRequest)
+
+		if !ok || err != nil {
+			log.WithFields(log.Fields{
+				"CorrelationId": messageObj.UUID,
+			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
+			continue
+		}
+
+		// Wait for the deployment to check the final
+		// Status https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status
+
+		now := time.Now()
+
+		job.RunAt = &now
 
 		db.UpdateJobByID(&job)
 	}
