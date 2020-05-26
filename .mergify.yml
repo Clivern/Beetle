@@ -1,0 +1,18 @@
+--- 
+pull_request_rules: 
+  - 
+    actions: 
+      merge: 
+        method: merge
+    conditions: 
+      - author!=Clivern
+      - "#approved-reviews-by>=1"
+    name: "Automatic Merge 🚀"
+  - 
+    actions: 
+      merge: 
+        method: merge
+    conditions: 
+      - author=Clivern
+      - label=merge
+    name: "Automatic Merge 🚀"
