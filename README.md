@@ -29,7 +29,7 @@ $ curl -sL https://github.com/Clivern/Beetle/releases/download/x.x.x/beetle_x.x.
 
 Create your config file as explained on [development part](#development) and run beetle with systemd or anything else you prefer.
 
-```
+```zsh
 $ ./beetle serve -c /custom/path/config.prod.yml
 ```
 
