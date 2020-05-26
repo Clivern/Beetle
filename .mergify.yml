@@ -2,8 +2,6 @@
 pull_request_rules:
   -
     actions:
-      comment:
-        message: "Automatic squash & merge 🚀"
       merge:
         method: squash
     conditions:
@@ -15,8 +13,6 @@ pull_request_rules:
     name: "Automatic Merge 🚀"
   -
     actions:
-      comment:
-        message: "Automatic merge 🚀"
       merge:
         method: merge
     conditions:
@@ -25,8 +21,6 @@ pull_request_rules:
     name: "Automatic Merge 🚀"
   -
     actions:
-      comment:
-        message: "Automatic squash & merge 🚀"
       merge:
         method: squash
     conditions:
@@ -42,4 +36,3 @@ pull_request_rules:
     conditions:
       - merged
     name: "Merge Done 🚀"
-
