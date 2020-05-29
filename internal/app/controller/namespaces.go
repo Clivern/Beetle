@@ -25,7 +25,7 @@ func Namespaces(c *gin.Context) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)
@@ -41,7 +41,7 @@ func Namespaces(c *gin.Context) {
 
 		if err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 		}
 	}

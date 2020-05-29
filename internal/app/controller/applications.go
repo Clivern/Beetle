@@ -26,7 +26,7 @@ func Applications(c *gin.Context) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Cluster not found %s: %s`, cn, err.Error()))
 
 		c.Status(http.StatusNotFound)
@@ -37,7 +37,7 @@ func Applications(c *gin.Context) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Warn(fmt.Sprintf(`Error while fetching beetle configMap for cluster %s namespace %s: %s`, cn, ns, err.Error()))
 	}
 
@@ -54,7 +54,7 @@ func Applications(c *gin.Context) {
 
 		if err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 			}).Warn(fmt.Sprintf(`Error while fetching application %s current version cluster %s namespace %s: %s`, app.ID, cn, ns, err.Error()))
 			continue
 		}

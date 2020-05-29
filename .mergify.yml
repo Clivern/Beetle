@@ -32,7 +32,7 @@ pull_request_rules:
   -
     actions:
       comment:
-        message: "Nice! PR merged successfully."
+        message: "Nice! PR successfully merged."
     conditions:
       - merged
     name: "Merge Done 🚀"

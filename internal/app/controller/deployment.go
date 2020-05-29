@@ -30,7 +30,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -48,7 +48,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -61,7 +61,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
 
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -76,7 +76,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error while connecting to database: %s`, err.Error()))
 
 		c.Status(http.StatusInternalServerError)

@@ -6,7 +6,6 @@ package middleware
 
 import (
 	"bytes"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/gin-gonic/gin"
@@ -27,8 +26,11 @@ func Logger() gin.HandlerFunc {
 		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Incoming Request %s:%s Body: %s`, c.Request.Method, c.Request.URL, string(bodyBytes)))
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
+			"http_method":    c.Request.Method,
+			"http_path":      c.Request.URL.Path,
+			"request_body":   string(bodyBytes),
+		}).Info("Request started")
 
 		c.Next()
 
@@ -37,7 +39,9 @@ func Logger() gin.HandlerFunc {
 		size := c.Writer.Size()
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Outgoing Response Code %d, Size %d`, status, size))
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
+			"http_status":    status,
+			"response_size":  size,
+		}).Info(`Request finished`)
 	}
 }

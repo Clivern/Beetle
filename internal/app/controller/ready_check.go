@@ -26,11 +26,11 @@ func ReadyCheck(c *gin.Context) {
 		status = "down"
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Ready Status: %s`, status))
 
 		c.Status(http.StatusInternalServerError)
@@ -43,11 +43,11 @@ func ReadyCheck(c *gin.Context) {
 		status = "down"
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Ready Status: %s`, status))
 
 		c.Status(http.StatusInternalServerError)
@@ -57,7 +57,7 @@ func ReadyCheck(c *gin.Context) {
 	defer db.Close()
 
 	log.WithFields(log.Fields{
-		"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+		"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 	}).Info(fmt.Sprintf(`Ready Status: %s`, status))
 
 	c.JSON(http.StatusOK, gin.H{

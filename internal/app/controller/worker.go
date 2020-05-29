@@ -29,7 +29,7 @@ func Worker(id int, messages <-chan string) {
 	deploymentRequest := model.DeploymentRequest{}
 
 	log.WithFields(log.Fields{
-		"CorrelationId": util.GenerateUUID4(),
+		"correlation_id": util.GenerateUUID4(),
 	}).Info(fmt.Sprintf(`Worker [%d] started`, id))
 
 	for message := range messages {
@@ -37,13 +37,13 @@ func Worker(id int, messages <-chan string) {
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Warn(fmt.Sprintf(`Worker [%d] received invalid message: %s`, id, message))
 			continue
 		}
 
 		log.WithFields(log.Fields{
-			"CorrelationId": messageObj.UUID,
+			"correlation_id": messageObj.UUID,
 		}).Info(fmt.Sprintf(`Worker [%d] received: %d`, id, messageObj.Job))
 
 		db = module.Database{}
@@ -52,7 +52,7 @@ func Worker(id int, messages <-chan string) {
 
 		if err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Error(fmt.Sprintf(`Worker [%d] unable to connect to database: %s`, id, err.Error()))
 			continue
 		}
@@ -67,12 +67,12 @@ func Worker(id int, messages <-chan string) {
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [id=%d] [uuid=%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
 			continue
 		} else {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Info(fmt.Sprintf(`Worker [%d] processed async job [id=%d] [uuid=%s]`, id, messageObj.Job, job.UUID))
 		}
 
@@ -80,7 +80,7 @@ func Worker(id int, messages <-chan string) {
 
 		if err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Info(fmt.Sprintf(`Worker [%d] Cluster not found %s: %s`, id, deploymentRequest.Cluster, err.Error()))
 			continue
 		}
@@ -89,7 +89,7 @@ func Worker(id int, messages <-chan string) {
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
 		}
 
@@ -97,7 +97,7 @@ func Worker(id int, messages <-chan string) {
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"CorrelationId": messageObj.UUID,
+				"correlation_id": messageObj.UUID,
 			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
 			continue
 		}

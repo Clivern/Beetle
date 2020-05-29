@@ -25,7 +25,7 @@ func Cluster(c *gin.Context) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Info(fmt.Sprintf(`Cluster not found %s: %s`, cn, err.Error()))
 
 		c.Status(http.StatusNotFound)
@@ -36,7 +36,7 @@ func Cluster(c *gin.Context) {
 
 	if err != nil {
 		log.WithFields(log.Fields{
-			"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
+			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
 	}
 

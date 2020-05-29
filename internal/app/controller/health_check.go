@@ -5,7 +5,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,8 +16,9 @@ func HealthCheck(c *gin.Context) {
 	status := "ok"
 
 	log.WithFields(log.Fields{
-		"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
-	}).Info(fmt.Sprintf(`Health Status: %s`, status))
+		"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
+		"status":         status,
+	}).Info(`Health check`)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,

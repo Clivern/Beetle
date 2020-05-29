@@ -5,7 +5,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -24,8 +23,12 @@ func Auth() gin.HandlerFunc {
 			authToken := c.GetHeader("X-AUTH-TOKEN")
 			if viper.GetString("app.api.token") != "" && authToken != viper.GetString("app.api.token") {
 				log.WithFields(log.Fields{
-					"CorrelationId": c.Request.Header.Get("X-Correlation-ID"),
-				}).Info(fmt.Sprintf(`Unauthorized access to %s:%s with token %s`, method, path, authToken))
+					"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
+					"http_method":    method,
+					"http_path":      path,
+					"auth_token":     authToken,
+				}).Info(`Unauthorized access`)
+
 				c.AbortWithStatus(http.StatusUnauthorized)
 			}
 		}
