@@ -23,6 +23,6 @@ EXPOSE 8080
 VOLUME /app/configs
 VOLUME /app/var
 
-./beetle version
+RUN ./beetle version
 
 CMD ["./beetle", "serve", "-c", "/app/configs/config.dist.yml"]
