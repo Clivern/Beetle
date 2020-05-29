@@ -1,6 +1,6 @@
 FROM golang:1.14.3
 
-ARG BEETLE_VERSION=0.0.3
+ARG BEETLE_VERSION=0.0.4
 
 ENV GO111MODULE=on
 
@@ -23,6 +23,6 @@ EXPOSE 8080
 VOLUME /app/configs
 VOLUME /app/var
 
-./beetle version
+RUN ./beetle version
 
 CMD ["./beetle", "serve", "-c", "/app/configs/config.dist.yml"]
