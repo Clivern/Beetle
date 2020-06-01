@@ -6,7 +6,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -25,7 +24,8 @@ func Clusters(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Error fetching clusters`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -39,7 +39,9 @@ func Clusters(c *gin.Context) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+				"cluster_name":   cluster.Name,
+				"error":          err.Error(),
+			}).Error(`Error ping a cluster`)
 		}
 
 		result = append(result, model.Cluster{

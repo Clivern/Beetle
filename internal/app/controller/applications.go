@@ -6,7 +6,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -27,7 +26,9 @@ func Applications(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Cluster not found %s: %s`, cn, err.Error()))
+			"cluster_name":   cn,
+			"error":          err.Error(),
+		}).Info(`Cluster not found`)
 
 		c.Status(http.StatusNotFound)
 		return
@@ -38,7 +39,10 @@ func Applications(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Warn(fmt.Sprintf(`Error while fetching beetle configMap for cluster %s namespace %s: %s`, cn, ns, err.Error()))
+			"cluster_name":   cn,
+			"namespace_name": ns,
+			"error":          err.Error(),
+		}).Warn(`Error while fetching beetle configMap`)
 	}
 
 	applications := []kubernetes.Application{}
@@ -55,7 +59,11 @@ func Applications(c *gin.Context) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-			}).Warn(fmt.Sprintf(`Error while fetching application %s current version cluster %s namespace %s: %s`, app.ID, cn, ns, err.Error()))
+				"application_id": app.ID,
+				"cluster_name":   cn,
+				"namespace_name": ns,
+				"error":          err.Error(),
+			}).Warn(`Error while fetching application current version`)
 			continue
 		}
 
