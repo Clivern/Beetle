@@ -13,6 +13,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/clivern/beetle/internal/app/controller"
 	"github.com/clivern/beetle/internal/app/middleware"
@@ -98,9 +99,14 @@ var serveCmd = &cobra.Command{
 			log.SetOutput(f)
 		}
 
-		if viper.GetString("log.level") == "info" {
-			log.SetLevel(log.InfoLevel)
+		lvl := strings.ToLower(viper.GetString("log.level"))
+		level, err := log.ParseLevel(lvl)
+
+		if err != nil {
+			level = log.InfoLevel
 		}
+
+		log.SetLevel(level)
 
 		if viper.GetString("app.mode") == "prod" {
 			gin.SetMode(gin.ReleaseMode)
@@ -108,7 +114,11 @@ var serveCmd = &cobra.Command{
 			gin.DisableConsoleColor()
 		}
 
-		log.SetFormatter(&log.JSONFormatter{})
+		if viper.GetString("log.format") == "json" {
+			log.SetFormatter(&log.JSONFormatter{})
+		} else {
+			log.SetFormatter(&log.TextFormatter{})
+		}
 
 		// Init DB Connection
 		db := module.Database{}
