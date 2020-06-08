@@ -41,7 +41,7 @@ func Clusters(c *gin.Context) {
 				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 				"cluster_name":   cluster.Name,
 				"error":          err.Error(),
-			}).Error(`Error ping a cluster`)
+			}).Error(`Error while ping a cluster`)
 		}
 
 		result = append(result, model.Cluster{

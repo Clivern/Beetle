@@ -5,7 +5,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/model"
@@ -31,7 +30,8 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Info(`Invalid request`)
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request!",
@@ -49,7 +49,8 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Info(`Invalid request`)
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -62,7 +63,8 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Invalid request: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Info(`Invalid request`)
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -77,7 +79,8 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error while connecting to database: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Failure while connecting database`)
 
 		c.Status(http.StatusInternalServerError)
 		return
