@@ -6,7 +6,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -30,7 +29,8 @@ func Worker(id int, messages <-chan string) {
 
 	log.WithFields(log.Fields{
 		"correlation_id": util.GenerateUUID4(),
-	}).Info(fmt.Sprintf(`Worker [%d] started`, id))
+		"worker_id":      id,
+	}).Info(`Worker started`)
 
 	for message := range messages {
 		ok, err = messageObj.LoadFromJSON([]byte(message))
@@ -38,13 +38,17 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Warn(fmt.Sprintf(`Worker [%d] received invalid message: %s`, id, message))
+				"worker_id":      id,
+				"message":        message,
+			}).Warn(`Worker received invalid message`)
 			continue
 		}
 
 		log.WithFields(log.Fields{
 			"correlation_id": messageObj.UUID,
-		}).Info(fmt.Sprintf(`Worker [%d] received: %d`, id, messageObj.Job))
+			"worker_id":      id,
+			"job_id":         messageObj.Job,
+		}).Info(`Worker received a new job`)
 
 		db = module.Database{}
 
@@ -53,7 +57,9 @@ func Worker(id int, messages <-chan string) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Error(fmt.Sprintf(`Worker [%d] unable to connect to database: %s`, id, err.Error()))
+				"worker_id":      id,
+				"error":          err.Error(),
+			}).Error(`Worker unable to connect to database`)
 			continue
 		}
 
@@ -68,12 +74,19 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Error(fmt.Sprintf(`Worker [%d] failure while executing async job [id=%d] [uuid=%s]: %s`, id, messageObj.Job, job.UUID, err.Error()))
+				"worker_id":      id,
+				"job_id":         messageObj.Job,
+				"job_uuid":       job.UUID,
+				"error":          err.Error(),
+			}).Error(`Worker failed while executing async job`)
 			continue
 		} else {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Info(fmt.Sprintf(`Worker [%d] processed async job [id=%d] [uuid=%s]`, id, messageObj.Job, job.UUID))
+				"worker_id":      id,
+				"job_id":         messageObj.Job,
+				"job_uuid":       job.UUID,
+			}).Info(`Worker processed async job`)
 		}
 
 		cluster, err = kubernetes.GetCluster(deploymentRequest.Cluster)
@@ -81,7 +94,10 @@ func Worker(id int, messages <-chan string) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Info(fmt.Sprintf(`Worker [%d] Cluster not found %s: %s`, id, deploymentRequest.Cluster, err.Error()))
+				"worker_id":      id,
+				"cluster_name":   deploymentRequest.Cluster,
+				"error":          err.Error(),
+			}).Error(`Worker can not find the cluster`)
 			continue
 		}
 
@@ -90,7 +106,10 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
+				"worker_id":      id,
+				"cluster_name":   deploymentRequest.Cluster,
+				"error":          err.Error(),
+			}).Error(`Worker unable to connect to cluster`)
 		}
 
 		ok, err = cluster.Deploy(deploymentRequest)
@@ -98,7 +117,10 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-			}).Error(fmt.Sprintf(`Worker [%d] Unable to connect to cluster %s error: %s`, id, deploymentRequest.Cluster, err.Error()))
+				"worker_id":      id,
+				"cluster_name":   deploymentRequest.Cluster,
+				"error":          err.Error(),
+			}).Error(`Worker unable to connect to cluster`)
 			continue
 		}
 
