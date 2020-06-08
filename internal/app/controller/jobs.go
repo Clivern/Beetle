@@ -5,7 +5,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/module"
@@ -23,7 +22,8 @@ func Jobs(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Failure while connecting database`)
 
 		c.Status(http.StatusInternalServerError)
 		return

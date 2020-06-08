@@ -25,7 +25,8 @@ func GetJob(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Failure while connecting database`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -38,7 +39,8 @@ func GetJob(c *gin.Context) {
 	if job.ID < 1 {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Job with UUID %s not found`, uuid))
+			"job_uuid":       uuid,
+		}).Info(fmt.Sprintf(`Job not found`))
 
 		c.Status(http.StatusNotFound)
 		return
@@ -46,7 +48,8 @@ func GetJob(c *gin.Context) {
 
 	log.WithFields(log.Fields{
 		"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-	}).Info(fmt.Sprintf(`Retrieve a job with UUID %s`, uuid))
+		"job_uuid":       uuid,
+	}).Info(`Retrieve a job`)
 
 	c.JSON(http.StatusOK, gin.H{
 		"id":        job.ID,
@@ -70,7 +73,8 @@ func DeleteJob(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Failure while connecting database`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -83,7 +87,8 @@ func DeleteJob(c *gin.Context) {
 	if job.ID < 1 {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Job with UUID %s not found`, uuid))
+			"job_uuid":       uuid,
+		}).Info(`Job not found`)
 
 		c.Status(http.StatusNotFound)
 		return
@@ -91,7 +96,8 @@ func DeleteJob(c *gin.Context) {
 
 	log.WithFields(log.Fields{
 		"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-	}).Info(fmt.Sprintf(`Deleting a job with UUID %s`, uuid))
+		"job_uuid":       uuid,
+	}).Info(`Deleting a job`)
 
 	db.DeleteJobByID(job.ID)
 

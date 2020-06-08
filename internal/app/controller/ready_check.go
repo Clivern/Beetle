@@ -5,7 +5,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/module"
@@ -27,11 +26,9 @@ func ReadyCheck(c *gin.Context) {
 
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
-
-		log.WithFields(log.Fields{
-			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Ready Status: %s`, status))
+			"status":         status,
+			"error":          err.Error(),
+		}).Error(`Failed ready check`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -44,11 +41,9 @@ func ReadyCheck(c *gin.Context) {
 
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
-
-		log.WithFields(log.Fields{
-			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Info(fmt.Sprintf(`Ready Status: %s`, status))
+			"status":         status,
+			"error":          err.Error(),
+		}).Error(`Failed ready check`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -58,7 +53,8 @@ func ReadyCheck(c *gin.Context) {
 
 	log.WithFields(log.Fields{
 		"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-	}).Info(fmt.Sprintf(`Ready Status: %s`, status))
+		"status":         status,
+	}).Info(`Passed ready check`)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": status,

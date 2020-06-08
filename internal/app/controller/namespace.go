@@ -6,7 +6,6 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -28,7 +27,8 @@ func Namespace(c *gin.Context) {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-		}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+			"error":          err.Error(),
+		}).Error(`Failure to get clusters`)
 
 		c.Status(http.StatusInternalServerError)
 		return
@@ -44,7 +44,10 @@ func Namespace(c *gin.Context) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
-			}).Error(fmt.Sprintf(`Error: %s`, err.Error()))
+				"namespace_name": ns,
+				"cluster_name":   cn,
+				"error":          err.Error(),
+			}).Error(`Failure to get cluster namespace`)
 		}
 	}
 
