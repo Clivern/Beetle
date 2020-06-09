@@ -79,25 +79,37 @@ func Worker(id int, messages <-chan string) {
 				"job_uuid":       job.UUID,
 				"error":          err.Error(),
 			}).Error(`Worker failed while executing async job`)
+			// TODO ---> mark the job as failed
 			continue
-		} else {
-			log.WithFields(log.Fields{
-				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
-				"job_id":         messageObj.Job,
-				"job_uuid":       job.UUID,
-			}).Info(`Worker processed async job`)
 		}
+
+		log.WithFields(log.Fields{
+			"correlation_id":      messageObj.UUID,
+			"worker_id":           id,
+			"job_id":              messageObj.Job,
+			"job_uuid":            job.UUID,
+			"request_cluster":     deploymentRequest.Cluster,
+			"request_namespace":   deploymentRequest.Namespace,
+			"request_application": deploymentRequest.Application,
+			"request_version":     deploymentRequest.Version,
+			"request_strategy":    deploymentRequest.Strategy,
+		}).Info(`Worker accepted deployment request`)
 
 		cluster, err = kubernetes.GetCluster(deploymentRequest.Cluster)
 
 		if err != nil {
 			log.WithFields(log.Fields{
-				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
-				"cluster_name":   deploymentRequest.Cluster,
-				"error":          err.Error(),
+				"correlation_id":      messageObj.UUID,
+				"worker_id":           id,
+				"error":               err.Error(),
+				"request_cluster":     deploymentRequest.Cluster,
+				"request_namespace":   deploymentRequest.Namespace,
+				"request_application": deploymentRequest.Application,
+				"request_version":     deploymentRequest.Version,
+				"request_strategy":    deploymentRequest.Strategy,
 			}).Error(`Worker can not find the cluster`)
+
+			// TODO ---> mark the job as failed
 			continue
 		}
 
@@ -105,27 +117,34 @@ func Worker(id int, messages <-chan string) {
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
-				"cluster_name":   deploymentRequest.Cluster,
-				"error":          err.Error(),
-			}).Error(`Worker unable to connect to cluster`)
+				"correlation_id":      messageObj.UUID,
+				"worker_id":           id,
+				"error":               err.Error(),
+				"request_cluster":     deploymentRequest.Cluster,
+				"request_namespace":   deploymentRequest.Namespace,
+				"request_application": deploymentRequest.Application,
+				"request_version":     deploymentRequest.Version,
+				"request_strategy":    deploymentRequest.Strategy,
+			}).Error(`Worker unable to ping cluster`)
 		}
 
 		ok, err = cluster.Deploy(deploymentRequest)
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
-				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
-				"cluster_name":   deploymentRequest.Cluster,
-				"error":          err.Error(),
-			}).Error(`Worker unable to connect to cluster`)
+				"correlation_id":      messageObj.UUID,
+				"worker_id":           id,
+				"error":               err.Error(),
+				"request_cluster":     deploymentRequest.Cluster,
+				"request_namespace":   deploymentRequest.Namespace,
+				"request_application": deploymentRequest.Application,
+				"request_version":     deploymentRequest.Version,
+				"request_strategy":    deploymentRequest.Strategy,
+			}).Error(`Worker unable deploy`)
+
+			// TODO ---> mark the job as failed
 			continue
 		}
-
-		// Wait for the deployment to check the final
-		// Status https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status
 
 		now := time.Now()
 

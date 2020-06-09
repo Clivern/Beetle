@@ -51,3 +51,9 @@ func (c *Cluster) BlueGreenStrategy(deploymentRequest model.DeploymentRequest) (
 func (c *Cluster) CanaryStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	return true, nil
 }
+
+// FetchDeploymentStatus get deployment status
+func (c *Cluster) FetchDeploymentStatus() {
+	// Wait for the deployment to check the final
+	// Status https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status
+}
