@@ -10,7 +10,11 @@
         <a href="https://github.com/Clivern/Beetle/blob/master/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
     </p>
 </p>
-
+<br/>
+<p align="center">
+    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/chart.png?v=0.0.3" width="100%" />
+</p>
+<br/>
 
 Application deployment and management should be automated, auditable, and easy to understand and that's what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
 
