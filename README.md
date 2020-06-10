@@ -12,7 +12,7 @@
 </p>
 <br/>
 <p align="center">
-    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/chart.png?v=0.0.4" width="100%" />
+    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.0.4" width="100%" />
 </p>
 <br/>
 
