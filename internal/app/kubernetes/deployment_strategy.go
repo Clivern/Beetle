@@ -34,11 +34,17 @@ func (c *Cluster) Deploy(deploymentRequest model.DeploymentRequest) (bool, error
 
 // RecreateStrategy terminates the old version and release the new one.
 func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
+	// deploymentRequest.Namespace
+	// deploymentRequest.Application
+	// deploymentRequest.Version
 	return true, nil
 }
 
 // RampedStrategy releases a new version on a rolling update fashion, one after the other.
 func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
+	// deploymentRequest.Namespace
+	// deploymentRequest.Application
+	// deploymentRequest.Version
 	return true, nil
 }
 
