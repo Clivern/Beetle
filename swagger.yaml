@@ -1,0 +1,72 @@
+swagger: '2.0'
+info:
+  description: |
+      Application deployment and management should be automated, auditable, and easy to understand and that\'s what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
+  version: 0.1.0
+  title: Beetle
+  contact:
+    email: hello@clivern.com
+  license:
+    name: MIT
+    url: 'https://github.com/Clivern/Beetle/blob/master/LICENSE'
+host: clivern.com
+basePath: /
+schemes:
+  - https
+  - http
+paths:
+  /_health:
+    get:
+      tags:
+        - Healthcheck
+      summary: Get system health status
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        200:
+          description: "system healthy"
+          schema:
+            $ref: "#/definitions/healthResponse"
+        500:
+          description: "system is down"
+          schema:
+            $ref: "#/definitions/healthResponse"
+  /_ready:
+    get:
+      tags:
+        - Readiness
+      summary: Get system readiness
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        200:
+          description: "system ready to accept traffic"
+          schema:
+            $ref: "#/definitions/healthResponse"
+        500:
+          description: "system not ready to accept traffic"
+          schema:
+            $ref: "#/definitions/healthResponse"
+  /metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get metrics for prometheus
+      produces:
+        - text/plain
+      parameters: []
+      responses:
+        200:
+          description: "system metrics"
+
+definitions:
+  healthResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+externalDocs:
+  description: Find out more about beetle
+  url: 'https://github.com/Clivern/Beetle'
