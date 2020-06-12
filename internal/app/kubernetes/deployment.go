@@ -6,8 +6,11 @@ package kubernetes
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/clivern/beetle/internal/app/model"
+	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 )
@@ -83,4 +86,94 @@ func (c *Cluster) PatchDeployment(ctx context.Context, namespace, name, data str
 	}
 
 	return true, nil
+}
+
+// FetchDeploymentStatus get deployment status
+func (c *Cluster) FetchDeploymentStatus(ctx context.Context, namespace, name string, limit int) (bool, error) {
+	err := c.Config()
+
+	if err != nil {
+		return false, err
+	}
+
+	// Wait till k8s pick the deployment
+	time.Sleep(10 * time.Second)
+
+	deployment, err := c.ClientSet.AppsV1().Deployments(namespace).Get(ctx, name, metav1.GetOptions{})
+
+	if err != nil {
+		return false, err
+	}
+
+	status := true
+
+	for i := 0; i < limit; i++ {
+		status = true
+
+		deployment, err = c.ClientSet.AppsV1().Deployments(namespace).Get(ctx, name, metav1.GetOptions{})
+
+		if err != nil {
+			return false, err
+		}
+
+		if int(deployment.Generation) != int(deployment.Status.ObservedGeneration) {
+			log.WithFields(log.Fields{
+				"deployment.Generation":                int(deployment.Generation),
+				"deployment.Status.ObservedGeneration": int(deployment.Status.ObservedGeneration),
+			}).Debug(`Deployment Pending`)
+
+			status = false
+		}
+
+		if int(deployment.Status.UnavailableReplicas) > 0 {
+			log.WithFields(log.Fields{
+				"deployment.Status.UnavailableReplicas": int(deployment.Status.UnavailableReplicas),
+			}).Debug(`Deployment Pending`)
+
+			status = false
+		}
+
+		if int(int32(*deployment.Spec.Replicas)) != int(deployment.Status.AvailableReplicas) {
+			log.WithFields(log.Fields{
+				"deployment.Spec.Replicas":            int(int32(*deployment.Spec.Replicas)),
+				"deployment.Status.AvailableReplicas": int(deployment.Status.AvailableReplicas),
+			}).Debug(`Deployment Pending`)
+
+			status = false
+		}
+
+		if !status {
+			time.Sleep(2 * time.Second)
+		} else {
+			log.WithFields(log.Fields{
+				"deployment.Generation":                 int(deployment.Generation),
+				"deployment.Status.ObservedGeneration":  int(deployment.Status.ObservedGeneration),
+				"deployment.Spec.Replicas":              int(int32(*deployment.Spec.Replicas)),
+				"deployment.Status.AvailableReplicas":   int(deployment.Status.AvailableReplicas),
+				"deployment.Status.UnavailableReplicas": int(deployment.Status.UnavailableReplicas),
+			}).Debug(`Deployment Success`)
+
+			return true, nil
+		}
+	}
+
+	log.WithFields(log.Fields{
+		"deployment.Generation":                 int(deployment.Generation),
+		"deployment.Status.ObservedGeneration":  int(deployment.Status.ObservedGeneration),
+		"deployment.Spec.Replicas":              int(int32(*deployment.Spec.Replicas)),
+		"deployment.Status.AvailableReplicas":   int(deployment.Status.AvailableReplicas),
+		"deployment.Status.UnavailableReplicas": int(deployment.Status.UnavailableReplicas),
+	}).Debug(`Deployment failure`)
+
+	return false, fmt.Errorf(fmt.Sprintf(
+		"Deployment %s failed: namespace %s, Generation %d, ObservedGeneration %d,"+
+			" UnavailableReplicas %d, Replicas %d, AvailableReplicas %d",
+		name,
+		namespace,
+		int(deployment.Generation),
+		int(deployment.Status.ObservedGeneration),
+		int(deployment.Status.UnavailableReplicas),
+		int(int32(*deployment.Spec.Replicas)),
+		int(deployment.Status.AvailableReplicas),
+	))
 }

@@ -125,7 +125,13 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 		}
 	}
 
-	// TODO -----> watch deployment status to ensure it is fully succeeded
+	for deploymentName := range patch {
+		status, err = c.FetchDeploymentStatus(context.Background(), deploymentRequest.Namespace, deploymentName, 600)
+
+		if !status || err != nil {
+			return false, err
+		}
+	}
 
 	return true, nil
 }
@@ -220,9 +226,16 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 		if !status || err != nil {
 			return false, err
 		}
+
 	}
 
-	// TODO -----> watch deployment status to ensure it is fully succeeded
+	for deploymentName := range patch {
+		status, err = c.FetchDeploymentStatus(context.Background(), deploymentRequest.Namespace, deploymentName, 1000)
+
+		if !status || err != nil {
+			return false, err
+		}
+	}
 
 	return true, nil
 }
@@ -235,10 +248,4 @@ func (c *Cluster) BlueGreenStrategy(deploymentRequest model.DeploymentRequest) (
 // CanaryStrategy releases a new version to a subset of users, then proceed to a full rollout.
 func (c *Cluster) CanaryStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	return true, nil
-}
-
-// FetchDeploymentStatus get deployment status
-func (c *Cluster) FetchDeploymentStatus() {
-	// Wait for the deployment to check the final
-	// Status https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status
 }
