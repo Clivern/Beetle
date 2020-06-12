@@ -73,7 +73,7 @@ func TestNamespace(t *testing.T) {
 			},
 		)
 
-		namespaces, err := cluster.GetNamespaces(context.Background())
+		namespaces, err := cluster.GetNamespaces(context.TODO())
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, namespaces[0].Name, "default")
@@ -109,7 +109,7 @@ func TestNamespace(t *testing.T) {
 			},
 		)
 
-		namespace, err := cluster.GetNamespace(context.Background(), "beetle")
+		namespace, err := cluster.GetNamespace(context.TODO(), "beetle")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, namespace.Name, "beetle")
@@ -141,7 +141,7 @@ func TestNamespace(t *testing.T) {
 			},
 		)
 
-		namespace, err := cluster.GetNamespace(context.Background(), "default")
+		namespace, err := cluster.GetNamespace(context.TODO(), "default")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, namespace.Name, "default")

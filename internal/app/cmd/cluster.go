@@ -65,7 +65,7 @@ func getClusters(httpClient *module.HTTPClient, beetleURL, token string) ([][]st
 	var result [][]string
 
 	response, err := httpClient.Get(
-		context.Background(),
+		context.TODO(),
 		fmt.Sprintf("%s/api/v1/cluster", beetleURL),
 		map[string]string{},
 		map[string]string{"X-AUTH-TOKEN": token},
@@ -109,7 +109,7 @@ func getCluster(httpClient *module.HTTPClient, cluster, beetleURL, token string)
 	var result [][]string
 
 	response, err := httpClient.Get(
-		context.Background(),
+		context.TODO(),
 		fmt.Sprintf("%s/api/v1/cluster/%s", beetleURL, cluster),
 		map[string]string{},
 		map[string]string{"X-AUTH-TOKEN": token},

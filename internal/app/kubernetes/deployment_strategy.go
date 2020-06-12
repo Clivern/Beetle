@@ -61,7 +61,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 	result := Application{}
 	patch := make(map[string][]model.PatchStringValue)
 
-	config, err := c.GetConfig(context.Background(), deploymentRequest.Namespace)
+	config, err := c.GetConfig(context.TODO(), deploymentRequest.Namespace)
 
 	if err != nil {
 		return false, err
@@ -70,7 +70,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 	for _, app := range config.Applications {
 		if app.ID == deploymentRequest.Application {
 			result, err = c.GetApplication(
-				context.Background(),
+				context.TODO(),
 				deploymentRequest.Namespace,
 				app.ID,
 				app.Name,
@@ -114,7 +114,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 		)
 
 		status, err = c.PatchDeployment(
-			context.Background(),
+			context.TODO(),
 			deploymentRequest.Namespace,
 			deploymentName,
 			data,
@@ -126,7 +126,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 	}
 
 	for deploymentName := range patch {
-		status, err = c.FetchDeploymentStatus(context.Background(), deploymentRequest.Namespace, deploymentName, 600)
+		status, err = c.FetchDeploymentStatus(context.TODO(), deploymentRequest.Namespace, deploymentName, 600)
 
 		if !status || err != nil {
 			return false, err
@@ -164,7 +164,7 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 	result := Application{}
 	patch := make(map[string][]model.PatchStringValue)
 
-	config, err := c.GetConfig(context.Background(), deploymentRequest.Namespace)
+	config, err := c.GetConfig(context.TODO(), deploymentRequest.Namespace)
 
 	if err != nil {
 		return false, err
@@ -173,7 +173,7 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 	for _, app := range config.Applications {
 		if app.ID == deploymentRequest.Application {
 			result, err = c.GetApplication(
-				context.Background(),
+				context.TODO(),
 				deploymentRequest.Namespace,
 				app.ID,
 				app.Name,
@@ -217,7 +217,7 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 		)
 
 		status, err = c.PatchDeployment(
-			context.Background(),
+			context.TODO(),
 			deploymentRequest.Namespace,
 			deploymentName,
 			data,
@@ -230,7 +230,7 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 	}
 
 	for deploymentName := range patch {
-		status, err = c.FetchDeploymentStatus(context.Background(), deploymentRequest.Namespace, deploymentName, 1000)
+		status, err = c.FetchDeploymentStatus(context.TODO(), deploymentRequest.Namespace, deploymentName, 1000)
 
 		if !status || err != nil {
 			return false, err

@@ -34,7 +34,7 @@ func Applications(c *gin.Context) {
 		return
 	}
 
-	config, err = cluster.GetConfig(context.Background(), ns)
+	config, err = cluster.GetConfig(context.TODO(), ns)
 
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -49,7 +49,7 @@ func Applications(c *gin.Context) {
 
 	for _, app := range config.Applications {
 		application, err := cluster.GetApplication(
-			context.Background(),
+			context.TODO(),
 			ns,
 			app.ID,
 			app.Name,

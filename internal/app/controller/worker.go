@@ -123,7 +123,7 @@ func Worker(id int, messages <-chan string) {
 			continue
 		}
 
-		ok, err = cluster.Ping(context.Background())
+		ok, err = cluster.Ping(context.TODO())
 
 		if !ok || err != nil {
 			log.WithFields(log.Fields{

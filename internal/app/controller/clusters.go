@@ -34,7 +34,7 @@ func Clusters(c *gin.Context) {
 	var status bool
 
 	for _, cluster := range clusters {
-		status, err = cluster.Ping(context.Background())
+		status, err = cluster.Ping(context.TODO())
 
 		if err != nil {
 			log.WithFields(log.Fields{

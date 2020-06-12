@@ -45,7 +45,7 @@ func GetLatestRelease() (LatestRelease, error) {
 	httpClient := NewHTTPClient()
 
 	response, err := httpClient.Get(
-		context.Background(),
+		context.TODO(),
 		ReleaseURL,
 		map[string]string{},
 		map[string]string{},

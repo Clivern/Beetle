@@ -33,7 +33,7 @@ func Cluster(c *gin.Context) {
 		return
 	}
 
-	status, err := cluster.Ping(context.Background())
+	status, err := cluster.Ping(context.TODO())
 
 	if err != nil {
 		log.WithFields(log.Fields{

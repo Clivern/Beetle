@@ -18,7 +18,7 @@ func TestHttpGet(t *testing.T) {
 	t.Run("TestHttpGet", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Get(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/get",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},
@@ -43,7 +43,7 @@ func TestHttpDelete(t *testing.T) {
 	t.Run("TestHttpDelete", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Delete(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/delete",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},
@@ -68,7 +68,7 @@ func TestHttpPost(t *testing.T) {
 	t.Run("TestHttpPost", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Post(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/post",
 			`{"Username":"admin", "Password":"12345"}`,
 			map[string]string{"arg1": "value1"},
@@ -98,7 +98,7 @@ func TestHttpPut(t *testing.T) {
 	t.Run("TestHttpPut", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Put(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/put",
 			`{"Username":"admin", "Password":"12345"}`,
 			map[string]string{"arg1": "value1"},
@@ -128,7 +128,7 @@ func TestHttpGetStatusCode1(t *testing.T) {
 	t.Run("TestHttpGetStatusCode1", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Get(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/status/200",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},
@@ -149,7 +149,7 @@ func TestHttpGetStatusCode2(t *testing.T) {
 	t.Run("TestHttpGetStatusCode2", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Get(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/status/500",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},
@@ -170,7 +170,7 @@ func TestHttpGetStatusCode3(t *testing.T) {
 	t.Run("TestHttpGetStatusCode3", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Get(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/status/404",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},
@@ -191,7 +191,7 @@ func TestHttpGetStatusCode4(t *testing.T) {
 	t.Run("TestHttpGetStatusCode4", func(t *testing.T) {
 		httpClient := NewHTTPClient()
 		response, error := httpClient.Get(
-			context.Background(),
+			context.TODO(),
 			"https://httpbin.org/status/201",
 			map[string]string{"arg1": "value1"},
 			map[string]string{"X-Auth": "hipp-123"},

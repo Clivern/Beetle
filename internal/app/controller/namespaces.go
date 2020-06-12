@@ -37,7 +37,7 @@ func Namespaces(c *gin.Context) {
 			continue
 		}
 
-		result, err = cluster.GetNamespaces(context.Background())
+		result, err = cluster.GetNamespaces(context.TODO())
 
 		if err != nil {
 			log.WithFields(log.Fields{
