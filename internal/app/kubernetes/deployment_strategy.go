@@ -36,24 +36,26 @@ func (c *Cluster) Deploy(deploymentRequest model.DeploymentRequest) (bool, error
 }
 
 // RecreateStrategy terminates the old version and release the new one.
+//
 // This method is like running this command
 //
 // ```
-//    	$ kubectl patch deployment toad-deployment --type=json -p '[
-// 	  	  	{"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
-//   		{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.3"}
-//     	]'
+//      $ kubectl patch deployment toad-deployment --type=json -p '[
+//          {"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
+//          {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//      ]'
 // ```
+//
 // In order to use it
 //
 //```
-// 		fmt.Println(cluster.RecreateStrategy(model.DeploymentRequest{
-//			Cluster:     $$cluster,
-//			Namespace:   $$namespace,
-//			Application: $$application_id,
-//			Version:     $$application_new_version,
-//			Strategy:    "recreate",
-//		}))
+//      cluster.RecreateStrategy(model.DeploymentRequest{
+//      	Cluster:     "~~cluster~~",
+//          Namespace:   "~~namespace",
+//          Application: "~~application id~~",
+//          Version:     ~~application new version~~",
+//          Strategy:    "recreate",
+//      })
 // ```
 func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	result := Application{}
@@ -91,14 +93,14 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 			Path:  fmt.Sprintf("/spec/template/spec/containers/%d/image", i),
 			Value: strings.Replace(container.Image, container.Version, deploymentRequest.Version, -1),
 		})
-		i += 1
+		i++
 	}
 
 	data := ""
 	status := true
 
-	for deployment_name, deployment_patch := range patch {
-		data, err = util.ConvertToJSON(deployment_patch)
+	for deploymentName, deploymentPatch := range patch {
+		data, err = util.ConvertToJSON(deploymentPatch)
 
 		if err != nil {
 			return false, err
@@ -114,7 +116,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 		status, err = c.PatchDeployment(
 			context.Background(),
 			deploymentRequest.Namespace,
-			deployment_name,
+			deploymentName,
 			data,
 		)
 
@@ -129,10 +131,99 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 }
 
 // RampedStrategy releases a new version on a rolling update fashion, one after the other.
+//
+// it will set maxSurge as 25% and maxUnavailable as 25%
+//
+// This method is like running this command
+//
+// ```
+//      $ kubectl patch deployment toad-deployment --type=json -p '[
+//          {"op":"replace", "path":"/spec/strategy", "value":{"type":"RollingUpdate"}},
+//          {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//      ]'
+// ```
+//
+// In order to use it
+//
+//```
+//      cluster.RampedStrategy(model.DeploymentRequest{
+//      	Cluster:     "~~cluster~~",
+//          Namespace:   "~~namespace",
+//          Application: "~~application id~~",
+//          Version:     ~~application new version~~",
+//          Strategy:    "ramped",
+//      })
+// ```
 func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
-	// deploymentRequest.Namespace
-	// deploymentRequest.Application
-	// deploymentRequest.Version
+	result := Application{}
+	patch := make(map[string][]model.PatchStringValue)
+
+	config, err := c.GetConfig(context.Background(), deploymentRequest.Namespace)
+
+	if err != nil {
+		return false, err
+	}
+
+	for _, app := range config.Applications {
+		if app.ID == deploymentRequest.Application {
+			result, err = c.GetApplication(
+				context.Background(),
+				deploymentRequest.Namespace,
+				app.ID,
+				app.Name,
+				app.ImageFormat,
+			)
+			if err != nil {
+				return false, err
+			}
+			break
+		}
+	}
+
+	i := 0
+	for _, container := range result.Containers {
+		if _, ok := patch[container.Deployment.Name]; !ok {
+			patch[container.Deployment.Name] = []model.PatchStringValue{}
+		}
+		patch[container.Deployment.Name] = append(patch[container.Deployment.Name], model.PatchStringValue{
+			Op:    "replace",
+			Path:  fmt.Sprintf("/spec/template/spec/containers/%d/image", i),
+			Value: strings.Replace(container.Image, container.Version, deploymentRequest.Version, -1),
+		})
+		i++
+	}
+
+	data := ""
+	status := true
+
+	for deploymentName, deploymentPatch := range patch {
+		data, err = util.ConvertToJSON(deploymentPatch)
+
+		if err != nil {
+			return false, err
+		}
+
+		// Enforce RollingUpdate strategy
+		data = strings.Replace(
+			data,
+			`[`, `[{"op":"replace","path":"/spec/strategy","value":{"type":"RollingUpdate"}},`,
+			-1,
+		)
+
+		status, err = c.PatchDeployment(
+			context.Background(),
+			deploymentRequest.Namespace,
+			deploymentName,
+			data,
+		)
+
+		if !status || err != nil {
+			return false, err
+		}
+	}
+
+	// TODO -----> watch deployment status to ensure it is fully succeeded
+
 	return true, nil
 }
 
