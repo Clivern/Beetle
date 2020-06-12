@@ -117,32 +117,25 @@ func (c *Cluster) FetchDeploymentStatus(ctx context.Context, namespace, name str
 		}
 
 		if int(deployment.Generation) != int(deployment.Status.ObservedGeneration) {
-			log.WithFields(log.Fields{
-				"deployment.Generation":                int(deployment.Generation),
-				"deployment.Status.ObservedGeneration": int(deployment.Status.ObservedGeneration),
-			}).Debug(`Deployment Pending`)
-
 			status = false
 		}
 
 		if int(deployment.Status.UnavailableReplicas) > 0 {
-			log.WithFields(log.Fields{
-				"deployment.Status.UnavailableReplicas": int(deployment.Status.UnavailableReplicas),
-			}).Debug(`Deployment Pending`)
-
 			status = false
 		}
 
 		if int(int32(*deployment.Spec.Replicas)) != int(deployment.Status.AvailableReplicas) {
-			log.WithFields(log.Fields{
-				"deployment.Spec.Replicas":            int(int32(*deployment.Spec.Replicas)),
-				"deployment.Status.AvailableReplicas": int(deployment.Status.AvailableReplicas),
-			}).Debug(`Deployment Pending`)
-
 			status = false
 		}
 
 		if !status {
+			log.WithFields(log.Fields{
+				"deployment.Generation":                 int(deployment.Generation),
+				"deployment.Status.ObservedGeneration":  int(deployment.Status.ObservedGeneration),
+				"deployment.Spec.Replicas":              int(int32(*deployment.Spec.Replicas)),
+				"deployment.Status.AvailableReplicas":   int(deployment.Status.AvailableReplicas),
+				"deployment.Status.UnavailableReplicas": int(deployment.Status.UnavailableReplicas),
+			}).Debug(`Deployment Success`)
 			time.Sleep(2 * time.Second)
 		} else {
 			log.WithFields(log.Fields{

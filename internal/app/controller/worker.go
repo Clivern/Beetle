@@ -6,6 +6,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -67,8 +68,6 @@ func Worker(id int, messages <-chan string) {
 
 		job = db.GetJobByID(messageObj.Job)
 
-		job.Status = model.JobPending
-
 		ok, err = deploymentRequest.LoadFromJSON([]byte(job.Payload))
 
 		if !ok || err != nil {
@@ -78,8 +77,14 @@ func Worker(id int, messages <-chan string) {
 				"job_id":         messageObj.Job,
 				"job_uuid":       job.UUID,
 				"error":          err.Error(),
-			}).Error(`Worker failed while executing async job`)
-			// TODO ---> mark the job as failed
+			}).Error(`Invalid job payload`)
+
+			// Job Failed
+			now := time.Now()
+			job.Status = model.JobFailed
+			job.RunAt = &now
+			job.Result = fmt.Sprintf("Invalid job payload, UUID %s", messageObj.UUID)
+			db.UpdateJobByID(&job)
 			continue
 		}
 
@@ -109,7 +114,12 @@ func Worker(id int, messages <-chan string) {
 				"request_strategy":    deploymentRequest.Strategy,
 			}).Error(`Worker can not find the cluster`)
 
-			// TODO ---> mark the job as failed
+			// Job Failed
+			now := time.Now()
+			job.Status = model.JobFailed
+			job.RunAt = &now
+			job.Result = fmt.Sprintf("Worker can not find the cluster, UUID %s", messageObj.UUID)
+			db.UpdateJobByID(&job)
 			continue
 		}
 
@@ -126,6 +136,14 @@ func Worker(id int, messages <-chan string) {
 				"request_version":     deploymentRequest.Version,
 				"request_strategy":    deploymentRequest.Strategy,
 			}).Error(`Worker unable to ping cluster`)
+
+			// Job Failed
+			now := time.Now()
+			job.Status = model.JobFailed
+			job.RunAt = &now
+			job.Result = fmt.Sprintf("Worker unable to ping cluster, UUID %s", messageObj.UUID)
+			db.UpdateJobByID(&job)
+			continue
 		}
 
 		ok, err = cluster.Deploy(deploymentRequest)
@@ -142,14 +160,30 @@ func Worker(id int, messages <-chan string) {
 				"request_strategy":    deploymentRequest.Strategy,
 			}).Error(`Worker unable deploy`)
 
-			// TODO ---> mark the job as failed
+			// Job Failed
+			now := time.Now()
+			job.Status = model.JobFailed
+			job.RunAt = &now
+			job.Result = fmt.Sprintf("Failure during deployment, UUID %s", messageObj.UUID)
+			db.UpdateJobByID(&job)
 			continue
 		}
 
+		log.WithFields(log.Fields{
+			"correlation_id":      messageObj.UUID,
+			"worker_id":           id,
+			"request_cluster":     deploymentRequest.Cluster,
+			"request_namespace":   deploymentRequest.Namespace,
+			"request_application": deploymentRequest.Application,
+			"request_version":     deploymentRequest.Version,
+			"request_strategy":    deploymentRequest.Strategy,
+		}).Info(`Deployment finished successfully`)
+
+		// Job Succeeded
 		now := time.Now()
-
+		job.Status = model.JobSuccess
 		job.RunAt = &now
-
+		job.Result = "Deployment finished successfully"
 		db.UpdateJobByID(&job)
 	}
 }

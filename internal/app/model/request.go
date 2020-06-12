@@ -50,7 +50,7 @@ func (d *DeploymentRequest) ConvertToJSON() (string, error) {
 
 // Validate validates the request
 func (d *DeploymentRequest) Validate(strategies []string) error {
-	if d.Version != "" {
+	if d.Version == "" {
 		return fmt.Errorf(
 			"Error! version is required",
 		)
