@@ -1,11 +1,11 @@
 <p align="center">
-    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.3" width="180" />
+    <img alt="Beetle Logo" src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.5" width="180" />
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
         <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
-        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-0.0.3-red.svg"></a>
-        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.3"></a>
+        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-0.0.5-red.svg"></a>
+        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.5"></a>
         <a href="https://hub.docker.com/r/clivern/beetle"><img src="https://img.shields.io/badge/Docker-Latest-orange"></a>
         <a href="https://github.com/Clivern/Beetle/blob/master/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
     </p>
