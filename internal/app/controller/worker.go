@@ -18,7 +18,7 @@ import (
 )
 
 // Worker controller
-func Worker(id int, messages <-chan string) {
+func Worker(workerID int, messages <-chan string) {
 	var ok bool
 	var err error
 	var db module.Database
@@ -30,7 +30,7 @@ func Worker(id int, messages <-chan string) {
 
 	log.WithFields(log.Fields{
 		"correlation_id": util.GenerateUUID4(),
-		"worker_id":      id,
+		"worker_id":      workerID,
 	}).Info(`Worker started`)
 
 	for message := range messages {
@@ -39,7 +39,7 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
+				"worker_id":      workerID,
 				"message":        message,
 			}).Warn(`Worker received invalid message`)
 			continue
@@ -47,7 +47,7 @@ func Worker(id int, messages <-chan string) {
 
 		log.WithFields(log.Fields{
 			"correlation_id": messageObj.UUID,
-			"worker_id":      id,
+			"worker_id":      workerID,
 			"job_id":         messageObj.Job,
 		}).Info(`Worker received a new job`)
 
@@ -58,7 +58,7 @@ func Worker(id int, messages <-chan string) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
+				"worker_id":      workerID,
 				"error":          err.Error(),
 			}).Error(`Worker unable to connect to database`)
 			continue
@@ -73,7 +73,7 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id": messageObj.UUID,
-				"worker_id":      id,
+				"worker_id":      workerID,
 				"job_id":         messageObj.Job,
 				"job_uuid":       job.UUID,
 				"error":          err.Error(),
@@ -90,7 +90,7 @@ func Worker(id int, messages <-chan string) {
 
 		log.WithFields(log.Fields{
 			"correlation_id":      messageObj.UUID,
-			"worker_id":           id,
+			"worker_id":           workerID,
 			"job_id":              messageObj.Job,
 			"job_uuid":            job.UUID,
 			"request_cluster":     deploymentRequest.Cluster,
@@ -105,7 +105,7 @@ func Worker(id int, messages <-chan string) {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id":      messageObj.UUID,
-				"worker_id":           id,
+				"worker_id":           workerID,
 				"error":               err.Error(),
 				"request_cluster":     deploymentRequest.Cluster,
 				"request_namespace":   deploymentRequest.Namespace,
@@ -128,7 +128,7 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id":      messageObj.UUID,
-				"worker_id":           id,
+				"worker_id":           workerID,
 				"error":               err.Error(),
 				"request_cluster":     deploymentRequest.Cluster,
 				"request_namespace":   deploymentRequest.Namespace,
@@ -151,7 +151,7 @@ func Worker(id int, messages <-chan string) {
 		if !ok || err != nil {
 			log.WithFields(log.Fields{
 				"correlation_id":      messageObj.UUID,
-				"worker_id":           id,
+				"worker_id":           workerID,
 				"error":               err.Error(),
 				"request_cluster":     deploymentRequest.Cluster,
 				"request_namespace":   deploymentRequest.Namespace,
@@ -171,7 +171,7 @@ func Worker(id int, messages <-chan string) {
 
 		log.WithFields(log.Fields{
 			"correlation_id":      messageObj.UUID,
-			"worker_id":           id,
+			"worker_id":           workerID,
 			"request_cluster":     deploymentRequest.Cluster,
 			"request_namespace":   deploymentRequest.Namespace,
 			"request_application": deploymentRequest.Application,

@@ -39,24 +39,10 @@ func (c *Cluster) Deploy(deploymentRequest model.DeploymentRequest) (bool, error
 //
 // This method is like running this command
 //
-// ```
-//      $ kubectl patch deployment toad-deployment --type=json -p '[
-//          {"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
-//          {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
-//      ]'
-// ```
-//
-// In order to use it
-//
-//```
-//      cluster.RecreateStrategy(model.DeploymentRequest{
-//      	Cluster:     "~~cluster~~",
-//          Namespace:   "~~namespace",
-//          Application: "~~application id~~",
-//          Version:     ~~application new version~~",
-//          Strategy:    "recreate",
-//      })
-// ```
+// $ kubectl patch deployment toad-deployment --type=json -p '[
+//     {"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
+//     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+// ]'
 func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	result := Application{}
 	patch := make(map[string][]model.PatchStringValue)
@@ -142,24 +128,10 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 //
 // This method is like running this command
 //
-// ```
-//      $ kubectl patch deployment toad-deployment --type=json -p '[
-//          {"op":"replace", "path":"/spec/strategy", "value":{"type":"RollingUpdate"}},
-//          {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
-//      ]'
-// ```
-//
-// In order to use it
-//
-//```
-//      cluster.RampedStrategy(model.DeploymentRequest{
-//      	Cluster:     "~~cluster~~",
-//          Namespace:   "~~namespace",
-//          Application: "~~application id~~",
-//          Version:     ~~application new version~~",
-//          Strategy:    "ramped",
-//      })
-// ```
+// $ kubectl patch deployment toad-deployment --type=json -p '[
+//     {"op":"replace", "path":"/spec/strategy", "value":{"type":"RollingUpdate"}},
+//     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+// ]'
 func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	result := Application{}
 	patch := make(map[string][]model.PatchStringValue)
@@ -241,11 +213,11 @@ func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (boo
 }
 
 // BlueGreenStrategy releases a new version alongside the old version then switch traffic.
-func (c *Cluster) BlueGreenStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
+func (c *Cluster) BlueGreenStrategy(_ model.DeploymentRequest) (bool, error) {
 	return true, nil
 }
 
 // CanaryStrategy releases a new version to a subset of users, then proceed to a full rollout.
-func (c *Cluster) CanaryStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
+func (c *Cluster) CanaryStrategy(_ model.DeploymentRequest) (bool, error) {
 	return true, nil
 }
