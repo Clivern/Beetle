@@ -171,6 +171,8 @@ var serveCmd = &cobra.Command{
 			go controller.Worker(i+1, messages)
 		}
 
+		go controller.Daemon()
+
 		var runerr error
 
 		if viper.GetBool("app.tls.status") {
