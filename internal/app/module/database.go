@@ -27,7 +27,7 @@ type Database struct {
 func (db *Database) Connect(dsn model.DSN) error {
 	var err error
 
-	// Reuse db connections
+	// Reuse db connections http://go-database-sql.org/surprises.html
 	if db.Ping() == nil {
 		return nil
 	}
