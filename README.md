@@ -106,10 +106,12 @@ app:
     clusters:
         -
             name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
+            inCluster: ${BEETLE_KUBE_CLUSTER_01_IN_CLUSTER:-false}
             kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/app/configs/production-cluster-kubeconfig.yaml}
             configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-configs}
         -
             name: ${BEETLE_KUBE_CLUSTER_02_NAME:-staging}
+            inCluster: ${BEETLE_KUBE_CLUSTER_02_IN_CLUSTER:-false}
             kubeconfig: ${BEETLE_KUBE_CLUSTER_02_CONFIG_FILE:-/app/configs/staging-cluster-kubeconfig.yaml}
             configMapName: ${BEETLE_KUBE_CLUSTER_02_CONFIG_MAP:-beetle-configs}
 
