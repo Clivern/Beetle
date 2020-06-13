@@ -19,8 +19,8 @@ var (
 	// JobSuccess success job type
 	JobSuccess = "SUCCESS"
 
-	// JobDeploymentCreate deployment create
-	JobDeploymentCreate = "deployment.create"
+	// JobDeploymentUpdate deployment update
+	JobDeploymentUpdate = "deployment.update"
 )
 
 // Job struct

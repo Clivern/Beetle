@@ -98,7 +98,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 		UUID:    uuid,
 		Payload: result,
 		Status:  model.JobPending,
-		Type:    model.JobDeploymentCreate,
+		Type:    model.JobDeploymentUpdate,
 	})
 
 	messageObj := model.Message{

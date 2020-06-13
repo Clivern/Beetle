@@ -137,6 +137,15 @@ func (db *Database) GetJobByUUID(uuid string) model.Job {
 	return job
 }
 
+// CountJobs count jobs by status
+func (db *Database) CountJobs(status string) int {
+	count := 0
+
+	db.Connection.Model(&model.Job{}).Where("status = ?", status).Count(&count)
+
+	return count
+}
+
 // DeleteJobByID deletes a job by id
 func (db *Database) DeleteJobByID(id int) {
 	db.Connection.Unscoped().Where("id=?", id).Delete(&migration.Job{})

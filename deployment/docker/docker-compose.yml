@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+
+    # Redis Service
+    redis:
+        image: 'redis:3.2-alpine'
+        volumes:
+            - 'redis_data:/data'
+        ports:
+            - '6379:6379'
+        restart: always
+
+    # Prometheus Service
+    prometheus:
+        image: 'prom/prometheus:v2.18.1'
+        volumes:
+            - './:/etc/prometheus'
+        command: '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - '9090:9090'
+        restart: always
+
+    # Grafana Service
+    grafana:
+        image: 'grafana/grafana:6.7.4'
+        environment:
+            - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+            - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+            - GF_USERS_ALLOW_SIGN_UP=false
+        ports:
+            - '3000:3000'
+        depends_on:
+            - prometheus
+        restart: always
+
+volumes:
+    redis_data: null
