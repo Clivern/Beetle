@@ -15,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/fake"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -27,6 +28,7 @@ type Clusters struct {
 type Cluster struct {
 	Name          string `mapstructure:",name"`
 	Kubeconfig    string `mapstructure:",kubeconfig"`
+	InCluster     bool   `mapstructure:",inCluster"`
 	ConfigMapName string `mapstructure:",configMapName"`
 	ClientSet     kubernetes.Interface
 	Fake          bool
@@ -76,20 +78,31 @@ func (c *Cluster) Config() error {
 		return nil
 	}
 
-	fs := module.FileSystem{}
+	var config *rest.Config
+	var err error
 
-	if !fs.FileExists(c.Kubeconfig) {
-		return fmt.Errorf(
-			"cluster [%s] config file [%s] not exist",
-			c.Name,
-			c.Kubeconfig,
-		)
-	}
+	if !c.InCluster {
+		fs := module.FileSystem{}
 
-	config, err := clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
+		if !fs.FileExists(c.Kubeconfig) {
+			return fmt.Errorf(
+				"cluster [%s] config file [%s] not exist",
+				c.Name,
+				c.Kubeconfig,
+			)
+		}
 
-	if err != nil {
-		return err
+		config, err = clientcmd.BuildConfigFromFlags("", c.Kubeconfig)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		config, err = rest.InClusterConfig()
+
+		if err != nil {
+			return err
+		}
 	}
 
 	clientset, err := kubernetes.NewForConfig(config)
