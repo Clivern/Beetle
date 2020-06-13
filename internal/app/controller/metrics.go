@@ -64,15 +64,20 @@ func init() {
 
 // Metrics controller
 func Metrics() http.Handler {
+	var err error
+	var pendingJobsCount int
+	var failedJobsCount int
+	var successfulJobsCount int
+
 	workersCount.Set(float64(viper.GetInt("app.broker.native.workers")))
 	queueCapacity.Set(float64(viper.GetInt("app.broker.native.capacity")))
+
+	db := module.Database{}
 
 	// spin a goroutine to update db metrics
 	go func() {
 		for {
-			db := module.Database{}
-
-			err := db.AutoConnect()
+			err = db.AutoConnect()
 
 			if err != nil {
 				log.WithFields(log.Fields{
@@ -83,11 +88,20 @@ func Metrics() http.Handler {
 				continue
 			}
 
-			defer db.Close()
+			pendingJobsCount = db.CountJobs(model.JobPending)
+			failedJobsCount = db.CountJobs(model.JobFailed)
+			successfulJobsCount = db.CountJobs(model.JobSuccess)
 
-			pendingJobs.Set(float64(db.CountJobs(model.JobPending)))
-			failedJobs.Set(float64(db.CountJobs(model.JobFailed)))
-			successJobs.Set(float64(db.CountJobs(model.JobSuccess)))
+			log.WithFields(log.Fields{
+				"correlation_id":        "",
+				"pending_jobs_count":    pendingJobsCount,
+				"failed_jobs_count":     failedJobsCount,
+				"successful_jobs_count": successfulJobsCount,
+			}).Debug(`Update metrics`)
+
+			pendingJobs.Set(float64(pendingJobsCount))
+			failedJobs.Set(float64(failedJobsCount))
+			successJobs.Set(float64(successfulJobsCount))
 			time.Sleep(2 * time.Second)
 		}
 	}()

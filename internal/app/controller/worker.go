@@ -21,7 +21,6 @@ import (
 func Worker(workerID int, messages <-chan string) {
 	var ok bool
 	var err error
-	var db module.Database
 	var job model.Job
 	var cluster *kubernetes.Cluster
 
@@ -32,6 +31,8 @@ func Worker(workerID int, messages <-chan string) {
 		"correlation_id": util.GenerateUUID4(),
 		"worker_id":      workerID,
 	}).Info(`Worker started`)
+
+	db := module.Database{}
 
 	for message := range messages {
 		ok, err = messageObj.LoadFromJSON([]byte(message))
@@ -51,8 +52,6 @@ func Worker(workerID int, messages <-chan string) {
 			"job_id":         messageObj.Job,
 		}).Info(`Worker received a new job`)
 
-		db = module.Database{}
-
 		err = db.AutoConnect()
 
 		if err != nil {
@@ -63,8 +62,6 @@ func Worker(workerID int, messages <-chan string) {
 			}).Error(`Worker unable to connect to database`)
 			continue
 		}
-
-		defer db.Close()
 
 		job = db.GetJobByID(messageObj.Job)
 

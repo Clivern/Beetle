@@ -5,14 +5,17 @@
 package module
 
 import (
+	"fmt"
 	"github.com/clivern/beetle/internal/app/migration"
 	"github.com/clivern/beetle/internal/app/model"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	log "github.com/sirupsen/logrus"
 )
 
 // Database struct
@@ -23,6 +26,12 @@ type Database struct {
 // Connect connects to a MySQL database
 func (db *Database) Connect(dsn model.DSN) error {
 	var err error
+
+	// Reuse db connections
+	if db.Ping() == nil {
+		return nil
+	}
+
 	db.Connection, err = gorm.Open(dsn.Driver, dsn.ToString())
 
 	if err != nil {
@@ -34,11 +43,28 @@ func (db *Database) Connect(dsn model.DSN) error {
 
 // Ping check the db connection
 func (db *Database) Ping() error {
+
+	if db.Connection == nil {
+		return fmt.Errorf("No DB Connections Found")
+	}
+
 	err := db.Connection.DB().Ping()
 
 	if err != nil {
 		return err
 	}
+
+	// Cleanup stale connections http://go-database-sql.org/surprises.html
+	db.Connection.DB().SetMaxOpenConns(5)
+	db.Connection.DB().SetConnMaxLifetime(time.Duration(10) * time.Second)
+	dbStats := db.Connection.DB().Stats()
+
+	log.WithFields(log.Fields{
+		"dbStats.maxOpenConnections": int(dbStats.MaxOpenConnections),
+		"dbStats.openConnections":    int(dbStats.OpenConnections),
+		"dbStats.inUse":              int(dbStats.InUse),
+		"dbStats.idle":               int(dbStats.Idle),
+	}).Debug(`Open DB Connection`)
 
 	return nil
 }
@@ -46,6 +72,11 @@ func (db *Database) Ping() error {
 // AutoConnect connects to a MySQL database using loaded configs
 func (db *Database) AutoConnect() error {
 	var err error
+
+	// Reuse db connections http://go-database-sql.org/surprises.html
+	if db.Ping() == nil {
+		return nil
+	}
 
 	dsn := model.DSN{
 		Driver:   viper.GetString("app.database.driver"),
