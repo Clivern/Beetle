@@ -149,7 +149,7 @@ $ go run beetle.go serve -c /custom/path/config.prod.yml
 
 ## Beetle Terraform Provider
 
-You can find the terraform provider here https://github.com/Clivern/terraform-provider-beetle. It preferred to use it in order to interact with beetle API server or the [SDK](https://github.com/Clivern/Beetle/tree/master/sdk).
+You can find the terraform provider here https://github.com/Clivern/terraform-provider-beetle. It is preferred to use it in order to interact with beetle API server or build your own thing using the [SDK](https://github.com/Clivern/Beetle/tree/master/sdk).
 
 
 ## Versioning
