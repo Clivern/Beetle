@@ -168,6 +168,15 @@ func (db *Database) GetJobByUUID(uuid string) model.Job {
 	return job
 }
 
+// GetPendingJobByType gets a job by uuid
+func (db *Database) GetPendingJobByType(jobType string) model.Job {
+	job := model.Job{}
+
+	db.Connection.Where("status = ? AND type = ?", model.JobPending, jobType).First(&job)
+
+	return job
+}
+
 // CountJobs count jobs by status
 func (db *Database) CountJobs(status string) int {
 	count := 0
@@ -195,4 +204,13 @@ func (db *Database) UpdateJobByID(job *model.Job) {
 // Close closes MySQL database connection
 func (db *Database) Close() error {
 	return db.Connection.Close()
+}
+
+// ReleaseChildJobs count jobs by status
+func (db *Database) ReleaseChildJobs(parentID int) {
+	db.Connection.Model(&model.Job{}).Where(
+		"parent = ? AND status = ?",
+		parentID,
+		model.JobOnHold,
+	).Update("status", model.JobPending)
 }

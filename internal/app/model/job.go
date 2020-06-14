@@ -19,6 +19,9 @@ var (
 	// JobSuccess success job type
 	JobSuccess = "SUCCESS"
 
+	// JobOnHold on hold job type
+	JobOnHold = "ON_HOLD"
+
 	// JobDeploymentUpdate deployment update
 	JobDeploymentUpdate = "deployment.update"
 

@@ -119,6 +119,7 @@ app:
     webhook:
         url: ${BEETLE_WEBHOOK_URL:- }
         retry: ${BEETLE_WEBHOOK_RETRY:-3}
+        token: ${BEETLE_WEBHOOK_TOKEN:- }
 
 # Log configs
 log:

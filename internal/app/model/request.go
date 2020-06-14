@@ -28,6 +28,7 @@ type DeploymentRequest struct {
 	Application string `json:"application"`
 	Version     string `json:"version"`
 	Strategy    string `json:"strategy"`
+	Status      string `json:"status"`
 }
 
 // LoadFromJSON update object from json

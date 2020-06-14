@@ -84,6 +84,7 @@ func Worker(workerID int, messages <-chan string) {
 			job.RunAt = &now
 			job.Result = fmt.Sprintf("Invalid job payload, UUID %s", messageObj.UUID)
 			db.UpdateJobByID(&job)
+			db.ReleaseChildJobs(job.ID)
 			continue
 		}
 
@@ -100,7 +101,7 @@ func Worker(workerID int, messages <-chan string) {
 		}).Info(`Worker accepted deployment request`)
 
 		// Notify if there is a webhook
-		if viper.GetString("webhook.url") != "" {
+		if viper.GetString("app.webhook.url") != "" {
 			uuid = util.GenerateUUID4()
 
 			for db.JobExistByUUID(uuid) {
@@ -110,7 +111,7 @@ func Worker(workerID int, messages <-chan string) {
 			db.CreateJob(&model.Job{
 				UUID:    uuid,
 				Payload: job.Payload,
-				Status:  model.JobPending,
+				Status:  model.JobOnHold,
 				Parent:  messageObj.Job,
 				Type:    model.JobDeploymentNotify,
 			})
@@ -125,7 +126,7 @@ func Worker(workerID int, messages <-chan string) {
 				"request_application": deploymentRequest.Application,
 				"request_version":     deploymentRequest.Version,
 				"request_strategy":    deploymentRequest.Strategy,
-				"webhook_url":         viper.GetString("webhook.url"),
+				"webhook_url":         viper.GetString("app.webhook.url"),
 			}).Info(`HTTP webhook enabled`)
 		} else {
 			log.WithFields(log.Fields{
@@ -161,6 +162,7 @@ func Worker(workerID int, messages <-chan string) {
 			job.RunAt = &now
 			job.Result = fmt.Sprintf("Worker can not find the cluster, UUID %s", messageObj.UUID)
 			db.UpdateJobByID(&job)
+			db.ReleaseChildJobs(job.ID)
 			continue
 		}
 
@@ -184,6 +186,7 @@ func Worker(workerID int, messages <-chan string) {
 			job.RunAt = &now
 			job.Result = fmt.Sprintf("Worker unable to ping cluster, UUID %s", messageObj.UUID)
 			db.UpdateJobByID(&job)
+			db.ReleaseChildJobs(job.ID)
 			continue
 		}
 
@@ -207,6 +210,7 @@ func Worker(workerID int, messages <-chan string) {
 			job.RunAt = &now
 			job.Result = fmt.Sprintf("Failure during deployment, UUID %s", messageObj.UUID)
 			db.UpdateJobByID(&job)
+			db.ReleaseChildJobs(job.ID)
 			continue
 		}
 
@@ -226,5 +230,6 @@ func Worker(workerID int, messages <-chan string) {
 		job.RunAt = &now
 		job.Result = "Deployment finished successfully"
 		db.UpdateJobByID(&job)
+		db.ReleaseChildJobs(job.ID)
 	}
 }
