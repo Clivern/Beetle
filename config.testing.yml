@@ -61,6 +61,11 @@ app:
             kubeconfig: ${BEETLE_KUBE_CLUSTER_02_CONFIG_FILE:-/app/configs/staging-cluster-kubeconfig.yaml}
             configMapName: ${BEETLE_KUBE_CLUSTER_02_CONFIG_MAP:-beetle-configs}
 
+    # HTTP Webhook
+    webhook:
+        url: ${BEETLE_WEBHOOK_URL:- }
+        retry: ${BEETLE_WEBHOOK_RETRY:-3}
+
 # Log configs
 log:
     # Log level, it can be debug, info, warn, error, panic, fatal

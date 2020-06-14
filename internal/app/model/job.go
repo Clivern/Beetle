@@ -21,6 +21,9 @@ var (
 
 	// JobDeploymentUpdate deployment update
 	JobDeploymentUpdate = "deployment.update"
+
+	// JobDeploymentNotify deployment notify
+	JobDeploymentNotify = "deployment.notify"
 )
 
 // Job struct
@@ -32,6 +35,7 @@ type Job struct {
 	Type      string     `json:"type"`
 	Result    string     `json:"result"`
 	Retry     int        `json:"retry"`
+	Parent    int        `json:"parent"`
 	RunAt     *time.Time `json:"run_at"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`

@@ -21,6 +21,7 @@ type Job struct {
 	Type    string    `json:"type"`
 	Result  string    `json:"result"`
 	Retry   int       `json:"retry"`
+	Parent  int       `json:"parent"`
 	RunAt   time.Time `json:"run_at"`
 }
 

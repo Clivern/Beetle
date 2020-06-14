@@ -98,6 +98,7 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 		UUID:    uuid,
 		Payload: result,
 		Status:  model.JobPending,
+		Parent:  0,
 		Type:    model.JobDeploymentUpdate,
 	})
 
