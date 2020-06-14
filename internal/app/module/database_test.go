@@ -90,7 +90,8 @@ func TestDatabase(t *testing.T) {
 
 		// Create the job
 		job := db.CreateJob(&model.Job{
-			UUID: "dddde755-5f99-4e51-a517-77878986a07e",
+			UUID:   "dddde755-5f99-4e51-a517-77878986a07e",
+			Parent: 0,
 		})
 
 		pkg.Expect(t, 1, job.ID)
