@@ -146,6 +146,12 @@ $ make run
 $ go run beetle.go serve -c /custom/path/config.prod.yml
 ```
 
+
+## Beetle Terraform Provider
+
+You can find the terraform provider here https://github.com/Clivern/terraform-provider-beetle. It preferred to use it in order to interact with beetle API server or the [SDK](https://github.com/Clivern/Beetle/tree/master/sdk).
+
+
 ## Versioning
 
 For transparency into our release cycle and in striving to maintain backward compatibility, Beetle is maintained under the [Semantic Versioning guidelines](https://semver.org/) and release process is predictable and business-friendly.
