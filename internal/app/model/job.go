@@ -11,16 +11,16 @@ import (
 
 var (
 	// JobPending pending job type
-	JobPending = "PENDING"
+	JobPending = "pending"
 
 	// JobFailed failed job type
-	JobFailed = "FAILED"
+	JobFailed = "failed"
 
 	// JobSuccess success job type
-	JobSuccess = "SUCCESS"
+	JobSuccess = "success"
 
 	// JobOnHold on hold job type
-	JobOnHold = "ON_HOLD"
+	JobOnHold = "on_hold"
 
 	// JobDeploymentUpdate deployment update
 	JobDeploymentUpdate = "deployment.update"

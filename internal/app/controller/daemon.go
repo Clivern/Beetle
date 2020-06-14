@@ -40,12 +40,20 @@ var (
 			Name:      "workers_queue_success_jobs",
 			Help:      "The successful jobs in the queue",
 		})
+
+	onHoldJobs = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Namespace: "beetle",
+			Name:      "workers_queue_on_hold_jobs",
+			Help:      "The on hold jobs in the queue",
+		})
 )
 
 func init() {
 	prometheus.MustRegister(pendingJobs)
 	prometheus.MustRegister(failedJobs)
 	prometheus.MustRegister(successJobs)
+	prometheus.MustRegister(onHoldJobs)
 }
 
 // Daemon function
@@ -54,6 +62,7 @@ func Daemon() {
 	var pendingJobsCount int
 	var failedJobsCount int
 	var successfulJobsCount int
+	var onHoldJobsCount int
 	var job model.Job
 	var parentJob model.Job
 	var deploymentRequest model.DeploymentRequest
@@ -83,17 +92,20 @@ func Daemon() {
 		pendingJobsCount = db.CountJobs(model.JobPending)
 		failedJobsCount = db.CountJobs(model.JobFailed)
 		successfulJobsCount = db.CountJobs(model.JobSuccess)
+		onHoldJobsCount = db.CountJobs(model.JobOnHold)
 
 		log.WithFields(log.Fields{
 			"correlation_id":        "",
 			"pending_jobs_count":    pendingJobsCount,
 			"failed_jobs_count":     failedJobsCount,
 			"successful_jobs_count": successfulJobsCount,
+			"on_hold_jobs_count":    onHoldJobsCount,
 		}).Debug(`Update metrics`)
 
 		pendingJobs.Set(float64(pendingJobsCount))
 		failedJobs.Set(float64(failedJobsCount))
 		successJobs.Set(float64(successfulJobsCount))
+		onHoldJobs.Set(float64(onHoldJobsCount))
 
 		// Run Pending Jobs (HTTP Notification)
 		job = db.GetPendingJobByType(model.JobDeploymentNotify)
