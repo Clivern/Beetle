@@ -127,6 +127,7 @@ func Daemon() {
 						"Content-Type":      "application/json",
 						"X-AUTH-TOKEN":      viper.GetString("app.webhook.token"),
 						"X-NOTIFICATION-ID": job.UUID,
+						"X-ACTION-NAME":     job.Type,
 						"X-DEPLOYMENT-ID":   parentJob.UUID,
 					},
 				)
