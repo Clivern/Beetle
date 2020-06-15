@@ -7,6 +7,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/clivern/beetle/internal/app/kubernetes"
@@ -101,7 +102,7 @@ func Worker(workerID int, messages <-chan string) {
 		}).Info(`Worker accepted deployment request`)
 
 		// Notify if there is a webhook
-		if viper.GetString("app.webhook.url") != "" {
+		if strings.TrimSpace(viper.GetString("app.webhook.url")) != "" {
 			uuid = util.GenerateUUID4()
 
 			for db.JobExistByUUID(uuid) {
