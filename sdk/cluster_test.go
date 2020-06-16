@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
@@ -54,6 +55,7 @@ func TestClusterCRUD(t *testing.T) {
 		srv := pkg.ServerMock(
 			"/api/v1/cluster",
 			`{"clusters": [{"name": "staging", "health": false},{"name": "production", "health": true}]}`,
+			http.StatusOK,
 		)
 
 		defer srv.Close()
@@ -74,6 +76,7 @@ func TestClusterCRUD(t *testing.T) {
 		srv := pkg.ServerMock(
 			"/api/v1/cluster/staging",
 			`{"name": "staging", "health": false}`,
+			http.StatusOK,
 		)
 
 		defer srv.Close()

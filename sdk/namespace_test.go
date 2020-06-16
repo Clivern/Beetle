@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
@@ -54,6 +55,7 @@ func TestNamespaceCRUD(t *testing.T) {
 		srv := pkg.ServerMock(
 			"/api/v1/cluster/production/namespace",
 			`{"namespaces": [{"name": "default","uid": "f03ea2f1-bc1c-4563-b9c7-4413dffc18db","status": "active"},{"name": "kube-node-lease","uid": "398c907f-d888-455d-871d-145752f9ca73","status": "active"}]}`,
+			http.StatusOK,
 		)
 
 		defer srv.Close()
@@ -74,6 +76,7 @@ func TestNamespaceCRUD(t *testing.T) {
 		srv := pkg.ServerMock(
 			"/api/v1/cluster/production/namespace/default",
 			`{"name":"default","status":"active","uid":"f03ea2f1-bc1c-4563-b9c7-4413dffc18db"}`,
+			http.StatusOK,
 		)
 
 		defer srv.Close()
