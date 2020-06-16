@@ -7,7 +7,6 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/imdario/mergo v0.3.9 // indirect
 	github.com/jinzhu/gorm v1.9.13
-	github.com/olekukonko/tablewriter v0.0.4
 	github.com/prometheus/client_golang v1.6.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.6.0

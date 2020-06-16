@@ -10,9 +10,10 @@ import (
 )
 
 // ServerMock mocks http server
-func ServerMock(uri, response string) *httptest.Server {
+func ServerMock(uri, response string, statusCode int) *httptest.Server {
 	handler := http.NewServeMux()
 	handler.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(statusCode)
 		w.Write([]byte(response))
 	})
 

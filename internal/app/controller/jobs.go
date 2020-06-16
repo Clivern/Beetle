@@ -31,5 +31,7 @@ func Jobs(c *gin.Context) {
 
 	defer db.Close()
 
-	c.JSON(http.StatusOK, db.GetJobs())
+	c.JSON(http.StatusOK, gin.H{
+		"jobs": db.GetJobs(),
+	})
 }

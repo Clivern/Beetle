@@ -32,6 +32,7 @@ paths:
           description: "system is down"
           schema:
             $ref: "#/definitions/healthResponse"
+
   /_ready:
     get:
       tags:
@@ -49,6 +50,7 @@ paths:
           description: "system not ready to accept traffic"
           schema:
             $ref: "#/definitions/healthResponse"
+
   /metrics:
     get:
       tags:
@@ -60,6 +62,182 @@ paths:
       responses:
         200:
           description: "system metrics"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster:
+    get:
+      tags:
+      - "Cluster"
+      summary: "Get clusters list"
+      description: ""
+      operationId: "getClusters"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Clusters"
+        400:
+          description: "Invalid request"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster/{cn}:
+    get:
+      tags:
+      - "Cluster"
+      summary: "Get cluster by name"
+      description: ""
+      operationId: "getClusterByName"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Cluster"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Cluster not found"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster/{cn}/namespace:
+    get:
+      tags:
+      - "Namespace"
+      summary: "Get namespaces list"
+      description: ""
+      operationId: "getNamespaces"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Namespaces"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Cluster not found"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster/{cn}/namespace/{ns}:
+    get:
+      tags:
+      - "Cluster"
+      summary: "Get cluster namespace by name"
+      description: ""
+      operationId: "getClusterNamespaceByName"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      - in: "path"
+        name: ns
+        description: "The name of the cluster namespace"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Namespace"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Cluster or namespace not found"
+        500:
+          description: "Internal server error"
+
+  /api/v1/job:
+    get:
+      tags:
+      - "Job"
+      summary: "Get jobs list"
+      description: ""
+      operationId: "getJobs"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+        400:
+          description: "Invalid request"
+        500:
+          description: "Internal server error"
+
+  /api/v1/job/{uuid}:
+    get:
+      tags:
+      - "Job"
+      summary: "Get a job by UUID"
+      description: ""
+      operationId: "getJobByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: uuid
+        description: "The UUID of the job"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Job"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Job not found"
+        500:
+          description: "Internal server error"
+    delete:
+      tags:
+      - "Job"
+      summary: "Delete a job by UUID"
+      description: ""
+      operationId: "deleteJobByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: uuid
+        description: "The UUID of the job"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Job not found"
+        500:
+          description: "Internal server error"
 
 definitions:
   healthResponse:
@@ -67,6 +245,77 @@ definitions:
     properties:
       status:
         type: "string"
+
+  Cluster:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      health:
+        type: "boolean"
+
+  Clusters:
+    type: "object"
+    properties:
+      clusters:
+        type: "array"
+        items:
+          $ref: "#/definitions/Cluster"
+
+  Namespace:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      uid:
+        type: "string"
+      status:
+        type: "string"
+
+  Namespaces:
+    type: "object"
+    properties:
+      namespaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/Namespace"
+  Job:
+    type: "object"
+    properties:
+      id:
+        type: integer
+        format: int64
+      uuid:
+        type: string
+      payload:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      result:
+        type: string
+      retry:
+        type: integer
+        format: int64
+      parent:
+        type: integer
+        format: int64
+      run_at:
+        type: string
+      created_at:
+        type: string
+      updated_at:
+        type: string
+
+  Jobs:
+    type: "object"
+    properties:
+      namespaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/Job"
+
 externalDocs:
   description: Find out more about beetle
   url: 'https://github.com/Clivern/Beetle'
