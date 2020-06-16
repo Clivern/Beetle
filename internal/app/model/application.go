@@ -24,6 +24,11 @@ type Application struct {
 	Containers []Container `json:"containers"`
 }
 
+// Applications struct
+type Applications struct {
+	Applications []Application `json:"applications"`
+}
+
 // Deployment struct
 type Deployment struct {
 	Name string `json:"name"`
@@ -41,6 +46,24 @@ func (c *Application) LoadFromJSON(data []byte) (bool, error) {
 
 // ConvertToJSON convert object to json
 func (c *Application) ConvertToJSON() (string, error) {
+	data, err := json.Marshal(&c)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// LoadFromJSON update object from json
+func (c *Applications) LoadFromJSON(data []byte) (bool, error) {
+	err := json.Unmarshal(data, &c)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ConvertToJSON convert object to json
+func (c *Applications) ConvertToJSON() (string, error) {
 	data, err := json.Marshal(&c)
 	if err != nil {
 		return "", err
