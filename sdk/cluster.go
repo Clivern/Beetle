@@ -13,9 +13,6 @@ import (
 	"github.com/clivern/beetle/internal/app/module"
 )
 
-// Cluster struct
-type Cluster struct{}
-
 // GetClusters Get Clusters List
 func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, token string) (model.Clusters, error) {
 	var result model.Clusters

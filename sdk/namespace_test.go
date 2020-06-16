@@ -21,8 +21,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// TestClusterCRUD test cases
-func TestClusterCRUD(t *testing.T) {
+// TestNamespaceCRUD test cases
+func TestNamespaceCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
 	httpClient := module.NewHTTPClient()
 
@@ -49,38 +49,38 @@ func TestClusterCRUD(t *testing.T) {
 		viper.ReadConfig(bytes.NewBuffer([]byte(configParsed)))
 	})
 
-	// TestGetClusters
-	t.Run("TestGetClusters", func(t *testing.T) {
+	// TestGetNamespaces
+	t.Run("TestGetNamespaces", func(t *testing.T) {
 		srv := pkg.ServerMock(
-			"/api/v1/cluster",
-			`{"clusters": [{"name": "staging", "health": false},{"name": "production", "health": true}]}`,
+			"/api/v1/cluster/production/namespace",
+			`{"namespaces": [{"name": "default","uid": "f03ea2f1-bc1c-4563-b9c7-4413dffc18db","status": "active"},{"name": "kube-node-lease","uid": "398c907f-d888-455d-871d-145752f9ca73","status": "active"}]}`,
 		)
 
 		defer srv.Close()
 
-		result, err := GetClusters(context.TODO(), httpClient, srv.URL, "")
+		result, err := GetNamespaces(context.TODO(), httpClient, srv.URL, "production", "")
 
 		pkg.Expect(t, nil, err)
-		pkg.Expect(t, result, model.Clusters{
-			Clusters: []model.Cluster{
-				model.Cluster{Name: "staging", Health: false},
-				model.Cluster{Name: "production", Health: true},
+		pkg.Expect(t, result, model.Namespaces{
+			Namespaces: []model.Namespace{
+				model.Namespace{Name: "default", UID: "f03ea2f1-bc1c-4563-b9c7-4413dffc18db", Status: "active"},
+				model.Namespace{Name: "kube-node-lease", UID: "398c907f-d888-455d-871d-145752f9ca73", Status: "active"},
 			},
 		})
 	})
 
-	// TestGetCluster
-	t.Run("TestGetCluster", func(t *testing.T) {
+	// TestGetNamespace
+	t.Run("TestGetNamespace", func(t *testing.T) {
 		srv := pkg.ServerMock(
-			"/api/v1/cluster/staging",
-			`{"name": "staging", "health": false}`,
+			"/api/v1/cluster/production/namespace/default",
+			`{"name":"default","status":"active","uid":"f03ea2f1-bc1c-4563-b9c7-4413dffc18db"}`,
 		)
 
 		defer srv.Close()
 
-		result, err := GetCluster(context.TODO(), httpClient, srv.URL, "staging", "")
+		result, err := GetNamespace(context.TODO(), httpClient, srv.URL, "production", "default", "")
 
 		pkg.Expect(t, nil, err)
-		pkg.Expect(t, result, model.Cluster{Name: "staging", Health: false})
+		pkg.Expect(t, result, model.Namespace{Name: "default", UID: "f03ea2f1-bc1c-4563-b9c7-4413dffc18db", Status: "active"})
 	})
 }
