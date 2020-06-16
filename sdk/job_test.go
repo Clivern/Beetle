@@ -61,8 +61,7 @@ func TestJobCRUD(t *testing.T) {
 
 		result, err := GetJobs(context.TODO(), httpClient, srv.URL, "")
 
-		pkg.Expect(t, nil, err)
-
+		pkg.Expect(t, err, nil)
 		pkg.Expect(t, result.Jobs[0].ID, 1)
 		pkg.Expect(t, result.Jobs[0].UUID, "4f540ab1-2c29-47e6-b900-675312b784d8")
 		pkg.Expect(t, result.Jobs[0].Status, "pending")
@@ -81,7 +80,7 @@ func TestJobCRUD(t *testing.T) {
 
 		result, err := GetJob(context.TODO(), httpClient, srv.URL, "4f540ab1-2c29-47e6-b900-675312b784d8", "")
 
-		pkg.Expect(t, nil, err)
+		pkg.Expect(t, err, nil)
 		pkg.Expect(t, result.ID, 1)
 		pkg.Expect(t, result.UUID, "4f540ab1-2c29-47e6-b900-675312b784d8")
 		pkg.Expect(t, result.Status, "pending")
@@ -100,7 +99,7 @@ func TestJobCRUD(t *testing.T) {
 
 		result, err := DeleteJob(context.TODO(), httpClient, srv.URL, "4f540ab1-2c29-47e6-b900-675312b784d8", "")
 
-		pkg.Expect(t, nil, err)
-		pkg.Expect(t, true, result)
+		pkg.Expect(t, err, nil)
+		pkg.Expect(t, result, true)
 	})
 }

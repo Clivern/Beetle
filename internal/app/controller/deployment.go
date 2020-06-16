@@ -113,7 +113,8 @@ func CreateDeployment(c *gin.Context, messages chan<- string) {
 	messages <- message
 
 	c.JSON(http.StatusAccepted, gin.H{
-		"id":        job.UUID,
+		"id":        job.ID,
+		"uuid":      job.UUID,
 		"type":      job.Type,
 		"status":    job.Status,
 		"createdAt": job.CreatedAt,
