@@ -44,7 +44,7 @@ func (c *Cluster) Deploy(deploymentRequest model.DeploymentRequest) (bool, error
 //     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
 // ]'
 func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
-	result := Application{}
+	result := model.Application{}
 	patch := make(map[string][]model.PatchStringValue)
 
 	config, err := c.GetConfig(context.TODO(), deploymentRequest.Namespace)
@@ -133,7 +133,7 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 //     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
 // ]'
 func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
-	result := Application{}
+	result := model.Application{}
 	patch := make(map[string][]model.PatchStringValue)
 
 	config, err := c.GetConfig(context.TODO(), deploymentRequest.Namespace)

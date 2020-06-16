@@ -45,7 +45,7 @@ func Applications(c *gin.Context) {
 		}).Warn(`Error while fetching beetle configMap`)
 	}
 
-	applications := []kubernetes.Application{}
+	applications := []model.Application{}
 
 	for _, app := range config.Applications {
 		application, err := cluster.GetApplication(

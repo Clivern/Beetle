@@ -9,34 +9,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/clivern/beetle/internal/app/model"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// Container struct
-type Container struct {
-	Name       string     `json:"name"`
-	Image      string     `json:"image"`
-	Version    string     `json:"version"`
-	Deployment Deployment `json:"deployment"`
-}
-
-// Deployment struct
-type Deployment struct {
-	Name string `json:"name"`
-	UID  string `json:"uid"`
-}
-
-// Application struct
-type Application struct {
-	ID         string      `json:"id"`
-	Name       string      `json:"name"`
-	Format     string      `json:"format"`
-	Containers []Container `json:"containers"`
-}
-
 // GetApplication gets current application version
-func (c *Cluster) GetApplication(ctx context.Context, namespace, id, name, format string) (Application, error) {
-	result := Application{}
+func (c *Cluster) GetApplication(ctx context.Context, namespace, id, name, format string) (model.Application, error) {
+	result := model.Application{}
 
 	err := c.Config()
 
@@ -61,11 +41,11 @@ func (c *Cluster) GetApplication(ctx context.Context, namespace, id, name, forma
 	result.ID = id
 	result.Name = name
 	result.Format = format
-	result.Containers = []Container{}
+	result.Containers = []model.Container{}
 
 	for _, deployment := range data.Items {
 		for _, container := range deployment.Spec.Template.Spec.Containers {
-			result.Containers = append(result.Containers, Container{
+			result.Containers = append(result.Containers, model.Container{
 				Name:  container.Name,
 				Image: container.Image,
 				Version: strings.Replace(
@@ -74,7 +54,7 @@ func (c *Cluster) GetApplication(ctx context.Context, namespace, id, name, forma
 					"",
 					-1,
 				),
-				Deployment: Deployment{
+				Deployment: model.Deployment{
 					Name: deployment.ObjectMeta.Name,
 					UID:  string(deployment.ObjectMeta.UID),
 				},
