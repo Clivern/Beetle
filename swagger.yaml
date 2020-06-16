@@ -170,12 +170,82 @@ paths:
         500:
           description: "Internal server error"
 
+  /api/v1/job:
+    get:
+      tags:
+      - "Job"
+      summary: "Get jobs list"
+      description: ""
+      operationId: "getJobs"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+        400:
+          description: "Invalid request"
+        500:
+          description: "Internal server error"
+
+  /api/v1/job/{uuid}:
+    get:
+      tags:
+      - "Job"
+      summary: "Get a job by UUID"
+      description: ""
+      operationId: "getJobByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: uuid
+        description: "The UUID of the job"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Job"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Job not found"
+        500:
+          description: "Internal server error"
+    delete:
+      tags:
+      - "Job"
+      summary: "Delete a job by UUID"
+      description: ""
+      operationId: "deleteJobByUUID"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: uuid
+        description: "The UUID of the job"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Job not found"
+        500:
+          description: "Internal server error"
+
 definitions:
   healthResponse:
     type: "object"
     properties:
       status:
         type: "string"
+
   Cluster:
     type: "object"
     properties:
@@ -183,6 +253,7 @@ definitions:
         type: "string"
       health:
         type: "boolean"
+
   Clusters:
     type: "object"
     properties:
@@ -190,6 +261,7 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Cluster"
+
   Namespace:
     type: "object"
     properties:
@@ -199,6 +271,7 @@ definitions:
         type: "string"
       status:
         type: "string"
+
   Namespaces:
     type: "object"
     properties:
@@ -206,6 +279,43 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Namespace"
+  Job:
+    type: "object"
+    properties:
+      id:
+        type: integer
+        format: int64
+      uuid:
+        type: string
+      payload:
+        type: string
+      status:
+        type: string
+      type:
+        type: string
+      result:
+        type: string
+      retry:
+        type: integer
+        format: int64
+      parent:
+        type: integer
+        format: int64
+      run_at:
+        type: string
+      created_at:
+        type: string
+      updated_at:
+        type: string
+
+  Jobs:
+    type: "object"
+    properties:
+      namespaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/Job"
+
 externalDocs:
   description: Find out more about beetle
   url: 'https://github.com/Clivern/Beetle'

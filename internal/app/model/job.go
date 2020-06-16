@@ -44,6 +44,11 @@ type Job struct {
 	UpdatedAt time.Time  `json:"updated_at"`
 }
 
+// Jobs struct
+type Jobs struct {
+	Jobs []Job `json:"jobs"`
+}
+
 // LoadFromJSON update object from json
 func (j *Job) LoadFromJSON(data []byte) (bool, error) {
 	err := json.Unmarshal(data, &j)
@@ -55,6 +60,24 @@ func (j *Job) LoadFromJSON(data []byte) (bool, error) {
 
 // ConvertToJSON convert object to json
 func (j *Job) ConvertToJSON() (string, error) {
+	data, err := json.Marshal(&j)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+// LoadFromJSON update object from json
+func (j *Jobs) LoadFromJSON(data []byte) (bool, error) {
+	err := json.Unmarshal(data, &j)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// ConvertToJSON convert object to json
+func (j *Jobs) ConvertToJSON() (string, error) {
 	data, err := json.Marshal(&j)
 	if err != nil {
 		return "", err
