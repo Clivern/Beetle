@@ -1,6 +1,6 @@
 FROM golang:1.14.4
 
-ARG BEETLE_VERSION=v0.0.12
+ARG BEETLE_VERSION=0.0.13
 
 ENV GO111MODULE=on
 
@@ -11,7 +11,7 @@ RUN apt-get update
 
 WORKDIR /app
 
-RUN curl -sL https://github.com/Clivern/Beetle/releases/download/${BEETLE_VERSION}/Beetle_${BEETLE_VERSION}_Linux_x86_64.tar.gz | tar xz
+RUN curl -sL https://github.com/Clivern/Beetle/releases/download/v${BEETLE_VERSION}/Beetle_${BEETLE_VERSION}_Linux_x86_64.tar.gz | tar xz
 RUN rm LICENSE
 RUN rm README.md
 RUN mv Beetle beetle

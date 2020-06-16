@@ -1,18 +1,18 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.12" width="180" />
+    <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.0.13" width="180" />
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
         <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
-        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v0.0.12-red.svg"></a>
-        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.12"></a>
+        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v0.0.13-red.svg"></a>
+        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.0.13"></a>
         <a href="https://hub.docker.com/r/clivern/beetle"><img src="https://img.shields.io/badge/Docker-Latest-orange"></a>
         <a href="https://github.com/Clivern/Beetle/blob/master/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
     </p>
 </p>
 <br/>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.0.12" width="100%" />
+    <img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.0.13" width="100%" />
 </p>
 <br/>
 
@@ -28,7 +28,7 @@ Application deployment and management should be automated, auditable, and easy t
 Download [the latest beetle binary.](https://github.com/Clivern/Beetle/releases)
 
 ```zsh
-$ curl -sL https://github.com/Clivern/Beetle/releases/download/x.x.x/beetle_x.x.x_OS.tar.gz | tar xz
+$ curl -sL https://github.com/Clivern/Beetle/releases/download/vx.x.x/beetle_x.x.x_OS.tar.gz | tar xz
 ```
 
 Create your config file as explained on [development part](#development) and run beetle with systemd or anything else you prefer.
