@@ -152,6 +152,11 @@ $ go run beetle.go serve -c /custom/path/config.prod.yml
 You can find the terraform provider here https://github.com/Clivern/terraform-provider-beetle. It is preferred to use it in order to interact with beetle API server or build your own thing using the [SDK](https://github.com/Clivern/Beetle/tree/master/sdk).
 
 
+## API Documentation
+
+Go to https://editor.swagger.io/ and import this file https://raw.githubusercontent.com/Clivern/Beetle/master/swagger.yaml.
+
+
 ## Versioning
 
 For transparency into our release cycle and in striving to maintain backward compatibility, Beetle is maintained under the [Semantic Versioning guidelines](https://semver.org/) and release process is predictable and business-friendly.
