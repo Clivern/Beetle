@@ -81,6 +81,8 @@ paths:
             $ref: "#/definitions/Clusters"
         400:
           description: "Invalid request"
+        404:
+          description: "Resource not found"
         500:
           description: "Internal server error"
 
@@ -107,7 +109,7 @@ paths:
         400:
           description: "Invalid request"
         404:
-          description: "Cluster not found"
+          description: "Resource not found"
         500:
           description: "Internal server error"
 
@@ -134,7 +136,7 @@ paths:
         400:
           description: "Invalid request"
         404:
-          description: "Cluster not found"
+          description: "Resource not found"
         500:
           description: "Internal server error"
 
@@ -166,7 +168,119 @@ paths:
         400:
           description: "Invalid request"
         404:
-          description: "Cluster or namespace not found"
+          description: "Resource not found"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster/{cn}/namespace/{ns}/app:
+    get:
+      tags:
+      - "Application"
+      summary: "Get applications list"
+      description: ""
+      operationId: "getApplications"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      - in: "path"
+        name: ns
+        description: "The name of the cluster namespace"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Applications"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Resource not found"
+        500:
+          description: "Internal server error"
+
+  /api/v1/cluster/{cn}/namespace/{ns}/app/{id}:
+    get:
+      tags:
+      - "Application"
+      summary: "Get application by id"
+      description: ""
+      operationId: "getApplicationById"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      - in: "path"
+        name: ns
+        description: "The name of the cluster namespace"
+        required: true
+        type: "string"
+      - in: "path"
+        name: id
+        description: "The application id"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Application"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Resource not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+      - "Application"
+      summary: "Create a deployment request"
+      description: ""
+      operationId: "createDeploymentRequest"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: cn
+        description: "The name of the cluster"
+        required: true
+        type: "string"
+      - in: "path"
+        name: ns
+        description: "The name of the cluster namespace"
+        required: true
+        type: "string"
+      - in: "path"
+        name: id
+        description: "The application id"
+        required: true
+        type: "string"
+      - in: body
+        name: body
+        description: The deployment request
+        required: true
+        schema:
+          $ref: '#/definitions/DeploymentRequest'
+
+      responses:
+        202:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Job"
+        400:
+          description: "Invalid request"
+        404:
+          description: "Resource not found"
         500:
           description: "Internal server error"
 
@@ -315,6 +429,56 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Job"
+
+  Applications:
+    type: "object"
+    properties:
+      namespaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/Application"
+
+  Application:
+    type: "object"
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      format:
+        type: string
+      containers:
+        type: "array"
+        items:
+          $ref: "#/definitions/Container"
+
+  Container:
+    type: "object"
+    properties:
+      name:
+        type: string
+      image:
+        type: string
+      version:
+        type: string
+      deployment:
+        $ref: "#/definitions/Deployment"
+
+  Deployment:
+    type: "object"
+    properties:
+      name:
+        type: string
+      uid:
+        type: string
+
+  DeploymentRequest:
+    type: "object"
+    properties:
+      version:
+        type: string
+      strategy:
+        type: string
 
 externalDocs:
   description: Find out more about beetle
