@@ -2,27 +2,31 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package main
+package controller
 
 import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/clivern/beetle/app/module"
 	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
 
-var testingConfig = "config.testing.yml"
+// TestHealthCheck test cases
+func TestHealthCheck(t *testing.T) {
+	testingConfig := "config.testing.yml"
 
-// TestMain test cases
-func TestMain(t *testing.T) {
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
 		fs := module.FileSystem{}
@@ -44,7 +48,24 @@ func TestMain(t *testing.T) {
 		configParsed, _ := envsubst.EvalEnv(string(configUnparsed))
 		viper.SetConfigType("yaml")
 		viper.ReadConfig(bytes.NewBuffer([]byte(configParsed)))
+	})
+
+	// TestHealthCheckController
+	t.Run("TestHealthCheckController", func(t *testing.T) {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DefaultWriter = ioutil.Discard
+		gin.DisableConsoleColor()
+
+		router := gin.Default()
+
+		router.GET("/_health", HealthCheck)
+
+		w := httptest.NewRecorder()
+		req, _ := http.NewRequest("GET", "/_health", nil)
+		router.ServeHTTP(w, req)
 
 		pkg.Expect(t, viper.GetString("app.mode"), "test")
+		pkg.Expect(t, w.Code, 200)
+		pkg.Expect(t, strings.TrimSpace(w.Body.String()), `{"status":"ok"}`)
 	})
 }

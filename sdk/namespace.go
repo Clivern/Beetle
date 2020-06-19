@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/clivern/beetle/internal/app/model"
+	"github.com/clivern/beetle/app/model"
 )
 
 // GetNamespaces Get Namespaces List

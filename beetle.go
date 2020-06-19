@@ -5,7 +5,7 @@
 package main
 
 import (
-	"github.com/clivern/beetle/internal/app/cmd"
+	"github.com/clivern/beetle/app/cmd"
 )
 
 var (

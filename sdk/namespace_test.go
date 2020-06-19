@@ -14,8 +14,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
+	"github.com/clivern/beetle/app/model"
+	"github.com/clivern/beetle/app/module"
 	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"

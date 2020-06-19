@@ -2,19 +2,16 @@
 // Use of this source code is governed by the MIT
 // license that can be found in the LICENSE file.
 
-package sdk
+package kubernetes
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/clivern/beetle/app/model"
 	"github.com/clivern/beetle/app/module"
 	"github.com/clivern/beetle/pkg"
 
@@ -22,13 +19,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-// TestClusterCRUD test cases
-func TestClusterCRUD(t *testing.T) {
+// TestCluster test cases
+func TestCluster(t *testing.T) {
 	testingConfig := "config.testing.yml"
-
-	httpClient := Client{}
-	httpClient.SetHTTPClient(module.NewHTTPClient())
-	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -55,40 +48,32 @@ func TestClusterCRUD(t *testing.T) {
 
 	// TestGetClusters
 	t.Run("TestGetClusters", func(t *testing.T) {
-		srv := pkg.ServerMock(
-			"/api/v1/cluster",
-			`{"clusters": [{"name": "staging", "health": false},{"name": "production", "health": true}]}`,
-			http.StatusOK,
-		)
-
-		defer srv.Close()
-
-		httpClient.SetAPIURL(srv.URL)
-		result, err := httpClient.GetClusters(context.TODO())
+		clusters, err := GetClusters()
 
 		pkg.Expect(t, nil, err)
-		pkg.Expect(t, result, model.Clusters{
-			Clusters: []model.Cluster{
-				model.Cluster{Name: "staging", Health: false},
-				model.Cluster{Name: "production", Health: true},
-			},
-		})
+		pkg.Expect(t, clusters[0].Name, "production")
+		pkg.Expect(t, clusters[0].Kubeconfig, "/app/configs/production-cluster-kubeconfig.yaml")
+		pkg.Expect(t, clusters[0].ConfigMapName, "beetle-configs")
+
+		pkg.Expect(t, clusters[1].Name, "staging")
+		pkg.Expect(t, clusters[1].Kubeconfig, "/app/configs/staging-cluster-kubeconfig.yaml")
+		pkg.Expect(t, clusters[1].ConfigMapName, "beetle-configs")
 	})
 
 	// TestGetCluster
 	t.Run("TestGetCluster", func(t *testing.T) {
-		srv := pkg.ServerMock(
-			"/api/v1/cluster/staging",
-			`{"name": "staging", "health": false}`,
-			http.StatusOK,
-		)
-
-		defer srv.Close()
-
-		httpClient.SetAPIURL(srv.URL)
-		result, err := httpClient.GetCluster(context.TODO(), "staging")
+		cluster, err := GetCluster("production")
 
 		pkg.Expect(t, nil, err)
-		pkg.Expect(t, result, model.Cluster{Name: "staging", Health: false})
+		pkg.Expect(t, cluster.Name, "production")
+		pkg.Expect(t, cluster.Kubeconfig, "/app/configs/production-cluster-kubeconfig.yaml")
+		pkg.Expect(t, cluster.ConfigMapName, "beetle-configs")
+
+		cluster, err = GetCluster("not-found")
+
+		pkg.Expect(t, fmt.Errorf("Unable to find cluster not-found"), err)
+		pkg.Expect(t, cluster.Name, "")
+		pkg.Expect(t, cluster.Kubeconfig, "")
+		pkg.Expect(t, cluster.ConfigMapName, "")
 	})
 }

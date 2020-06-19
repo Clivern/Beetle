@@ -5,7 +5,7 @@
 package sdk
 
 import (
-	"github.com/clivern/beetle/internal/app/module"
+	"github.com/clivern/beetle/app/module"
 )
 
 // Client struct
