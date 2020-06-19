@@ -137,7 +137,7 @@ func Daemon() {
 					map[string]string{},
 					map[string]string{
 						"Content-Type":      "application/json",
-						"X-AUTH-TOKEN":      viper.GetString("app.webhook.token"),
+						"X-API-KEY":         viper.GetString("app.webhook.apiKey"),
 						"X-NOTIFICATION-ID": job.UUID,
 						"X-ACTION-NAME":     job.Type,
 						"X-DEPLOYMENT-ID":   parentJob.UUID,

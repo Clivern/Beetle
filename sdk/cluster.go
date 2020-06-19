@@ -14,14 +14,14 @@ import (
 )
 
 // GetClusters Get Clusters List
-func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, token string) (model.Clusters, error) {
+func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, apiKey string) (model.Clusters, error) {
 	var result model.Clusters
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster", serverURL),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
@@ -54,14 +54,14 @@ func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, 
 }
 
 // GetCluster Get Cluster
-func GetCluster(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, token string) (model.Cluster, error) {
+func GetCluster(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, apiKey string) (model.Cluster, error) {
 	var result model.Cluster
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster/%s", serverURL, cluster),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {

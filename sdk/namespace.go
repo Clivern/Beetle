@@ -14,14 +14,14 @@ import (
 )
 
 // GetNamespaces Get Namespaces List
-func GetNamespaces(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, token string) (model.Namespaces, error) {
+func GetNamespaces(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, apiKey string) (model.Namespaces, error) {
 	var result model.Namespaces
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster/%s/namespace", serverURL, cluster),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
@@ -54,14 +54,14 @@ func GetNamespaces(ctx context.Context, httpClient *module.HTTPClient, serverURL
 }
 
 // GetNamespace Get Namespace
-func GetNamespace(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, token string) (model.Namespace, error) {
+func GetNamespace(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, apiKey string) (model.Namespace, error) {
 	var result model.Namespace
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s", serverURL, cluster, namespace),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
