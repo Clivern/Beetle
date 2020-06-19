@@ -14,7 +14,7 @@ import (
 )
 
 // CreateDeployment Get Application
-func CreateDeployment(ctx context.Context, httpClient *module.HTTPClient, serverURL string, request model.DeploymentRequest, token string) (model.Job, error) {
+func CreateDeployment(ctx context.Context, httpClient *module.HTTPClient, serverURL string, request model.DeploymentRequest, apiKey string) (model.Job, error) {
 	var result model.Job
 
 	requestBody, err := request.ConvertToJSON()
@@ -28,7 +28,7 @@ func CreateDeployment(ctx context.Context, httpClient *module.HTTPClient, server
 		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s", serverURL, request.Cluster, request.Namespace, request.Application),
 		requestBody,
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {

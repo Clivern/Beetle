@@ -20,13 +20,13 @@ func Auth() gin.HandlerFunc {
 		method := c.Request.Method
 
 		if strings.Contains(path, "/api/") {
-			authToken := c.GetHeader("X-AUTH-TOKEN")
-			if viper.GetString("app.api.token") != "" && authToken != viper.GetString("app.api.token") {
+			apiKey := c.GetHeader("X-API-KEY")
+			if viper.GetString("app.api.key") != "" && apiKey != viper.GetString("app.api.key") {
 				log.WithFields(log.Fields{
 					"correlation_id": c.Request.Header.Get("X-Correlation-ID"),
 					"http_method":    method,
 					"http_path":      path,
-					"auth_token":     authToken,
+					"api_key":        apiKey,
 				}).Info(`Unauthorized access`)
 
 				c.AbortWithStatus(http.StatusUnauthorized)

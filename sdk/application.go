@@ -14,14 +14,14 @@ import (
 )
 
 // GetApplications Get Applications List
-func GetApplications(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, token string) (model.Applications, error) {
+func GetApplications(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, apiKey string) (model.Applications, error) {
 	var result model.Applications
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app", serverURL, cluster, namespace),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
@@ -54,14 +54,14 @@ func GetApplications(ctx context.Context, httpClient *module.HTTPClient, serverU
 }
 
 // GetApplication Get Application
-func GetApplication(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, application, token string) (model.Application, error) {
+func GetApplication(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, application, apiKey string) (model.Application, error) {
 	var result model.Application
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s", serverURL, cluster, namespace, application),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {

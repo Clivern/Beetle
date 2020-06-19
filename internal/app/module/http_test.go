@@ -21,7 +21,7 @@ func TestHttpGet(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/get",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusOK, httpClient.GetStatusCode(response))
@@ -32,7 +32,7 @@ func TestHttpGet(t *testing.T) {
 		pkg.Expect(t, true, strings.Contains(body, "value1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1=value1"))
-		pkg.Expect(t, true, strings.Contains(body, "X-Auth"))
+		pkg.Expect(t, true, strings.Contains(body, "X-Api-Key"))
 		pkg.Expect(t, true, strings.Contains(body, "hipp-123"))
 		pkg.Expect(t, nil, error)
 	})
@@ -46,7 +46,7 @@ func TestHttpDelete(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/delete",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusOK, httpClient.GetStatusCode(response))
@@ -57,7 +57,7 @@ func TestHttpDelete(t *testing.T) {
 		pkg.Expect(t, true, strings.Contains(body, "value1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1=value1"))
-		pkg.Expect(t, true, strings.Contains(body, "X-Auth"))
+		pkg.Expect(t, true, strings.Contains(body, "X-Api-Key"))
 		pkg.Expect(t, true, strings.Contains(body, "hipp-123"))
 		pkg.Expect(t, nil, error)
 	})
@@ -72,7 +72,7 @@ func TestHttpPost(t *testing.T) {
 			"https://httpbin.org/post",
 			`{"Username":"admin", "Password":"12345"}`,
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusOK, httpClient.GetStatusCode(response))
@@ -87,7 +87,7 @@ func TestHttpPost(t *testing.T) {
 		pkg.Expect(t, true, strings.Contains(body, "value1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1=value1"))
-		pkg.Expect(t, true, strings.Contains(body, "X-Auth"))
+		pkg.Expect(t, true, strings.Contains(body, "X-Api-Key"))
 		pkg.Expect(t, true, strings.Contains(body, "hipp-123"))
 		pkg.Expect(t, nil, error)
 	})
@@ -102,7 +102,7 @@ func TestHttpPut(t *testing.T) {
 			"https://httpbin.org/put",
 			`{"Username":"admin", "Password":"12345"}`,
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusOK, httpClient.GetStatusCode(response))
@@ -117,7 +117,7 @@ func TestHttpPut(t *testing.T) {
 		pkg.Expect(t, true, strings.Contains(body, "value1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1"))
 		pkg.Expect(t, true, strings.Contains(body, "arg1=value1"))
-		pkg.Expect(t, true, strings.Contains(body, "X-Auth"))
+		pkg.Expect(t, true, strings.Contains(body, "X-Api-Key"))
 		pkg.Expect(t, true, strings.Contains(body, "hipp-123"))
 		pkg.Expect(t, nil, error)
 	})
@@ -131,7 +131,7 @@ func TestHttpGetStatusCode1(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/status/200",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusOK, httpClient.GetStatusCode(response))
@@ -152,7 +152,7 @@ func TestHttpGetStatusCode2(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/status/500",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusInternalServerError, httpClient.GetStatusCode(response))
@@ -173,7 +173,7 @@ func TestHttpGetStatusCode3(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/status/404",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusNotFound, httpClient.GetStatusCode(response))
@@ -194,7 +194,7 @@ func TestHttpGetStatusCode4(t *testing.T) {
 			context.TODO(),
 			"https://httpbin.org/status/201",
 			map[string]string{"arg1": "value1"},
-			map[string]string{"X-Auth": "hipp-123"},
+			map[string]string{"X-Api-Key": "hipp-123"},
 		)
 
 		pkg.Expect(t, http.StatusCreated, httpClient.GetStatusCode(response))

@@ -85,6 +85,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/cluster/{cn}:
     get:
@@ -112,6 +114,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/cluster/{cn}/namespace:
     get:
@@ -139,6 +143,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/cluster/{cn}/namespace/{ns}:
     get:
@@ -171,6 +177,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/cluster/{cn}/namespace/{ns}/app:
     get:
@@ -203,6 +211,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/cluster/{cn}/namespace/{ns}/app/{id}:
     get:
@@ -240,6 +250,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
     post:
       tags:
@@ -271,7 +283,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/DeploymentRequest'
-
       responses:
         202:
           description: "successful operation"
@@ -283,6 +294,8 @@ paths:
           description: "Resource not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/job:
     get:
@@ -302,6 +315,8 @@ paths:
           description: "Invalid request"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
 
   /api/v1/job/{uuid}:
     get:
@@ -329,6 +344,9 @@ paths:
           description: "Job not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
+
     delete:
       tags:
       - "Job"
@@ -352,6 +370,14 @@ paths:
           description: "Job not found"
         500:
           description: "Internal server error"
+      security:
+        - api_key: []
+
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: X-API-KEY
+    in: header
 
 definitions:
   healthResponse:

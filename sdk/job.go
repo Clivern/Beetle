@@ -14,14 +14,14 @@ import (
 )
 
 // GetJobs Get Jobs List
-func GetJobs(ctx context.Context, httpClient *module.HTTPClient, serverURL, token string) (model.Jobs, error) {
+func GetJobs(ctx context.Context, httpClient *module.HTTPClient, serverURL, apiKey string) (model.Jobs, error) {
 	var result model.Jobs
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/job", serverURL),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
@@ -54,14 +54,14 @@ func GetJobs(ctx context.Context, httpClient *module.HTTPClient, serverURL, toke
 }
 
 // GetJob Get Job
-func GetJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, token string) (model.Job, error) {
+func GetJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, apiKey string) (model.Job, error) {
 	var result model.Job
 
 	response, err := httpClient.Get(
 		ctx,
 		fmt.Sprintf("%s/api/v1/job/%s", serverURL, uuid),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
@@ -94,12 +94,12 @@ func GetJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid,
 }
 
 // DeleteJob Delete Job
-func DeleteJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, token string) (bool, error) {
+func DeleteJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, apiKey string) (bool, error) {
 	response, err := httpClient.Delete(
 		ctx,
 		fmt.Sprintf("%s/api/v1/job/%s", serverURL, uuid),
 		map[string]string{},
-		map[string]string{"X-AUTH-TOKEN": token},
+		map[string]string{"X-API-KEY": apiKey},
 	)
 
 	if err != nil {
