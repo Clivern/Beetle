@@ -25,7 +25,10 @@ import (
 // TestNamespaceCRUD test cases
 func TestNamespaceCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
-	httpClient := module.NewHTTPClient()
+
+	httpClient := Client{}
+	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -60,7 +63,8 @@ func TestNamespaceCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetNamespaces(context.TODO(), httpClient, srv.URL, "production", "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetNamespaces(context.TODO(), "production")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Namespaces{
@@ -81,7 +85,8 @@ func TestNamespaceCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetNamespace(context.TODO(), httpClient, srv.URL, "production", "default", "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetNamespace(context.TODO(), "production", "default")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Namespace{Name: "default", UID: "f03ea2f1-bc1c-4563-b9c7-4413dffc18db", Status: "active"})

@@ -25,7 +25,10 @@ import (
 // TestApplicationCRUD test cases
 func TestApplicationCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
-	httpClient := module.NewHTTPClient()
+
+	httpClient := Client{}
+	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -60,7 +63,8 @@ func TestApplicationCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetApplications(context.TODO(), httpClient, srv.URL, "production", "default", "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetApplications(context.TODO(), "production", "default")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Applications{
@@ -95,7 +99,8 @@ func TestApplicationCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetApplication(context.TODO(), httpClient, srv.URL, "production", "default", "toad", "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetApplication(context.TODO(), "production", "default", "toad")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Application{

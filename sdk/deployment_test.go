@@ -25,7 +25,10 @@ import (
 // TestDeploymentCRUD test cases
 func TestDeploymentCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
-	httpClient := module.NewHTTPClient()
+
+	httpClient := Client{}
+	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -68,7 +71,8 @@ func TestDeploymentCRUD(t *testing.T) {
 			Strategy:    "recreate",
 		}
 
-		result, err := CreateDeployment(context.TODO(), httpClient, srv.URL, deploymentRequest, "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.CreateDeployment(context.TODO(), deploymentRequest)
 
 		pkg.Expect(t, err, nil)
 		pkg.Expect(t, 1, result.ID)

@@ -10,31 +10,30 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 )
 
 // GetNamespaces Get Namespaces List
-func GetNamespaces(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, apiKey string) (model.Namespaces, error) {
+func (c *Client) GetNamespaces(ctx context.Context, cluster string) (model.Namespaces, error) {
 	var result model.Namespaces
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s/namespace", serverURL, cluster),
+		fmt.Sprintf("%s/api/v1/cluster/%s/namespace", c.APIURL, cluster),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))
@@ -54,27 +53,27 @@ func GetNamespaces(ctx context.Context, httpClient *module.HTTPClient, serverURL
 }
 
 // GetNamespace Get Namespace
-func GetNamespace(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, apiKey string) (model.Namespace, error) {
+func (c *Client) GetNamespace(ctx context.Context, cluster, namespace string) (model.Namespace, error) {
 	var result model.Namespace
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s", serverURL, cluster, namespace),
+		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s", c.APIURL, cluster, namespace),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))

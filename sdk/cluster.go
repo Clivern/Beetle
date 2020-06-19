@@ -10,31 +10,30 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 )
 
 // GetClusters Get Clusters List
-func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, apiKey string) (model.Clusters, error) {
+func (c *Client) GetClusters(ctx context.Context) (model.Clusters, error) {
 	var result model.Clusters
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster", serverURL),
+		fmt.Sprintf("%s/api/v1/cluster", c.APIURL),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))
@@ -54,27 +53,27 @@ func GetClusters(ctx context.Context, httpClient *module.HTTPClient, serverURL, 
 }
 
 // GetCluster Get Cluster
-func GetCluster(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, apiKey string) (model.Cluster, error) {
+func (c *Client) GetCluster(ctx context.Context, cluster string) (model.Cluster, error) {
 	var result model.Cluster
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s", serverURL, cluster),
+		fmt.Sprintf("%s/api/v1/cluster/%s", c.APIURL, cluster),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))

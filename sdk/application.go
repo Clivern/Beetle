@@ -10,31 +10,30 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 )
 
 // GetApplications Get Applications List
-func GetApplications(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, apiKey string) (model.Applications, error) {
+func (c *Client) GetApplications(ctx context.Context, cluster, namespace string) (model.Applications, error) {
 	var result model.Applications
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app", serverURL, cluster, namespace),
+		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app", c.APIURL, cluster, namespace),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))
@@ -54,27 +53,27 @@ func GetApplications(ctx context.Context, httpClient *module.HTTPClient, serverU
 }
 
 // GetApplication Get Application
-func GetApplication(ctx context.Context, httpClient *module.HTTPClient, serverURL, cluster, namespace, application, apiKey string) (model.Application, error) {
+func (c *Client) GetApplication(ctx context.Context, cluster, namespace, application string) (model.Application, error) {
 	var result model.Application
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s", serverURL, cluster, namespace, application),
+		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s", c.APIURL, cluster, namespace, application),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))

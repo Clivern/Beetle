@@ -10,31 +10,30 @@ import (
 	"net/http"
 
 	"github.com/clivern/beetle/internal/app/model"
-	"github.com/clivern/beetle/internal/app/module"
 )
 
 // GetJobs Get Jobs List
-func GetJobs(ctx context.Context, httpClient *module.HTTPClient, serverURL, apiKey string) (model.Jobs, error) {
+func (c *Client) GetJobs(ctx context.Context) (model.Jobs, error) {
 	var result model.Jobs
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/job", serverURL),
+		fmt.Sprintf("%s/api/v1/job", c.APIURL),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))
@@ -54,27 +53,27 @@ func GetJobs(ctx context.Context, httpClient *module.HTTPClient, serverURL, apiK
 }
 
 // GetJob Get Job
-func GetJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, apiKey string) (model.Job, error) {
+func (c *Client) GetJob(ctx context.Context, uuid string) (model.Job, error) {
 	var result model.Job
 
-	response, err := httpClient.Get(
+	response, err := c.HTTPClient.Get(
 		ctx,
-		fmt.Sprintf("%s/api/v1/job/%s", serverURL, uuid),
+		fmt.Sprintf("%s/api/v1/job/%s", c.APIURL, uuid),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return result, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusOK {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))
 	}
 
-	body, err := httpClient.ToString(response)
+	body, err := c.HTTPClient.ToString(response)
 
 	if err != nil {
 		return result, fmt.Errorf(fmt.Sprintf("Invalid response: %s", err.Error()))
@@ -94,19 +93,19 @@ func GetJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid,
 }
 
 // DeleteJob Delete Job
-func DeleteJob(ctx context.Context, httpClient *module.HTTPClient, serverURL, uuid, apiKey string) (bool, error) {
-	response, err := httpClient.Delete(
+func (c *Client) DeleteJob(ctx context.Context, uuid string) (bool, error) {
+	response, err := c.HTTPClient.Delete(
 		ctx,
-		fmt.Sprintf("%s/api/v1/job/%s", serverURL, uuid),
+		fmt.Sprintf("%s/api/v1/job/%s", c.APIURL, uuid),
 		map[string]string{},
-		map[string]string{"X-API-KEY": apiKey},
+		map[string]string{"X-API-KEY": c.APIKey},
 	)
 
 	if err != nil {
 		return false, err
 	}
 
-	statusCode := httpClient.GetStatusCode(response)
+	statusCode := c.HTTPClient.GetStatusCode(response)
 
 	if statusCode != http.StatusNoContent {
 		return false, fmt.Errorf(fmt.Sprintf("Invalid status code %d", statusCode))

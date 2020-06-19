@@ -25,7 +25,10 @@ import (
 // TestClusterCRUD test cases
 func TestClusterCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
-	httpClient := module.NewHTTPClient()
+
+	httpClient := Client{}
+	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
 	t.Run("LoadConfigFile", func(t *testing.T) {
@@ -60,7 +63,8 @@ func TestClusterCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetClusters(context.TODO(), httpClient, srv.URL, "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetClusters(context.TODO())
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Clusters{
@@ -81,7 +85,8 @@ func TestClusterCRUD(t *testing.T) {
 
 		defer srv.Close()
 
-		result, err := GetCluster(context.TODO(), httpClient, srv.URL, "staging", "")
+		httpClient.SetAPIURL(srv.URL)
+		result, err := httpClient.GetCluster(context.TODO(), "staging")
 
 		pkg.Expect(t, nil, err)
 		pkg.Expect(t, result, model.Cluster{Name: "staging", Health: false})
