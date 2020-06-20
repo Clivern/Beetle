@@ -1,5 +1,7 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank">
+        <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
+    </a>
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment service</p>
     <p align="center">
@@ -12,10 +14,11 @@
 </p>
 <br/>
 <p align="center">
-    <a href="https://terminalizer.com/view/c2ea6e934034"><img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" /></a>
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank"><img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" /></a>
 </p>
+
 <h4 align="center">
-    <a href="https://terminalizer.com/view/c2ea6e934034">:unicorn: Check out the demo!</a>
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank">:unicorn: Check out the demo!</a>
 </h4>
 <br/>
 
