@@ -12,8 +12,11 @@
 </p>
 <br/>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" />
+    <a href="https://terminalizer.com/view/c2ea6e934034"><img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" /></a>
 </p>
+<h4 align="center">
+    <a href="https://terminalizer.com/view/c2ea6e934034">:unicorn: Check out the demo!</a>
+</h4>
 <br/>
 
 Application deployment and management should be automated, auditable, and easy to understand and that's what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
