@@ -3,7 +3,7 @@
         <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
     </a>
     <h3 align="center">Beetle</h3>
-    <p align="center">Kubernetes multi-cluster deployment service</p>
+    <p align="center">Kubernetes multi-cluster deployment automation service</p>
     <p align="center">
         <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
         <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v0.2.2-red.svg"></a>
