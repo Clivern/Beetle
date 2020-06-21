@@ -1,15 +1,15 @@
 swagger: '2.0'
 info:
   description: |
-      Application deployment and management should be automated, auditable, and easy to understand and that\'s what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
-  version: 0.1.1
+    Application deployment and management should be automated, auditable, and easy to understand and that\'s what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
+  version: 0.2.2
   title: Beetle
   contact:
     email: hello@clivern.com
   license:
     name: MIT
     url: 'https://github.com/Clivern/Beetle/blob/master/LICENSE'
-host: clivern.com
+host: beetle.yourcompany.com
 basePath: /
 schemes:
   - https
@@ -24,15 +24,14 @@ paths:
         - application/json
       parameters: []
       responses:
-        200:
-          description: "system healthy"
+        '200':
+          description: system healthy
           schema:
-            $ref: "#/definitions/healthResponse"
-        500:
-          description: "system is down"
+            $ref: '#/definitions/healthResponse'
+        '500':
+          description: system is down
           schema:
-            $ref: "#/definitions/healthResponse"
-
+            $ref: '#/definitions/healthResponse'
   /_ready:
     get:
       tags:
@@ -42,15 +41,14 @@ paths:
         - application/json
       parameters: []
       responses:
-        200:
-          description: "system ready to accept traffic"
+        '200':
+          description: system ready to accept traffic
           schema:
-            $ref: "#/definitions/healthResponse"
-        500:
-          description: "system not ready to accept traffic"
+            $ref: '#/definitions/healthResponse'
+        '500':
+          description: system not ready to accept traffic
           schema:
-            $ref: "#/definitions/healthResponse"
-
+            $ref: '#/definitions/healthResponse'
   /metrics:
     get:
       tags:
@@ -60,367 +58,351 @@ paths:
         - text/plain
       parameters: []
       responses:
-        200:
-          description: "system metrics"
-        500:
-          description: "Internal server error"
-
+        '200':
+          description: system metrics
+        '500':
+          description: Internal server error
   /api/v1/cluster:
     get:
       tags:
-      - "Cluster"
-      summary: "Get clusters list"
-      description: ""
-      operationId: "getClusters"
+        - Cluster
+      summary: Get clusters list
+      description: ''
+      operationId: getClusters
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Clusters"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Clusters'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/cluster/{cn}:
+  '/api/v1/cluster/{cn}':
     get:
       tags:
-      - "Cluster"
-      summary: "Get cluster by name"
-      description: ""
-      operationId: "getClusterByName"
+        - Cluster
+      summary: Get cluster by name
+      description: ''
+      operationId: getClusterByName
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Cluster"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Cluster'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/cluster/{cn}/namespace:
+  '/api/v1/cluster/{cn}/namespace':
     get:
       tags:
-      - "Namespace"
-      summary: "Get namespaces list"
-      description: ""
-      operationId: "getNamespaces"
+        - Namespace
+      summary: Get namespaces list
+      description: ''
+      operationId: getNamespaces
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Namespaces"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Namespaces'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/cluster/{cn}/namespace/{ns}:
+  '/api/v1/cluster/{cn}/namespace/{ns}':
     get:
       tags:
-      - "Cluster"
-      summary: "Get cluster namespace by name"
-      description: ""
-      operationId: "getClusterNamespaceByName"
+        - Namespace
+      summary: Get cluster namespace by name
+      description: ''
+      operationId: getClusterNamespaceByName
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
-      - in: "path"
-        name: ns
-        description: "The name of the cluster namespace"
-        required: true
-        type: "string"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
+        - in: path
+          name: ns
+          description: The name of the cluster namespace
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Namespace"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Namespace'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/cluster/{cn}/namespace/{ns}/app:
+  '/api/v1/cluster/{cn}/namespace/{ns}/app':
     get:
       tags:
-      - "Application"
-      summary: "Get applications list"
-      description: ""
-      operationId: "getApplications"
+        - Application
+      summary: Get applications list
+      description: ''
+      operationId: getApplications
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
-      - in: "path"
-        name: ns
-        description: "The name of the cluster namespace"
-        required: true
-        type: "string"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
+        - in: path
+          name: ns
+          description: The name of the cluster namespace
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Applications"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Applications'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/cluster/{cn}/namespace/{ns}/app/{id}:
+  '/api/v1/cluster/{cn}/namespace/{ns}/app/{id}':
     get:
       tags:
-      - "Application"
-      summary: "Get application by id"
-      description: ""
-      operationId: "getApplicationById"
+        - Application
+      summary: Get application by id
+      description: ''
+      operationId: getApplicationById
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
-      - in: "path"
-        name: ns
-        description: "The name of the cluster namespace"
-        required: true
-        type: "string"
-      - in: "path"
-        name: id
-        description: "The application id"
-        required: true
-        type: "string"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
+        - in: path
+          name: ns
+          description: The name of the cluster namespace
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: The application id
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Application"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Application'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
     post:
       tags:
-      - "Application"
-      summary: "Create a deployment request"
-      description: ""
-      operationId: "createDeploymentRequest"
+        - Application
+      summary: Create a deployment request
+      description: ''
+      operationId: createDeploymentRequest
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: cn
-        description: "The name of the cluster"
-        required: true
-        type: "string"
-      - in: "path"
-        name: ns
-        description: "The name of the cluster namespace"
-        required: true
-        type: "string"
-      - in: "path"
-        name: id
-        description: "The application id"
-        required: true
-        type: "string"
-      - in: body
-        name: body
-        description: The deployment request
-        required: true
-        schema:
-          $ref: '#/definitions/DeploymentRequest'
-      responses:
-        202:
-          description: "successful operation"
+        - in: path
+          name: cn
+          description: The name of the cluster
+          required: true
+          type: string
+        - in: path
+          name: ns
+          description: The name of the cluster namespace
+          required: true
+          type: string
+        - in: path
+          name: id
+          description: The application id
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The deployment request
+          required: true
           schema:
-            $ref: "#/definitions/Job"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Resource not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/DeploymentRequest'
+      responses:
+        '202':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Job'
+        '400':
+          description: Invalid request
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
   /api/v1/job:
     get:
       tags:
-      - "Job"
-      summary: "Get jobs list"
-      description: ""
-      operationId: "getJobs"
+        - Job
+      summary: Get jobs list
+      description: ''
+      operationId: getJobs
       produces:
-      - "application/json"
+        - application/json
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Jobs"
-        400:
-          description: "Invalid request"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Jobs'
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
-  /api/v1/job/{uuid}:
+  '/api/v1/job/{uuid}':
     get:
       tags:
-      - "Job"
-      summary: "Get a job by UUID"
-      description: ""
-      operationId: "getJobByUUID"
+        - Job
+      summary: Get a job by UUID
+      description: ''
+      operationId: getJobByUUID
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: uuid
-        description: "The UUID of the job"
-        required: true
-        type: "string"
+        - in: path
+          name: uuid
+          description: The UUID of the job
+          required: true
+          type: string
       responses:
-        200:
-          description: "successful operation"
+        '200':
+          description: successful operation
           schema:
-            $ref: "#/definitions/Job"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Job not found"
-        500:
-          description: "Internal server error"
+            $ref: '#/definitions/Job'
+        '400':
+          description: Invalid request
+        '404':
+          description: Job not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
     delete:
       tags:
-      - "Job"
-      summary: "Delete a job by UUID"
-      description: ""
-      operationId: "deleteJobByUUID"
+        - Job
+      summary: Delete a job by UUID
+      description: ''
+      operationId: deleteJobByUUID
       produces:
-      - "application/json"
+        - application/json
       parameters:
-      - in: "path"
-        name: uuid
-        description: "The UUID of the job"
-        required: true
-        type: "string"
+        - in: path
+          name: uuid
+          description: The UUID of the job
+          required: true
+          type: string
       responses:
-        204:
-          description: "successful operation"
-        400:
-          description: "Invalid request"
-        404:
-          description: "Job not found"
-        500:
-          description: "Internal server error"
+        '204':
+          description: successful operation
+        '400':
+          description: Invalid request
+        '404':
+          description: Job not found
+        '500':
+          description: Internal server error
       security:
         - api_key: []
-
 securityDefinitions:
   api_key:
     type: apiKey
     name: X-API-KEY
     in: header
-
 definitions:
   healthResponse:
-    type: "object"
+    type: object
     properties:
       status:
-        type: "string"
-
+        type: string
   Cluster:
-    type: "object"
+    type: object
     properties:
       name:
-        type: "string"
+        type: string
       health:
-        type: "boolean"
-
+        type: boolean
   Clusters:
-    type: "object"
+    type: object
     properties:
       clusters:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/Cluster"
-
+          $ref: '#/definitions/Cluster'
   Namespace:
-    type: "object"
+    type: object
     properties:
       name:
-        type: "string"
+        type: string
       uid:
-        type: "string"
+        type: string
       status:
-        type: "string"
-
+        type: string
   Namespaces:
-    type: "object"
+    type: object
     properties:
       namespaces:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/Namespace"
+          $ref: '#/definitions/Namespace'
   Job:
-    type: "object"
+    type: object
     properties:
       id:
         type: integer
@@ -447,25 +429,22 @@ definitions:
         type: string
       updated_at:
         type: string
-
   Jobs:
-    type: "object"
+    type: object
     properties:
       namespaces:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/Job"
-
+          $ref: '#/definitions/Job'
   Applications:
-    type: "object"
+    type: object
     properties:
       namespaces:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/Application"
-
+          $ref: '#/definitions/Application'
   Application:
-    type: "object"
+    type: object
     properties:
       id:
         type: string
@@ -474,12 +453,11 @@ definitions:
       format:
         type: string
       containers:
-        type: "array"
+        type: array
         items:
-          $ref: "#/definitions/Container"
-
+          $ref: '#/definitions/Container'
   Container:
-    type: "object"
+    type: object
     properties:
       name:
         type: string
@@ -488,24 +466,21 @@ definitions:
       version:
         type: string
       deployment:
-        $ref: "#/definitions/Deployment"
-
+        $ref: '#/definitions/Deployment'
   Deployment:
-    type: "object"
+    type: object
     properties:
       name:
         type: string
       uid:
         type: string
-
   DeploymentRequest:
-    type: "object"
+    type: object
     properties:
       version:
         type: string
       strategy:
         type: string
-
 externalDocs:
   description: Find out more about beetle
   url: 'https://github.com/Clivern/Beetle'

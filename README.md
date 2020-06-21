@@ -1,7 +1,9 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank">
+        <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
+    </a>
     <h3 align="center">Beetle</h3>
-    <p align="center">Kubernetes multi-cluster deployment service</p>
+    <p align="center">Kubernetes multi-cluster deployment automation service</p>
     <p align="center">
         <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
         <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v0.2.2-red.svg"></a>
@@ -12,8 +14,12 @@
 </p>
 <br/>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" />
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank"><img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" /></a>
 </p>
+
+<h4 align="center">
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank">:unicorn: Check out the demo!</a>
+</h4>
 <br/>
 
 Application deployment and management should be automated, auditable, and easy to understand and that's what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
