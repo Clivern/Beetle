@@ -98,10 +98,4 @@ run:
 	$(GO) run beetle.go serve -c config.prod.yml
 
 
-## doc: Serve the docs.
-doc:
-	@echo ">> ============= Serve Docs ============= <<"
-	cd docs; $(HUGO) server --minify --theme book
-
-
 .PHONY: help
