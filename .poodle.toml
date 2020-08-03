@@ -1,0 +1,84 @@
+# API Definition for Beetle
+# --------------------------
+#
+# In order to use this file:
+# 1. Check & Install https://github.com/Clivern/Poodle
+#
+# 2. Create a new service for penguin.
+#   $ poodle new
+#
+# 3. Paste the content of this file & Replace example.com with your hosted penguin URL.
+#
+# 4. Now you can use poodle to interact with your hosted penguin.
+#   $ poodle new
+#
+
+[Main]
+    id = "clivern_beetle"
+    name = "Clivern - Beetle"
+    description = "Beetle API Definitions"
+    timeout = "30s"
+    service_url = "{$serviceURL:http://127.0.0.1:8080}"
+    # These headers will be applied to all endpoints http calls
+    headers = []
+
+[Security]
+    # Supported Types are basic, bearer and api_key and none
+    scheme = "none"
+
+    [Security.Basic]
+        username = "{$authUsername:default}"
+        password = "{$authPassword:default}"
+        header = ["Authorization", "Basic base64(username:password)"]
+
+    [Security.ApiKey]
+        header = ["X-API-KEY", "{$authApiKey:default}"]
+
+    # In case of bearer authentication, it is recommended to create another
+    # service or endpoint to generate the bearer tokens
+    [Security.Bearer]
+        header = ["Authorization", "Bearer {$authBearerToken:default}"]
+
+[[Endpoint]]
+    id = "GetSystemHealth"
+    name = "Get System Health"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/"
+    body = ""
+
+[[Endpoint]]
+    id = "GetSystemHealth"
+    name = "Get System Health"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/_health"
+    body = ""
+
+[[Endpoint]]
+    id = "GetSystemReadiness"
+    name = "Get System Readiness"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/_ready"
+    body = ""
+
+[[Endpoint]]
+    id = "GetMetrics"
+    name = "Get Metrics"
+    description = ""
+    method = "get"
+    headers = []
+    parameters = []
+    public = true
+    uri = "/metrics"
+    body = ""
