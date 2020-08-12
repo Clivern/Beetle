@@ -1,16 +1,11 @@
-# API Definition for Beetle
+# API Definition For Beetle
 # --------------------------
 #
 # In order to use this file:
 # 1. Check & Install https://github.com/Clivern/Poodle
 #
-# 2. Create a new service for penguin.
-#   $ poodle new
-#
-# 3. Paste the content of this file & Replace example.com with your hosted penguin URL.
-#
-# 4. Now you can use poodle to interact with your hosted penguin.
-#   $ poodle new
+# 2. Now you can use poodle to interact with your local or hosted penguin.
+#   $ poodle call -f .poodle.toml
 #
 
 [Main]
@@ -47,17 +42,6 @@
     headers = [ ["Content-Type", "application/json"] ]
     parameters = []
     public = true
-    uri = "/"
-    body = ""
-
-[[Endpoint]]
-    id = "GetSystemHealth"
-    name = "Get System Health"
-    description = ""
-    method = "get"
-    headers = [ ["Content-Type", "application/json"] ]
-    parameters = []
-    public = true
     uri = "/_health"
     body = ""
 
@@ -82,3 +66,115 @@
     public = true
     uri = "/metrics"
     body = ""
+
+[[Endpoint]]
+    id = "GetClusters"
+    name = "Get Clusters"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster"
+    body = ""
+
+[[Endpoint]]
+    id = "GetCluster"
+    name = "Get Cluster"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster/{$clusterName}"
+    body = ""
+
+[[Endpoint]]
+    id = "GetClusterNamespaces"
+    name = "Get Cluster Namespaces"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster/{$clusterName}/namespace"
+    body = ""
+
+[[Endpoint]]
+    id = "GetClusterNamespace"
+    name = "Get Cluster Namespace"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster/{$clusterName}/namespace/{$namespaceName}"
+    body = ""
+
+[[Endpoint]]
+    id = "GetNamespaceApplications"
+    name = "Get Namespace Applications"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster/{$clusterName}/namespace/{$namespaceName}/app"
+    body = ""
+
+[[Endpoint]]
+    id = "GetNamespaceApplicationByID"
+    name = "Get Namespace Application by ID"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/cluster/{$clusterName}/namespace/{$namespaceName}/app/{$applicationId}"
+    body = ""
+
+[[Endpoint]]
+    id = "GetJobs"
+    name = "Get Jobs"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    public = true
+    uri = "/api/v1/job"
+    body = ""
+
+[[Endpoint]]
+    id = "GetJobByUUID"
+    name = "Get Job by UUID"
+    description = ""
+    method = "get"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    uri = "/api/v1/job/{$jobUUID}"
+    body = ""
+
+[[Endpoint]]
+    id = "DeleteJobByUUID"
+    name = "Delete Job by UUID"
+    description = ""
+    method = "delete"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    uri = "/api/v1/job/{$jobUUID}"
+    body = ""
+
+[[Endpoint]]
+    id = "DeployApplicationById"
+    name = "Deploy Application By ID"
+    description = ""
+    method = "post"
+    headers = [ ["Content-Type", "application/json"] ]
+    parameters = []
+    uri = "/api/v1/cluster/{$clusterName}/namespace/{$namespaceName}/app/{$applicationId}/deployment"
+    body = """
+    {
+        "version":"{$version}",
+        "strategy":"{$strategy:recreate}"
+    }
+    """
