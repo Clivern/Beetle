@@ -4,7 +4,7 @@
 # In order to use this file:
 # 1. Check & Install https://github.com/Clivern/Poodle
 #
-# 2. Now you can use poodle to interact with your local or hosted penguin.
+# 2. Now you can use poodle to interact with your local or hosted beetle.
 #   $ poodle call -f .poodle.toml
 #
 
