@@ -1,0 +1,218 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: beetle-service-account
+  namespace: default
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: beetle-service-account
+  namespace: default
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list"]
+- apiGroups: ["extensions", "apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: beetle-service-account
+roleRef:
+  kind: ClusterRole
+  name: beetle-service-account
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: beetle-service-account
+  namespace: default
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: incluster-beetle-configs
+  namespace: default
+data:
+  config.dist.yml: |-
+    ---
+    # App configs
+    app:
+        # Env mode (dev or prod)
+        mode: ${BEETLE_APP_MODE:-dev}
+        # HTTP port
+        port: ${BEETLE_API_PORT:-8080}
+        # App URL
+        domain: ${BEETLE_APP_DOMAIN:-http://127.0.0.1:8080}
+        # TLS configs
+        tls:
+            status: ${BEETLE_API_TLS_STATUS:-off}
+            pemPath: ${BEETLE_API_TLS_PEMPATH:-cert/server.pem}
+            keyPath: ${BEETLE_API_TLS_KEYPATH:-cert/server.key}
+
+        # Message Broker Configs
+        broker:
+            # Broker driver (native)
+            driver: ${BEETLE_BROKER_DRIVER:-native}
+            # Native driver configs
+            native:
+                # Queue max capacity
+                capacity: ${BEETLE_BROKER_NATIVE_CAPACITY:-5000}
+                # Number of concurrent workers
+                workers: ${BEETLE_BROKER_NATIVE_WORKERS:-4}
+
+        # API Configs
+        api:
+            key: ${BEETLE_API_KEY:-1234}
+
+        # Runtime, Requests/Response and Beetle Metrics
+        metrics:
+            prometheus:
+                # Route for the metrics endpoint
+                endpoint: ${BEETLE_METRICS_PROM_ENDPOINT:-/metrics}
+
+        # Application Database
+        database:
+            # Database driver (sqlite3, mysql)
+            driver: ${BEETLE_DATABASE_DRIVER:-mysql}
+            # Hostname
+            host: ${BEETLE_DATABASE_MYSQL_HOST:-REPLACE_WITH_MYSQL_HOSTNAME}
+            # Port
+            port: ${BEETLE_DATABASE_MYSQL_PORT:-3306}
+            # Database
+            name: ${BEETLE_DATABASE_MYSQL_DATABASE:-REPLACE_WITH_MYSQL_DATABASE}
+            # Username
+            username: ${BEETLE_DATABASE_MYSQL_USERNAME:-REPLACE_WITH_MYSQL_USERNAME}
+            # Password
+            password: ${BEETLE_DATABASE_MYSQL_PASSWORD:-REPLACE_WITH_MYSQL_PASSWORD}
+
+        # Kubernetes Clusters
+        clusters:
+            -
+                name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
+                inCluster: ${BEETLE_KUBE_CLUSTER_01_IN_CLUSTER:-true}
+                kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:- }
+                configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-applications-configs}
+
+        # HTTP Webhook
+        webhook:
+            url: ${BEETLE_WEBHOOK_URL:-https://httpbin.org/anything}
+            retry: ${BEETLE_WEBHOOK_RETRY:-3}
+            apiKey: ${BEETLE_WEBHOOK_API_KEY:-12345}
+
+    # Log configs
+    log:
+        # Log level, it can be debug, info, warn, error, panic, fatal
+        level: ${BEETLE_LOG_LEVEL:-info}
+        # output can be stdout or abs path to log file /var/logs/beetle.log
+        output: ${BEETLE_LOG_OUTPUT:-stdout}
+        # Format can be json
+        format: ${BEETLE_LOG_FORMAT:-json}
+
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beetle-applications-configs
+  namespace: default
+data:
+  config: |-
+    ---
+    applications:
+      -
+        name: Toad App
+        id: toad
+        imageFormat: clivern/toad:release-[.Release]
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beetle-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: beetle
+  template:
+    metadata:
+      labels:
+        app: beetle
+      name: beetle
+    spec:
+      serviceAccount: beetle-service-account
+      serviceAccountName: beetle-service-account
+      containers:
+        -
+          image: "clivern/beetle:0.2.2"
+          name: beetle-app
+          volumeMounts:
+            -
+              mountPath: /app/configs
+              name: incluster-beetle-configs-volume
+      volumes:
+        -
+          configMap:
+            name: incluster-beetle-configs
+          name: incluster-beetle-configs-volume
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beetle-svc
+  labels:
+    app: beetle
+spec:
+  ports:
+    -
+      port: 80
+      targetPort: 8080
+  selector:
+    app: beetle
+  type: LoadBalancer
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    # example.com/beetle rewrites to example.com/
+    # example.com/beetle/ rewrites to example.com/
+    # example.com/beetle/_ready rewrites to example.com/_ready
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: beetle-ing
+spec:
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /beetle(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: beetle-svc
+            port:
+              number: 80
