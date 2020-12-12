@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.clivern.com/managed-by: beetle
+    app.clivern.com/application-id: toad
+  name: toad-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: toad
+  template:
+    metadata:
+      labels:
+        app: toad
+      name: toad
+    spec:
+      containers:
+        -
+          image: "clivern/toad:release-0.2.3"
+          name: toad-app
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: toad-svc
+  labels:
+    app: toad
+spec:
+  ports:
+    -
+      port: 80
+      targetPort: 8080
+  selector:
+    app: toad
+  type: LoadBalancer
+
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    # example.com/toad rewrites to example.com/
+    # example.com/toad/ rewrites to example.com/
+    # example.com/toad/_ready rewrites to example.com/_ready
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: toad-ing
+spec:
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /toad(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: toad-svc
+            port:
+              number: 80
