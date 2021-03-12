@@ -1,4 +1,4 @@
-FROM golang:1.16.0
+FROM golang:1.16.2
 
 ARG BEETLE_VERSION=0.2.2
 
