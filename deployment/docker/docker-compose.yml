@@ -13,7 +13,7 @@ services:
 
     # Prometheus Service
     prometheus:
-        image: 'prom/prometheus:v2.25.2'
+        image: 'prom/prometheus:v2.26.0'
         volumes:
             - './:/etc/prometheus'
         command: '--config.file=/etc/prometheus/prometheus.yml'
