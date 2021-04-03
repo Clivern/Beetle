@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/clivern/beetle/app/model"
+	"github.com/clivern/beetle/core/model"
 )
 
 // CreateDeployment Get Application
@@ -24,7 +24,7 @@ func (c *Client) CreateDeployment(ctx context.Context, request model.DeploymentR
 
 	response, err := c.HTTPClient.Post(
 		ctx,
-		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s", c.APIURL, request.Cluster, request.Namespace, request.Application),
+		fmt.Sprintf("%s/api/v1/cluster/%s/namespace/%s/app/%s/deployment", c.APIURL, request.Cluster, request.Namespace, request.Application),
 		requestBody,
 		map[string]string{},
 		map[string]string{"X-API-KEY": c.APIKey},

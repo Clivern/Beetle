@@ -2,13 +2,13 @@ swagger: '2.0'
 info:
   description: |
     Application deployment and management should be automated, auditable, and easy to understand and that\'s what beetle tries to achieve in a simple manner. Beetle automates the deployment and rollback of your applications in a multi-cluster, multi-namespaces kubernetes environments. Easy to integrate with through API endpoints & webhooks to fit a variety of workflows.
-  version: 0.2.2
+  version: 1.0.0
   title: Beetle
   contact:
     email: hello@clivern.com
   license:
     name: MIT
-    url: 'https://github.com/Clivern/Beetle/blob/master/LICENSE'
+    url: 'https://github.com/Clivern/Beetle/blob/main/LICENSE'
 host: beetle.yourcompany.com
 basePath: /
 schemes:

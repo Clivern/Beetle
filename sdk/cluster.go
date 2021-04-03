@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/clivern/beetle/app/model"
+	"github.com/clivern/beetle/core/model"
 )
 
 // GetClusters Get Clusters List

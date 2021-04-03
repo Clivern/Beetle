@@ -76,4 +76,13 @@ $ curl -X POST \
      -H "X-API-KEY: 1234" \
      -d '{"version":"0.2.4","strategy":"recreate"}' \
      http://example.com/beetle/api/v1/cluster/production/namespace/default/app/toad/deployment
+
+# Get application `toad` version
+$ curl http://example.com/beetle/api/v1/cluster/production/namespace/default/app/toad -H "X-API-KEY: 1234" -s | jq .
+
+# Another deployment with ramped strategy
+$ curl -X POST \
+     -H "X-API-KEY: 1234" \
+     -d '{"version":"0.2.3","strategy":"ramped", "maxSurge": "1", "maxUnavailable": "0"}' \
+     http://example.com/beetle/api/v1/cluster/production/namespace/default/app/toad/deployment
 ```

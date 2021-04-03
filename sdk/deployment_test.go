@@ -14,8 +14,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/clivern/beetle/app/model"
-	"github.com/clivern/beetle/app/module"
+	"github.com/clivern/beetle/core/model"
+	"github.com/clivern/beetle/core/module"
 	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"
@@ -27,7 +27,7 @@ func TestDeploymentCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
 
 	httpClient := Client{}
-	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetHTTPClient(module.NewHTTPClient(20))
 	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
@@ -56,7 +56,7 @@ func TestDeploymentCRUD(t *testing.T) {
 	// TestCreateDeployment
 	t.Run("TestCreateDeployment", func(t *testing.T) {
 		srv := pkg.ServerMock(
-			"/api/v1/cluster/production/namespace/default/app/toad",
+			"/api/v1/cluster/production/namespace/default/app/toad/deployment",
 			`{"id":1,"uuid":"4f540ab1-2c29-47e6-b900-675312b784d8","status":"pending","type":"deployment.update","created_at":"2020-06-16T18:20:35Z"}`,
 			http.StatusAccepted,
 		)

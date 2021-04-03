@@ -57,7 +57,7 @@ data:
     # App configs
     app:
         # Env mode (dev or prod)
-        mode: ${BEETLE_APP_MODE:-dev}
+        mode: ${BEETLE_APP_MODE:-prod}
         # HTTP port
         port: ${BEETLE_API_PORT:-8080}
         # App URL
@@ -110,7 +110,6 @@ data:
                 name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
                 inCluster: ${BEETLE_KUBE_CLUSTER_01_IN_CLUSTER:-true}
                 kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:- }
-                configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-applications-configs}
 
         # HTTP Webhook
         webhook:
@@ -126,22 +125,6 @@ data:
         output: ${BEETLE_LOG_OUTPUT:-stdout}
         # Format can be json
         format: ${BEETLE_LOG_FORMAT:-json}
-
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: beetle-applications-configs
-  namespace: default
-data:
-  config: |-
-    ---
-    applications:
-      -
-        name: Toad App
-        id: toad
-        imageFormat: clivern/toad:release-[.Release]
 
 
 ---
@@ -164,7 +147,7 @@ spec:
       serviceAccountName: beetle-service-account
       containers:
         -
-          image: "clivern/beetle:0.2.2"
+          image: "clivern/beetle:1.0.0"
           name: beetle-app
           volumeMounts:
             -

@@ -44,13 +44,13 @@ check_license:
 ## test_short: Run test cases with short flag.
 test_short:
 	@echo ">> ============= Running Short Tests ============= <<"
-	$(GO) test -short $(pkgs)
+	$(GO) test -mod=readonly -short $(pkgs)
 
 
 ## test: Run test cases.
 test:
 	@echo ">> ============= Running All Tests ============= <<"
-	$(GO) test -v -cover $(pkgs)
+	$(GO) test -mod=readonly -v -cover $(pkgs)
 
 
 ## lint: Lint the code.
@@ -83,7 +83,7 @@ vet:
 coverage:
 	@echo ">> ============= Coverage ============= <<"
 	rm -f coverage.html cover.out
-	$(GO) test -coverprofile=cover.out $(pkgs)
+	$(GO) test -mod=readonly -coverprofile=cover.out $(pkgs)
 	go tool cover -html=cover.out -o coverage.html
 
 

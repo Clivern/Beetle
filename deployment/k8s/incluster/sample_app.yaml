@@ -3,8 +3,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app.clivern.com/managed-by: beetle
-    app.clivern.com/application-id: toad
+    beetle.clivern.com/status: enabled
+    beetle.clivern.com/application-id: toad
+  annotations:
+    beetle.clivern.com/application-name: Toad
+    beetle.clivern.com/image-format: "clivern/toad:release-[.Release]"
   name: toad-deployment
 spec:
   replicas: 2

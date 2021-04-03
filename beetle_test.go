@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/clivern/beetle/app/module"
+	"github.com/clivern/beetle/core/module"
 	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"

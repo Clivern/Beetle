@@ -1,20 +1,20 @@
 <p align="center">
     <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank">
-        <img src="https://raw.githubusercontent.com/clivern/Beetle/master/assets/img/gopher.png?v=0.2.2" width="180" />
+        <img src="https://raw.githubusercontent.com/clivern/Beetle/main/assets/img/gopher.png?v=1.0.0" width="180" />
     </a>
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment automation service</p>
     <p align="center">
-        <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=master"></a>
-        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v0.2.2-red.svg"></a>
-        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=0.2.2"></a>
+        <a href="https://travis-ci.com/Clivern/Beetle"><img src="https://travis-ci.com/Clivern/Beetle.svg?branch=main"></a>
+        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v1.0.0-red.svg"></a>
+        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=1.0.0"></a>
         <a href="https://hub.docker.com/r/clivern/beetle"><img src="https://img.shields.io/badge/Docker-Latest-orange"></a>
-        <a href="https://github.com/Clivern/Beetle/blob/master/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
+        <a href="https://github.com/Clivern/Beetle/blob/main/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
     </p>
 </p>
 <br/>
 <p align="center">
-    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank"><img src="https://raw.githubusercontent.com/Clivern/Beetle/master/assets/img/chart.png?v=0.2.2" width="100%" /></a>
+    <a href="https://www.youtube.com/watch?v=54qQIYTZiAw" target="_blank"><img src="https://raw.githubusercontent.com/Clivern/Beetle/main/assets/img/chart.png?v=1.0.0" width="100%" /></a>
 </p>
 
 <h4 align="center">
@@ -114,12 +114,10 @@ app:
             name: ${BEETLE_KUBE_CLUSTER_01_NAME:-production}
             inCluster: ${BEETLE_KUBE_CLUSTER_01_IN_CLUSTER:-false}
             kubeconfig: ${BEETLE_KUBE_CLUSTER_01_CONFIG_FILE:-/app/configs/production-cluster-kubeconfig.yaml}
-            configMapName: ${BEETLE_KUBE_CLUSTER_01_CONFIG_MAP:-beetle-configs}
         -
             name: ${BEETLE_KUBE_CLUSTER_02_NAME:-staging}
             inCluster: ${BEETLE_KUBE_CLUSTER_02_IN_CLUSTER:-false}
             kubeconfig: ${BEETLE_KUBE_CLUSTER_02_CONFIG_FILE:-/app/configs/staging-cluster-kubeconfig.yaml}
-            configMapName: ${BEETLE_KUBE_CLUSTER_02_CONFIG_MAP:-beetle-configs}
 
     # HTTP Webhook
     webhook:
@@ -153,14 +151,9 @@ $ go run beetle.go serve -c /custom/path/config.prod.yml
 ```
 
 
-## Beetle Terraform Provider
-
-You can find the terraform provider here https://github.com/Clivern/terraform-provider-beetle. It is preferred to use it in order to interact with beetle API server or build your own thing using the [SDK](https://github.com/Clivern/Beetle/tree/master/sdk).
-
-
 ## API Documentation
 
-Go to https://editor.swagger.io/ and import this file https://raw.githubusercontent.com/Clivern/Beetle/master/swagger.yaml.
+Go to https://editor.swagger.io/ and import this file https://raw.githubusercontent.com/Clivern/Beetle/main/swagger.yaml.
 
 
 ## Versioning

@@ -14,8 +14,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/clivern/beetle/app/model"
-	"github.com/clivern/beetle/app/module"
+	"github.com/clivern/beetle/core/model"
+	"github.com/clivern/beetle/core/module"
 	"github.com/clivern/beetle/pkg"
 
 	"github.com/drone/envsubst"
@@ -27,7 +27,7 @@ func TestClusterCRUD(t *testing.T) {
 	testingConfig := "config.testing.yml"
 
 	httpClient := Client{}
-	httpClient.SetHTTPClient(module.NewHTTPClient())
+	httpClient.SetHTTPClient(module.NewHTTPClient(20))
 	httpClient.SetAPIKey("")
 
 	// LoadConfigFile
