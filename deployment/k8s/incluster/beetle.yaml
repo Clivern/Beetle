@@ -147,7 +147,7 @@ spec:
       serviceAccountName: beetle-service-account
       containers:
         -
-          image: "clivern/beetle:1.0.0"
+          image: "clivern/beetle:1.0.1"
           name: beetle-app
           volumeMounts:
             -
