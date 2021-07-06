@@ -38,11 +38,13 @@ func (c *Cluster) Deploy(deploymentRequest model.DeploymentRequest) (bool, error
 
 // RecreateStrategy terminates the old version and release the new one.
 //
-// This method is like running this command
+// # This method is like running this command
 //
 // $ kubectl patch deployment toad-deployment --type=json -p '[
-//     {"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
-//     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//
+//	{"op":"replace", "path":"/spec/strategy", "value":{"type":"Recreate"}},
+//	{"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//
 // ]'
 func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	result := model.Application{}
@@ -128,13 +130,15 @@ func (c *Cluster) RecreateStrategy(deploymentRequest model.DeploymentRequest) (b
 //
 // it will set maxSurge as 25% and maxUnavailable as 25%
 //
-// This method is like running this command
+// # This method is like running this command
 //
 // $ kubectl patch deployment toad-deployment --type=json -p '[
-//     {"op":"replace", "path":"/spec/strategy", "value":{"type":"RollingUpdate"}},
-//     {"op":"replace", "path":"/spec/strategy/rollingUpdate", "value":{"maxSurge":""}},
-//	   {"op":"replace", "path":"/spec/strategy/rollingUpdate", "value":{"maxUnavailable":""}},
-//     {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//
+//	    {"op":"replace", "path":"/spec/strategy", "value":{"type":"RollingUpdate"}},
+//	    {"op":"replace", "path":"/spec/strategy/rollingUpdate", "value":{"maxSurge":""}},
+//		   {"op":"replace", "path":"/spec/strategy/rollingUpdate", "value":{"maxUnavailable":""}},
+//	    {"op":"replace","path":"/spec/template/spec/containers/0/image","value":"clivern/toad:release-0.2.4"}
+//
 // ]'
 func (c *Cluster) RampedStrategy(deploymentRequest model.DeploymentRequest) (bool, error) {
 	result := model.Application{}
