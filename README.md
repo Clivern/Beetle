@@ -1,12 +1,12 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/clivern/Beetle/main/assets/img/gopher.png?v=1.0.3" width="180" />
+    <img src="https://raw.githubusercontent.com/clivern/Beetle/main/assets/img/gopher.png?v=1.0.4" width="180" />
     <h3 align="center">Beetle</h3>
     <p align="center">Kubernetes multi-cluster deployment automation service</p>
     <p align="center">
         <a href="https://github.com/Clivern/Beetle/actions"><img src="https://github.com/Clivern/Beetle/workflows/Build/badge.svg"></a>
         <a href="https://github.com/Clivern/Beetle/actions"><img src="https://github.com/Clivern/Beetle/workflows/Release/badge.svg"></a>
-        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v1.0.3-red.svg"></a>
-        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=1.0.3"></a>
+        <a href="https://github.com/Clivern/Beetle/releases"><img src="https://img.shields.io/badge/Version-v1.0.4-red.svg"></a>
+        <a href="https://goreportcard.com/report/github.com/Clivern/Beetle"><img src="https://goreportcard.com/badge/github.com/clivern/Beetle?v=1.0.4"></a>
         <a href="https://godoc.org/github.com/clivern/beetle"><img src="https://godoc.org/github.com/clivern/beetle?status.svg"></a>
         <a href="https://hub.docker.com/r/clivern/beetle"><img src="https://img.shields.io/badge/Docker-Latest-orange"></a>
         <a href="https://github.com/Clivern/Beetle/blob/main/LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-orange.svg"></a>
@@ -14,7 +14,7 @@
 </p>
 <br/>
 <p align="center">
-    <img src="https://raw.githubusercontent.com/Clivern/Beetle/main/assets/img/chart.png?v=1.0.3" width="100%" />
+    <img src="https://raw.githubusercontent.com/Clivern/Beetle/main/assets/img/chart.png?v=1.0.4" width="100%" />
 </p>
 
 <h4 align="center">
