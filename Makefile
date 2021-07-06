@@ -15,7 +15,7 @@ help: Makefile
 ## install_revive: Install revive for linting.
 install_revive:
 	@echo ">> ============= Install Revive ============= <<"
-	$(GO) get github.com/mgechev/revive
+	$(GO) install github.com/mgechev/revive@latest
 
 
 ## style: Check code style.
