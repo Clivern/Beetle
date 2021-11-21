@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/briandowns/spinner v1.16.0
 	github.com/drone/envsubst v1.0.3
-	github.com/gin-gonic/gin v1.7.4
+	github.com/gin-gonic/gin v1.7.5
 	github.com/jinzhu/gorm v1.9.16
 	github.com/logrusorgru/aurora/v3 v3.0.0
 	github.com/olekukonko/tablewriter v0.0.5
