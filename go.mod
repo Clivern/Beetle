@@ -1,6 +1,6 @@
 module github.com/clivern/beetle
 
-go 1.16
+go 1.19
 
 require (
 	github.com/briandowns/spinner v1.19.0
