@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/jinzhu/gorm v1.9.16
 	github.com/logrusorgru/aurora/v3 v3.0.0
+	github.com/logrusorgru/aurora/v4 v4.0.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/prometheus/client_golang v1.14.0
 	github.com/satori/go.uuid v1.2.0
