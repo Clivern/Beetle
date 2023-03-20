@@ -3,7 +3,7 @@ module github.com/clivern/beetle
 go 1.19
 
 require (
-	github.com/briandowns/spinner v1.21.0
+	github.com/briandowns/spinner v1.23.0
 	github.com/drone/envsubst v1.0.3
 	github.com/gin-gonic/gin v1.9.0
 	github.com/jinzhu/gorm v1.9.16
