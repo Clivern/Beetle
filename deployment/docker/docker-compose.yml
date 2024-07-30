@@ -4,7 +4,7 @@ services:
 
     # Redis Service
     redis:
-        image: 'redis:7.2-alpine'
+        image: 'redis:7.4-alpine'
         volumes:
             - 'redis_data:/data'
         ports:
