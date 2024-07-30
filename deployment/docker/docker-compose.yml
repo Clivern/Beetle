@@ -23,7 +23,7 @@ services:
 
     # Grafana Service
     grafana:
-        image: 'grafana/grafana:9.5.20'
+        image: 'grafana/grafana:9.5.21'
         environment:
             - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
             - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
