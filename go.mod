@@ -1,6 +1,6 @@
 module github.com/clivern/beetle
 
-go 1.20
+go 1.23
 
 require (
 	github.com/briandowns/spinner v1.23.0
@@ -11,7 +11,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/prometheus/client_golang v1.18.0
 	github.com/satori/go.uuid v1.2.0
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.10.2
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/viper v1.18.2
 	k8s.io/api v0.27.4
